@@ -24,6 +24,8 @@ endif
 
 export PATH := $(DEVKITPPC_LOCAL)/bin:$(PATH_BACKUP)
 
+# Get 'build number' from git
+BUILD_NUMBER := $(shell git rev-list --all --count)
 
 #---------------------------------------------------------------------------------
 # TARGET is the name of the output
@@ -194,10 +196,18 @@ $(OUTPUT).dol: $(OUTPUT).elf
 $(OUTPUT).elf: $(OFILES)
 
 #---------------------------------------------------------------------------------
-# SVN revision
+# GIT revision
 #---------------------------------------------------------------------------------
-revision:
-	@cmd /c ..\\util\\revision.bat
+revision_new:
+	@cp $(CURDIR)/../include/revision.template $(CURDIR)/../include/revision-new.inc
+	@sed -i "s/%BUILD_NUMBER%/$(BUILD_NUMBER)/g" $(CURDIR)/../include/revision-new.inc
+
+revision: revision_new
+	@if [ "$(word 1, $(shell md5sum $(CURDIR)/../include/revision-new.inc))" != "$(word 1, $(shell md5sum $(CURDIR)/../include/revision.inc))" ]; then \
+		mv -f $(CURDIR)/../include/revision-new.inc $(CURDIR)/../include/revision.inc; \
+	else \
+		rm  $(CURDIR)/../include/revision-new.inc; \
+	fi \
 
 #---------------------------------------------------------------------------------
 # This rule links in binary data with the .jpg extension
