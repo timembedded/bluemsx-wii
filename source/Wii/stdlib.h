@@ -1,10 +1,11 @@
 
 #define MALLOC_LOGGING 1
 
+#if MALLOC_LOGGING
+
+#include <malloc.h>
 #include DEVKITPPC_STDLIB_INCLUDE
 #include <string.h>
-
-#if MALLOC_LOGGING
 
 #ifdef __cplusplus
 extern "C" {
@@ -31,7 +32,7 @@ extern void my_free(void *buf, const char *file, int line);
 extern void *my_malloc(int size, const char *file, int line);
 extern void *my_calloc(int num, int size, const char *file, int line);
 extern void *my_realloc(void *buf, int size, const char *file, int line);
-extern void *my_memalign(int align, int size, const char *file, int line);
+extern void *my_memalign(size_t align, size_t size, const char *file, int line);
 extern char *my_strdup(const char *str, const char *file, int line);
 
 extern void allocLogStart(void);
@@ -42,11 +43,14 @@ extern void allocLogPrint(void);
 #ifdef __cplusplus
 }
 #endif
-#else
+
+#else /* MALLOC_LOGGING */
+
+#include DEVKITPPC_STDLIB_INCLUDE
+
 #define _SYS_AllocateFramebuffer SYS_AllocateFramebuffer
 #define allocLogStart()
 #define allocLogStop()
 #define allocLogSetMarker()
 #define allocLogPrint()
 #endif
-

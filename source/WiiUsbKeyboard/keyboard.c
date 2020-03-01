@@ -617,7 +617,6 @@ s32 KEYBOARD_Init(keyPressCallback keypress_cb)
 
 				USBKeyboard_Close();
 				KEYBOARD_FlushEvents();
-				USBKeyboard_Deinitialize();
 				_kbd_thread_running = false;
 				return -6;
 			}
@@ -647,7 +646,6 @@ s32 KEYBOARD_Deinit(void)
 
 	USBKeyboard_Close();
 	KEYBOARD_FlushEvents();
-	USBKeyboard_Deinitialize();
 // TIM: Removed calling USB_Deinitialize() since it causes a freeze on leaving our application.
 //      USB init/deinit shouldn't be the responsebility of the keyboard driver anyway.
 #if 0

@@ -42,7 +42,7 @@ namespace wsp{
                 _rmode = &TVPal528IntDf;
                 break;
             case GW_VIDEO_MODE_PAL50_440:
-                _rmode = &TVPal574IntDfScale;
+                _rmode = &TVPal576IntDfScale;
                 yoffset = 20;
                 break;
             case GW_VIDEO_MODE_PAL60_440:
@@ -159,14 +159,14 @@ namespace wsp{
         if(_initialized)return;
 
         // Allocate two framebuffers for double buffering
-        TVPal574IntDfScale.xfbHeight += 16;
+        TVPal576IntDfScale.xfbHeight += 16;
         if(_frameBuffer[0] == NULL ) {
-            _frameBuffer[0] = MEM_K0_TO_K1(_SYS_AllocateFramebuffer(&TVPal574IntDfScale));
+            _frameBuffer[0] = MEM_K0_TO_K1(_SYS_AllocateFramebuffer(&TVPal576IntDfScale));
         }
         if(_frameBuffer[1] == NULL ) {
-            _frameBuffer[1] = MEM_K0_TO_K1(_SYS_AllocateFramebuffer(&TVPal574IntDfScale));
+            _frameBuffer[1] = MEM_K0_TO_K1(_SYS_AllocateFramebuffer(&TVPal576IntDfScale));
         }
-        TVPal574IntDfScale.xfbHeight -= 16;
+        TVPal576IntDfScale.xfbHeight -= 16;
 
         // Start initializing
         VIDEO_Init();

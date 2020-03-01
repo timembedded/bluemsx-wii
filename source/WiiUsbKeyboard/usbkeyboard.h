@@ -57,7 +57,6 @@ typedef struct
 typedef void (*eventcallback) (USBKeyboard_event event);
 
 s32 USBKeyboard_Initialize(void);
-s32 USBKeyboard_Deinitialize(void);
 
 s32 USBKeyboard_Open(const eventcallback cb);
 void USBKeyboard_Close(void);

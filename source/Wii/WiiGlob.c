@@ -48,11 +48,11 @@ typedef void* HANDLE;
 
 typedef struct {
     // Private
-    DIR_ITER *dirPointer;
-    struct stat fileStat;
-	char cPattern[MAX_PATH + 1];
-	// Public
-	char cFileName[MAX_PATH + 1];
+    DIR *dirPointer;
+    unsigned char d_type;
+    char cPattern[MAX_PATH + 1];
+    // Public
+    char cFileName[MAX_PATH + 1];
 } WIN32_FIND_DATA;
 
 void GetCurrentDirectory(int max, char *path)
@@ -69,55 +69,57 @@ void FindClose(HANDLE handle)
 {
     WIN32_FIND_DATA *wfd = (WIN32_FIND_DATA *)handle;
 
-	if( !wfd || !wfd->dirPointer ) {
-		fprintf(stderr, "Couldn't close directory!\n");
+    if( !wfd || !wfd->dirPointer ) {
+        fprintf(stderr, "Couldn't close directory!\n");
         return;
-	}
-	// Pass the DIR_ITER pointer to libfat and shut 'er down.
-	(void)dirclose(wfd->dirPointer);
-	wfd->dirPointer = NULL;
+    }
+    // Pass the DIR_ITER pointer to libfat and shut 'er down.
+    (void)closedir(wfd->dirPointer);
+    wfd->dirPointer = NULL;
 }
 
 int FindNextFile(HANDLE handle, WIN32_FIND_DATA *wfd)
 {
     (void)handle;
 
-	if( wfd == NULL || wfd->dirPointer == NULL ) {
-		fprintf(stderr, "Invalid find data in FinNextFile!\n");
+    if( wfd == NULL || wfd->dirPointer == NULL ) {
+        fprintf(stderr, "Invalid find data in FinNextFile!\n");
         return 0;
-	}
+    }
 
-	for(;;) {
-		if(dirnext(wfd->dirPointer, wfd->cFileName, &wfd->fileStat) != 0)
-		{
+    for(;;) {
+        struct dirent *dir = readdir(wfd->dirPointer);
+        if( dir == NULL ) {
             //fprintf(stderr, "No\n");
-			return 0; // No more files found
-		}else{
-			// Pattern validation
-			//fprintf(stderr, "Matching '%s' with '%s' ... ", wfd->cPattern, wfd->cFileName);
-			char *pp = wfd->cPattern;
-			char *pf = wfd->cFileName;
-			while( *pp != '\0' ) {
-				if( *pp == '?' && *pf != '\0' ) pf++;
-				if( *pp == '*' ) {
-					while( *pf != '\0' && *pf != *(pp+1) ) pf++;
-				}
-				if( *pp != '?' && *pp != '*' ) {
-				  if( toupper(*pp) != toupper(*pf) ) {
-					break; // No match
-				  }
-				  pf++;
-				}
-				pp++;
-				if( *pf == '\0' && *pp == '\0' ) {
+            return 0; // No more files found
+        }else{
+            strncpy(wfd->cFileName, dir->d_name, sizeof(wfd->cFileName)-1);
+            wfd->d_type = dir->d_type;
+            // Pattern validation
+            //fprintf(stderr, "Matching '%s' with '%s' ... ", wfd->cPattern, wfd->cFileName);
+            char *pp = wfd->cPattern;
+            char *pf = wfd->cFileName;
+            while( *pp != '\0' ) {
+                if( *pp == '?' && *pf != '\0' ) pf++;
+                if( *pp == '*' ) {
+                    while( *pf != '\0' && *pf != *(pp+1) ) pf++;
+                }
+                if( *pp != '?' && *pp != '*' ) {
+                  if( toupper(*pp) != toupper(*pf) ) {
+                    break; // No match
+                  }
+                  pf++;
+                }
+                pp++;
+                if( *pf == '\0' && *pp == '\0' ) {
                     //fprintf(stderr, "Yes\n");
-					return 1; // Match
-				}
-			}
-		}
-	}
+                    return 1; // Match
+                }
+            }
+        }
+    }
     //fprintf(stderr, "Error\n");
-	return 0; // never get here
+    return 0; // never get here
 }
 
 HANDLE FindFirstFile(const char *pattern, WIN32_FIND_DATA *wfd)
@@ -125,36 +127,36 @@ HANDLE FindFirstFile(const char *pattern, WIN32_FIND_DATA *wfd)
     char current_dir[MAX_PATH+1] = "/";
 
     (void)getcwd(current_dir, sizeof(current_dir));
-    wfd->dirPointer = diropen(current_dir);
-	if( wfd->dirPointer == NULL ) {
-		fprintf(stderr, "Could not open directory '%s'!\n", current_dir);
-		return NULL; // diropen sets errno for us, so just return NULL.
-	}
+    wfd->dirPointer = opendir(current_dir);
+    if( wfd->dirPointer == NULL ) {
+        fprintf(stderr, "Could not open directory '%s'!\n", current_dir);
+        return NULL; // diropen sets errno for us, so just return NULL.
+    }
+    rewinddir(wfd->dirPointer);
 
     strncpy(wfd->cPattern, pattern, MAX_PATH);
 
     if( FindNextFile(NULL, wfd) ) { // Find first entry
-		return wfd;
-	}else{
-		FindClose(wfd);
-		return NULL;
-	}
+        return wfd;
+    }else{
+        FindClose(wfd);
+        return NULL;
+    }
 }
 
 DWORD GetFileAttributesWfd(WIN32_FIND_DATA *wfd)
 {
     DWORD attr = 0;
 
-	if( !wfd || !wfd->dirPointer ) {
-		fprintf(stderr, "Invalid handle in GetFileAttributes!\n");
+    if( !wfd || !wfd->dirPointer ) {
+        fprintf(stderr, "Invalid handle in GetFileAttributes!\n");
         return 0;
-	}
-    //fprintf(stderr, "<%X>", wfd->fileStat.st_mode);
-    if( wfd->fileStat.st_mode & S_IFDIR ) {
+    }
+    if( wfd->d_type & DT_DIR ) {
         attr |= FILE_ATTRIBUTE_DIRECTORY;
     }
 
-	return attr;
+    return attr;
 }
 
 // This glob only support very basic globbing, dirs in the patterns are only
@@ -196,7 +198,7 @@ ArchGlob* archGlob(const char* pattern, int flags)
             continue;
         }
         //fprintf(stderr, "found '%s' ... ", wfd.cFileName);
-		fa = GetFileAttributesWfd(&wfd);
+        fa = GetFileAttributesWfd(&wfd);
         if (((flags & ARCH_GLOB_DIRS) && (fa & FILE_ATTRIBUTE_DIRECTORY) != 0) ||
             ((flags & ARCH_GLOB_FILES) && (fa & FILE_ATTRIBUTE_DIRECTORY) == 0))
         {
@@ -282,7 +284,7 @@ ArchGlob* archGlob(const char* pattern, int flags)
         if (0 == strcmp(wfd.cFileName, ".") || 0 == strcmp(wfd.cFileName, "..")) {
             continue;
         }
-		fa = GetFileAttributes(wfd.cFileName);
+        fa = GetFileAttributes(wfd.cFileName);
         if (((flags & ARCH_GLOB_DIRS) && (fa & FILE_ATTRIBUTE_DIRECTORY) != 0) ||
             ((flags & ARCH_GLOB_FILES) && (fa & FILE_ATTRIBUTE_DIRECTORY) == 0))
         {

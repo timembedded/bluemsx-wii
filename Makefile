@@ -88,7 +88,7 @@ INCLUDES	:=	include/libpng \
 # options for code generation
 #---------------------------------------------------------------------------------
 
-CFLAGS	= -g -O2 -Wall $(MACHDEP) $(INCLUDE) -DNO_ASM -DWII -DDEVKITPPC_STDLIB_INCLUDE=\"$(DEVKITPPC_LOCAL)/powerpc-eabi/include/stdlib.h\"
+CFLAGS	= -g -O2 -Wall -fsigned-char $(MACHDEP) $(INCLUDE) -DNO_ASM -DWII -DDEVKITPPC_STDLIB_INCLUDE=\"$(DEVKITPPC_LOCAL)/powerpc-eabi/include/stdlib.h\"
 CXXFLAGS	=	$(CFLAGS)
 
 LDFLAGS	=	-g $(MACHDEP) -Wl,-Map,$(notdir $@).map
@@ -96,7 +96,7 @@ LDFLAGS	=	-g $(MACHDEP) -Wl,-Map,$(notdir $@).map
 #---------------------------------------------------------------------------------
 # any extra libraries we wish to link with the project
 #---------------------------------------------------------------------------------
-LIBS	:=	 -ldb -lfreetype -lpng -lz -lwiiuse -lbte -lfat -logc -lm -lmad
+LIBS	:=	 -ldb -lfreetype -lpng -lwiiuse -lbte -lfat -logc -lm -lmad
 
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing

@@ -45,7 +45,7 @@ static int loggingEnabled = 0;
 #undef free
 #undef memalign
 
-extern void *memalign(int align, int size);
+extern void *memalign(size_t align, size_t size);
 extern void VIDEO_SetFramebuffer(void *);
 static void *exception_xfb = (void*)0xC1710000;   //we use a static address above ArenaHi.
 static char exception_str[1024];
@@ -318,7 +318,7 @@ void *my_calloc(int num, int size, const char *file, int line)
     }
 }
 
-void *my_memalign(int align, int size, const char *file, int line)
+void *my_memalign(size_t align, size_t size, const char *file, int line)
 {
     if( loggingEnabled ) {
         void *buf;
