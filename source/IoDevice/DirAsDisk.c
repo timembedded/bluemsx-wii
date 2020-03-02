@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/IoDevice/DirAsDisk.c,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/IoDevice/DirAsDisk.c,v $
 **
 ** $Revision: 1.15 $
 **
-** $Date: 2008/06/24 20:10:38 $
+** $Date: 2008-06-24 20:10:38 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -32,6 +32,12 @@
 #pragma warning(disable: 4996)
 #if defined(WIN32) || defined (WINDOWS_HOST)
 #include <io.h> // not on Linux
+#endif
+
+#ifdef _WIN32
+#include <direct.h>
+#else
+#include <unistd.h>
 #endif
 
 #include <fcntl.h>
@@ -527,7 +533,7 @@ static void store_fat(int link, int next) {
   }
 }
 
-static int add_single_file(char *name, char *pathname) {
+static int add_single_file(char *name, const char *pathname) {
   int i,total;
   fileinfo *file;
   int fileid;
@@ -563,13 +569,19 @@ static int add_single_file(char *name, char *pathname) {
   }
 
   if ((size=getfilelength(fileid))>bytes_free())
+  {
+    close (fileid);
     return 1;
+  }
 
   for (i=0; i<direlements; i++)
     if (direc[i*32]<0x20 || direc[i*32]>=0x80)
       break;
   if (i==direlements)
+  {
+    close (fileid);
     return 2;
+  }
 
   pos=i;
 
@@ -637,7 +649,7 @@ static char* my_strupr(char* s)
     return s;
 }
 
-static int add_single_file_svi(int diskType, char *name, char *pathname)
+static int add_single_file_svi(int diskType, char *name, const char *pathname)
 {
     typedef struct
     {
@@ -788,7 +800,7 @@ static int add_single_file_svi(int diskType, char *name, char *pathname)
     return 0;
 }
 
-static int add_single_file_cpm(int diskType, char *name, char *pathname)
+static int add_single_file_cpm(int diskType, char *name, const char *pathname)
 {
     typedef struct
     {
@@ -945,7 +957,7 @@ static int add_single_file_cpm(int diskType, char *name, char *pathname)
 }
 
 #ifdef USE_ARCH_GLOB
-void* dirLoadFile(DirDiskType diskType, char* directory, int* size)
+void* dirLoadFile(DirDiskType diskType, const char* directory, int* size)
 {
     ArchGlob* glob;
     static char filename[512];
@@ -998,7 +1010,7 @@ void* dirLoadFile(DirDiskType diskType, char* directory, int* size)
     return dskimage;
 }
 #else
-void* dirLoadFile(DirDiskType diskType, char* directory, int* size)
+void* dirLoadFile(DirDiskType diskType, const char* directory, int* size)
 {
 	WIN32_FIND_DATA fileData;
     HANDLE hFile;

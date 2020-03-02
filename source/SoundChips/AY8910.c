@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/SoundChips/AY8910.c,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/SoundChips/AY8910.c,v $
 **
 ** $Revision: 1.26 $
 **
-** $Date: 2008/11/23 20:26:12 $
+** $Date: 2008-11-23 20:26:12 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -13,7 +13,7 @@
 ** it under the terms of the GNU General Public License as published by
 ** the Free Software Foundation; either version 2 of the License, or
 ** (at your option) any later version.
-**
+** 
 ** This program is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -41,7 +41,7 @@ static Int16 voltTable[16];
 static Int16 voltEnvTable[32];
 
 static const UInt8 regMask[16] = {
-    0xff, 0x0f, 0xff, 0x0f, 0xff, 0x0f, 0x1f, 0x3f,
+    0xff, 0x0f, 0xff, 0x0f, 0xff, 0x0f, 0x1f, 0x3f, 
     0x1f, 0x1f, 0x1f, 0xff, 0xff, 0x0f, 0xff, 0xff
 };
 
@@ -76,11 +76,14 @@ struct AY8910 {
 
     UInt8  enable;
     UInt8  ampVolume[3];
-    Int32  ctrlVolume;
-    Int32  oldSampleVolume;
-    Int32  daVolume;
+    Int32  ctrlVolume[2];
+    Int32  oldSampleVolume[2];
+    Int32  daVolume[2];
 
-    Int32  buffer[AUDIO_MONO_BUFFER_SIZE];
+    Int32  stereo;
+    Int32  pan[3];
+
+    Int32  buffer[AUDIO_STEREO_BUFFER_SIZE];
 };
 
 void ay8910LoadState(AY8910* ay8910)
@@ -100,9 +103,12 @@ void ay8910LoadState(AY8910* ay8910)
     ay8910->envPhase         =         saveStateGet(state, "envPhase",        0);
 
     ay8910->enable           = (UInt8) saveStateGet(state, "enable",          0);
-    ay8910->ctrlVolume       =         saveStateGet(state, "ctrlVolume",      0);
-    ay8910->oldSampleVolume  =         saveStateGet(state, "oldSampleVolume", 0);
-    ay8910->daVolume         =         saveStateGet(state, "daVolume",        0);
+    ay8910->ctrlVolume[0]       =         saveStateGet(state, "ctrlVolume",      0);
+    ay8910->oldSampleVolume[0]  =         saveStateGet(state, "oldSampleVolume", 0);
+    ay8910->daVolume[0]         =         saveStateGet(state, "daVolume",        0);
+    ay8910->ctrlVolume[1]       =         saveStateGet(state, "ctrlVolume1",      0);
+    ay8910->oldSampleVolume[1]  =         saveStateGet(state, "oldSampleVolume1", 0);
+    ay8910->daVolume[1]         =         saveStateGet(state, "daVolume1",        0);
 
     for (i = 0; i < 16; i++) {
         sprintf(tag, "reg%d", i);
@@ -119,7 +125,7 @@ void ay8910LoadState(AY8910* ay8910)
         sprintf(tag, "ampVol%d", i);
         ay8910->ampVolume[i] = (UInt8)saveStateGet(state, tag, 0);
     }
-
+    
     saveStateClose(state);
 }
 
@@ -140,9 +146,12 @@ void ay8910SaveState(AY8910* ay8910)
     saveStateSet(state, "envPhase",        ay8910->envPhase);
 
     saveStateSet(state, "enable",          ay8910->enable);
-    saveStateSet(state, "ctrlVolume",      ay8910->ctrlVolume);
-    saveStateSet(state, "oldSampleVolume", ay8910->oldSampleVolume);
-    saveStateSet(state, "daVolume",        ay8910->daVolume);
+    saveStateSet(state, "ctrlVolume",      ay8910->ctrlVolume[0]);
+    saveStateSet(state, "oldSampleVolume", ay8910->oldSampleVolume[0]);
+    saveStateSet(state, "daVolume",        ay8910->daVolume[0]);
+    saveStateSet(state, "ctrlVolume1",      ay8910->ctrlVolume[1]);
+    saveStateSet(state, "oldSampleVolume1", ay8910->oldSampleVolume[1]);
+    saveStateSet(state, "daVolume1",        ay8910->daVolume[1]);
 
     for (i = 0; i < 16; i++) {
         sprintf(tag, "reg%d", i);
@@ -159,7 +168,7 @@ void ay8910SaveState(AY8910* ay8910)
         sprintf(tag, "ampVol%d", i);
         saveStateSet(state, tag, ay8910->ampVolume[i]);
     }
-
+    
     saveStateClose(state);
 }
 
@@ -185,6 +194,13 @@ static void getDebugInfo(AY8910* ay8910, DbgDevice* dbgDevice)
         dbgIoPortsAddPort(ioPorts, 2, 0xa2, DBG_IO_READ, ay8910PeekData(ay8910, 0xa2));
         break;
 
+    case AY8910_MSX_SCCPLUS:
+        ioPorts = dbgDeviceAddIoPorts(dbgDevice, langDbgDevAy8910(), 3);
+        dbgIoPortsAddPort(ioPorts, 0, 0x10, DBG_IO_WRITE, 0);
+        dbgIoPortsAddPort(ioPorts, 1, 0x11, DBG_IO_WRITE, 0);
+        dbgIoPortsAddPort(ioPorts, 2, 0x12, DBG_IO_READ, ay8910PeekData(ay8910, 0xa2));
+        break;
+
     case AY8910_SVI:
         ioPorts = dbgDeviceAddIoPorts(dbgDevice, langDbgDevAy8910(), 3);
         dbgIoPortsAddPort(ioPorts, 0, 0x88, DBG_IO_WRITE, 0);
@@ -201,13 +217,13 @@ static int dbgWriteRegister(AY8910* ay8910, char* name, int regIndex, UInt32 val
     return 1;
 }
 
-AY8910* ay8910Create(Mixer* mixer, Ay8910Connector connector, PsgType type)
+AY8910* ay8910Create(Mixer* mixer, Ay8910Connector connector, PsgType type, Int32 stereo, Int32* pan)
 {
     DebugCallbacks dbgCallbacks = { getDebugInfo, NULL, dbgWriteRegister, NULL };
     AY8910* ay8910 = (AY8910*)calloc(1, sizeof(AY8910));
     int i;
 
-    double v = 0x26a9;
+    DoubleT v = 0x26a9;
     for (i = 15; i >= 0; i--) {
         voltTable[i] = (Int16)v;
         voltEnvTable[2 * i + 0] = (Int16)v;
@@ -216,7 +232,7 @@ AY8910* ay8910Create(Mixer* mixer, Ay8910Connector connector, PsgType type)
     }
 
     if ( type == PSGTYPE_YM2149) {
-        double v = 0x26a9;
+        DoubleT v = 0x26a9;
         for (i = 31; i >= 0; i--) {
             voltEnvTable[i] = (Int16)v;
             v *= 0.84139514164519509115274189380029;
@@ -234,8 +250,12 @@ AY8910* ay8910Create(Mixer* mixer, Ay8910Connector connector, PsgType type)
     ay8910->connector = connector;
     ay8910->noiseRand = 1;
     ay8910->noiseVolume = 1;
+    ay8910->stereo = stereo;
+    ay8910->pan[0] = pan?pan[0]:0;
+    ay8910->pan[1] = pan?pan[1]:0;
+    ay8910->pan[2] = pan?pan[2]:0;
 
-    ay8910->handle = mixerRegisterChannel(mixer, MIXER_CHANNEL_PSG, 0, ay8910Sync, ay8910);
+    ay8910->handle = mixerRegisterChannel(mixer, MIXER_CHANNEL_PSG, stereo, ay8910Sync, NULL, ay8910);
 
     ay8910Reset(ay8910);
     for (i = 0; i < 16; i++) {
@@ -248,6 +268,12 @@ AY8910* ay8910Create(Mixer* mixer, Ay8910Connector connector, PsgType type)
         ioPortRegister(0xa0, NULL,           ay8910WriteAddress, ay8910);
         ioPortRegister(0xa1, NULL,           ay8910WriteData,    ay8910);
         ioPortRegister(0xa2, ay8910ReadData, NULL,               ay8910);
+        break;
+
+    case AY8910_MSX_SCCPLUS:
+        ioPortRegister(0x10, NULL,           ay8910WriteAddress, ay8910);
+        ioPortRegister(0x11, NULL,           ay8910WriteData,    ay8910);
+        ioPortRegister(0x12, ay8910ReadData, NULL,               ay8910);
         break;
 
     case AY8910_SVI:
@@ -266,7 +292,7 @@ void ay8910Reset(AY8910* ay8910)
 {
     if (ay8910 != NULL) {
         int i;
-
+    
         for (i = 0; i < 16; i++) {
             ay8910WriteAddress(ay8910, 0xa0, i);
             ay8910WriteData(ay8910, 0xa1, 0);
@@ -283,6 +309,12 @@ void ay8910Destroy(AY8910* ay8910)
         ioPortUnregister(0xa0);
         ioPortUnregister(0xa1);
         ioPortUnregister(0xa2);
+        break;
+
+    case AY8910_MSX_SCCPLUS:
+        ioPortUnregister(0x10);
+        ioPortUnregister(0x11);
+        ioPortUnregister(0x12);
         break;
 
     case AY8910_SVI:
@@ -362,16 +394,16 @@ static void updateRegister(AY8910* ay8910, UInt8 regIndex, UInt8 data)
 //        period *= (~ay8910->enable >> (address >> 1)) & 1;
         ay8910->toneStep[regIndex >> 1] = period > 0 ? BASE_PHASE_STEP / period : 1 << 31;
         break;
-
+        
     case 6:
         period = data ? data : 1;
         ay8910->noiseStep = period > 0 ? BASE_PHASE_STEP / period : 1 << 31;
         break;
-
+        
     case 7:
         ay8910->enable = data;
         break;
-
+        
     case 8:
     case 9:
     case 10:
@@ -383,7 +415,7 @@ static void updateRegister(AY8910* ay8910, UInt8 regIndex, UInt8 data)
         period = 16 * (ay8910->regs[11] | ((UInt32)ay8910->regs[12] << 8));
         ay8910->envStep = BASE_PHASE_STEP / (period ? period : 8);
         break;
-
+        
     case 13:
         if (data < 4) data = 0x09;
         if (data < 8) data = 0x0f;
@@ -427,7 +459,7 @@ static Int32* ay8910Sync(void* ref, UInt32 count)
     UInt32  index;
 
     for (index = 0; index < count; index++) {
-        Int32 sampleVolume = 0;
+        Int32 sampleVolume[3] = { 0, 0, 0 };
         Int16 envVolume;
 
         /* Update noise generator */
@@ -443,7 +475,7 @@ static Int32* ay8910Sync(void* ref, UInt32 count)
         if ((ay8910->envShape & 1) && (ay8910->envPhase >> 28)) {
             ay8910->envPhase = 0x10000000;
         }
-
+ 
         /* Calculate envelope volume */
         envVolume = (Int16)((ay8910->envPhase >> 23) & 0x1f);
         if (((ay8910->envPhase >> 27) & (ay8910->envShape + 1) ^ (~ay8910->envShape >> 1)) & 2) {
@@ -463,7 +495,7 @@ static Int32* ay8910Sync(void* ref, UInt32 count)
             while (count--) {
                 /* Update phase of tone */
                 tonePhase += phaseStep;
-
+     
                 /* Calculate if tone is on or off */
                 tone += (enable | (tonePhase >> 31)) & noiseEnable;
             }
@@ -473,22 +505,54 @@ static Int32* ay8910Sync(void* ref, UInt32 count)
 
             /* Amplify sample using either envelope volume or channel volume */
             if (ay8910->ampVolume[channel] & 0x10) {
-                sampleVolume += (Int16)tone * voltEnvTable[envVolume] / 16;
+                sampleVolume[channel] += (Int16)tone * voltEnvTable[envVolume] / 16;
             }
             else {
-                sampleVolume += (Int16)tone * voltTable[ay8910->ampVolume[channel]] / 16;
+                sampleVolume[channel] += (Int16)tone * voltTable[ay8910->ampVolume[channel]] / 16;
             }
         }
 
-        /* Perform DC offset filtering */
-        ay8910->ctrlVolume = sampleVolume - ay8910->oldSampleVolume + 0x3fe7 * ay8910->ctrlVolume / 0x4000;
-        ay8910->oldSampleVolume = sampleVolume;
+        if (ay8910->stereo) {
+            Int32 sampleVolumeL = 0;
+            Int32 sampleVolumeR = 0;
+            int i;
 
-        /* Perform simple 1 pole low pass IIR filtering */
-        ay8910->daVolume += 2 * (ay8910->ctrlVolume - ay8910->daVolume) / 3;
+            for (i = 0; i < 3; i++) {
+                if (ay8910->pan[i] <= 0) {
+                    sampleVolumeL += sampleVolume[i];
+                }
+                if (ay8910->pan[i] >= 0) {
+                    sampleVolumeR += sampleVolume[i];
+                }
+            }
 
-        /* Store calclulated sample value */
-        ay8910->buffer[index] = 9 * ay8910->daVolume;
+            /* Perform DC offset filtering */
+            ay8910->ctrlVolume[0] = sampleVolumeL - ay8910->oldSampleVolume[0] + 0x3fe7 * ay8910->ctrlVolume[0] / 0x4000;
+            ay8910->oldSampleVolume[0] = sampleVolumeL;
+            ay8910->ctrlVolume[1] = sampleVolumeR - ay8910->oldSampleVolume[1] + 0x3fe7 * ay8910->ctrlVolume[1] / 0x4000;
+            ay8910->oldSampleVolume[1] = sampleVolumeR;
+
+            /* Perform simple 1 pole low pass IIR filtering */
+            ay8910->daVolume[0] += 2 * (ay8910->ctrlVolume[0] - ay8910->daVolume[0]) / 3;
+            ay8910->daVolume[1] += 2 * (ay8910->ctrlVolume[1] - ay8910->daVolume[1]) / 3;
+            
+            /* Store calclulated sample value */
+            ay8910->buffer[2 * index + 0] = 9 * ay8910->daVolume[0];
+            ay8910->buffer[2 * index + 1] = 9 * ay8910->daVolume[1];
+        }
+        else {
+            Int32 sampleVolumes = sampleVolume[0] + sampleVolume[1] + sampleVolume[2];
+
+            /* Perform DC offset filtering */
+            ay8910->ctrlVolume[0] = sampleVolumes - ay8910->oldSampleVolume[0] + 0x3fe7 * ay8910->ctrlVolume[0] / 0x4000;
+            ay8910->oldSampleVolume[0] = sampleVolumes;
+
+            /* Perform simple 1 pole low pass IIR filtering */
+            ay8910->daVolume[0] += 2 * (ay8910->ctrlVolume[0] - ay8910->daVolume[0]) / 3;
+            
+            /* Store calclulated sample value */
+            ay8910->buffer[index] = 9 * ay8910->daVolume[0];
+        }
     }
 
     return ay8910->buffer;

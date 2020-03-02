@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Memory/romMapperPlayBall.c,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperPlayBall.c,v $
 **
 ** $Revision: 1.6 $
 **
-** $Date: 2008/05/17 04:51:04 $
+** $Date: 2008-05-17 04:51:04 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -56,7 +56,7 @@ static void destroy(RomMapperPlayBall* rm)
     free(rm);
 }
 
-int romMapperPlayBallCreate(char* filename, UInt8* romData, 
+int romMapperPlayBallCreate(const char* filename, UInt8* romData, 
                           int size, int slot, int sslot, int startPage) 
 {
     DeviceCallbacks callbacks = { destroy, NULL, NULL, NULL };
@@ -136,7 +136,7 @@ static void write(RomMapperPlayBall* rm, UInt16 address, UInt8 value)
     }
 }
 
-int romMapperPlayBallCreate(char* filename, UInt8* romData, 
+int romMapperPlayBallCreate(const char* filename, UInt8* romData, 
                           int size, int slot, int sslot, int startPage) 
 {
     DeviceCallbacks callbacks = { destroy, NULL, NULL, NULL };

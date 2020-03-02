@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Memory/romMapperCasette.c,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperCasette.c,v $
 **
 ** $Revision: 1.9 $
 **
-** $Date: 2008/03/31 19:42:22 $
+** $Date: 2008-03-31 19:42:22 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -55,7 +55,7 @@ static void destroy(RomMapperCasette* rm)
     free(rm);
 }
 
-int romMapperCasetteCreate(char* filename, UInt8* romData, 
+int romMapperCasetteCreate(const char* filename, UInt8* romData, 
                         int size, int slot, int sslot, int startPage) 
 {
     DeviceCallbacks callbacks = { destroy, NULL, NULL, NULL };

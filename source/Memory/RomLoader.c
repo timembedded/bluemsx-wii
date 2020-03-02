@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Memory/RomLoader.c,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/RomLoader.c,v $
 **
 ** $Revision: 1.6 $
 **
-** $Date: 2008/03/30 18:38:42 $
+** $Date: 2008-03-30 18:38:42 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -34,14 +34,13 @@
 // PacketFileSystem.h Need to be included after all other includes
 #include "PacketFileSystem.h"
 
-
 UInt8* romLoad(const char *fileName, const char *fileInZipFile, int* size)
 {
     UInt8* buf = NULL;
     FILE *file;
 
     if (fileName == NULL || strlen(fileName) == 0) {
-        return NULL;
+        goto error;
     }
 
     if (fileInZipFile != NULL && strlen(fileInZipFile) == 0) {
@@ -50,12 +49,14 @@ UInt8* romLoad(const char *fileName, const char *fileInZipFile, int* size)
 
     if (fileInZipFile != NULL) {
         buf = zipLoadFile(fileName, fileInZipFile, size);
+        if (buf == NULL)
+           goto error;
         return buf;
     }
 
     file = fopen(fileName, "rb");
     if (file == NULL) {
-        return NULL;
+        goto error;
     }
 
     fseek(file, 0, SEEK_END);
@@ -73,5 +74,10 @@ UInt8* romLoad(const char *fileName, const char *fileInZipFile, int* size)
     fclose(file);
 
     return buf;
+
+error:
+    if (fileName && fileName[0])
+      fflush(stdout);
+    return NULL;
 }
 

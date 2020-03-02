@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Memory/romMapperTC8566AF.c,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperTC8566AF.c,v $
 **
 ** $Revision: 1.11 $
 **
-** $Date: 2008/03/30 18:38:44 $
+** $Date: 2008-03-30 18:38:44 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -225,7 +225,7 @@ static void write(RomMapperTC8566AF* rm, UInt16 address, UInt8 value)
     }
 }
 
-int romMapperTC8566AFCreate(char* filename, UInt8* romData, 
+int romMapperTC8566AFCreate(const char* filename, UInt8* romData, 
                            int size, int slot, int sslot, int startPage,
                            RomType romType) 
 {

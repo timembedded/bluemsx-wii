@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Input/ColecoJoystick.c,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Input/ColecoJoystick.c,v $
 **
 ** $Revision: 1.4 $
 **
-** $Date: 2008/03/30 18:38:40 $
+** $Date: 2008-03-30 18:38:40 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -35,8 +35,8 @@ struct ColecoJoystick {
     int controller;
 };
 
-static UInt8 read(ColecoJoystick* joystick) {
-    UInt8 state;
+static UInt16 read(ColecoJoystick* joystick) {
+    UInt8 state = 16;
 
     if (joystick->controller == 0) {
         state = (inputEventGetState(EC_JOY1_UP)      << 0) |
@@ -55,7 +55,7 @@ static UInt8 read(ColecoJoystick* joystick) {
                 (inputEventGetState(EC_JOY2_BUTTON2) << 5);
     }
 
-    return ~state & 0x3f;
+    return ~state;
 }
 
 ColecoJoystickDevice* colecoJoystickCreate(int controller)

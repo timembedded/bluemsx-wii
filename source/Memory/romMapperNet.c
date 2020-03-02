@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Memory/romMapperNet.c,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperNet.c,v $
 **
 ** $Revision: 1.1 $
 **
-** $Date: 2008/09/09 04:32:19 $
+** $Date: 2008-09-09 04:32:19 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -437,7 +437,7 @@ static void getDebugInfo(RomMapperNet* rm, DbgDevice* dbgDevice)
     ym2151GetDebugInfo(rm->ym2151, dbgDevice);
 }
 
-int romMapperNetCreate(char* filename, UInt8* romData, 
+int romMapperNetCreate(const char* filename, UInt8* romData, 
                        int size, int slot, int sslot, int startPage) 
 {
     DeviceCallbacks callbacks = { destroy, reset, saveState, loadState };

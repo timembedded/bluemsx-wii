@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Memory/romMapperSonyHBIV1.h,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperSonyHBIV1.h,v $
 **
 ** $Revision: 1.4 $
 **
-** $Date: 2008/03/31 19:42:22 $
+** $Date: 2008-03-31 19:42:22 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -31,7 +31,7 @@
 
 #include "MsxTypes.h"
 
-int romMapperSonyHbiV1Create(char* filename, UInt8* romData, int size,
+int romMapperSonyHbiV1Create(const char* filename, UInt8* romData, int size,
                              int slot, int sslot, int startPage);
 
 #endif

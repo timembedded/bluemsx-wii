@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Memory/RomMapper.h,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/RomMapper.h,v $
 **
 ** $Revision: 1.18 $
 **
-** $Date: 2008/12/22 21:33:59 $
+** $Date: 2008-12-22 21:33:59 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -30,6 +30,7 @@
 
 
 #include "MediaDb.h"
+
 
 #ifndef WII
 const char* romTypeToString(RomType romType) {
@@ -66,6 +67,7 @@ const char* romTypeToString(RomType romType) {
     case ROM_MICROSOL:    return "Microsol Disk Controller";
     case ROM_NATIONALFDC: return "National Disk Controller";
     case ROM_PHILIPSFDC:  return "Philips Disk Controller";
+    case ROM_SVI707FDC:   return "SVI-707 Disk Controller";
     case ROM_SVI738FDC:   return "SVI-738 Disk Controller";
     case RAM_MAPPER:      return "Mapped RAM";
     case RAM_NORMAL:      return "Normal RAM";
@@ -111,11 +113,12 @@ const char* romTypeToString(RomType romType) {
     case ROM_MSXRS232:    return "MSX RS-232";
     case ROM_MOONSOUND:   return "Moonsound";
     case ROM_KOREAN90:    return "Korean 90 in 1";
-    case ROM_SVI328:      return "SVI-328 Cartridge";
+    case ROM_SVI328CART:  return "SVI-328 Cartridge";
     case ROM_SVI328FDC:   return "SVI-328 Disk Controller";
     case ROM_SVI328PRN:   return "SVI-328 Printer";
     case ROM_SVI328RS232: return "SVI-328 Serial Port";
-    case ROM_SVI80COL:    return "SVI 80 Column Card";
+    case ROM_SVI328COL80: return "SVI-328 80 Column Card";
+    case ROM_SVI328RSIDE: return "SVI-328 RS IDE";
     case ROM_COLECO:      return "Coleco Cartridge";
     case ROM_SONYHBI55:   return "Sony HBI-55";
     case ROM_MSXAUDIODEV: return "MSX Audio Chip";
@@ -161,6 +164,7 @@ const char* romTypeToShortString(RomType romType) {
     case ROM_MICROSOL:    return "MICROSOL";
     case ROM_NATIONALFDC: return "NATNL FDC";
     case ROM_PHILIPSFDC:  return "PHILIPSFDC";
+    case ROM_SVI707FDC:   return "SVI707 FDC";
     case ROM_SVI738FDC:   return "SVI738 FDC";
     case RAM_MAPPER:      return "MAPPED RAM";
     case RAM_NORMAL:      return "NORMAL RAM";
@@ -207,11 +211,12 @@ const char* romTypeToShortString(RomType romType) {
     case ROM_MSXRS232:    return "MSXRS232";
     case ROM_MOONSOUND:   return "MOONSOUND";
     case ROM_KOREAN90:    return "90IN1";
-    case ROM_SVI328:      return "SVI328";
+    case ROM_SVI328CART:  return "SVI328CART";
     case ROM_SVI328FDC:   return "SVI328FDC";
     case ROM_SVI328PRN:   return "SVI328PRN";
     case ROM_SVI328RS232: return "SVI328RS232";
-    case ROM_SVI80COL:    return "SVI80COL";
+    case ROM_SVI328COL80: return "SVI328COL80";
+    case ROM_SVI328RSIDE: return "SVI328RSIDE";
     case ROM_COLECO:      return "COLECO";
     case ROM_SONYHBI55:   return "HBI-55";
     case ROM_MSXAUDIODEV: return "MSXAUDIO";

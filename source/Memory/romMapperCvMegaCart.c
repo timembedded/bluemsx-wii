@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Memory/romMapperCvMegaCart.c,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperCvMegaCart.c,v $
 **
 ** $Revision: 1.3 $
 **
-** $Date: 2008/03/30 18:38:43 $
+** $Date: 2008-03-30 18:38:43 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -109,7 +109,7 @@ static UInt8 peek(RomMapperCvMegaCart* rm, UInt16 address)
     return rm->romMapper;
 }
 
-int romMapperCvMegaCartCreate(char* filename, UInt8* romData, 
+int romMapperCvMegaCartCreate(const char* filename, UInt8* romData, 
                            int size, int slot, int sslot, int startPage) 
 {
     DeviceCallbacks callbacks = { destroy, NULL, saveState, loadState };

@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Memory/romMapperPanasonic.c,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperPanasonic.c,v $
 **
-** $Revision: 1.14 $
+** $Revision: 1.15 $
 **
-** $Date: 2008/03/30 18:38:44 $
+** $Date: 2009-07-03 21:27:14 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -82,9 +82,10 @@ static void saveState(RomMapperPanasonic* rm)
         saveStateSet(state, tag, rm->romMapper[i]);
     }
     
-    saveStateGet(state, "readSection", rm->readSection);
-    saveStateGet(state, "readOffset", rm->readOffset);
+    saveStateSet(state, "readSection", rm->readSection);
+    saveStateSet(state, "readOffset", rm->readOffset);
     saveStateSet(state, "control", rm->control);
+    saveStateSetBuffer(state, "sram", rm->sram, rm->sramSize);
 
     saveStateClose(state);
 }
@@ -104,6 +105,7 @@ static void loadState(RomMapperPanasonic* rm)
     rm->readSection = saveStateGet(state, "readSection", 0);
     rm->readOffset  = saveStateGet(state, "readOffset", 0);
     rm->control     = (UInt8)saveStateGet(state, "control", 0);
+    saveStateGetBuffer(state, "sram", rm->sram, rm->sramSize);
 
     saveStateClose(state);
 
@@ -292,7 +294,7 @@ static void reset(RomMapperPanasonic* rm)
     }
 }
 
-int romMapperPanasonicCreate(char* filename, UInt8* romData, 
+int romMapperPanasonicCreate(const char* filename, UInt8* romData, 
                              int size, int slot, int sslot, int startPage,
                              int sramSize, int mappedSlots) 
 {

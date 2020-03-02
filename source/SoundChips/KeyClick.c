@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/SoundChips/KeyClick.c,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/SoundChips/KeyClick.c,v $
 **
 ** $Revision: 1.7 $
 **
-** $Date: 2008/03/30 18:38:45 $
+** $Date: 2008-03-30 18:38:45 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -53,7 +53,7 @@ AudioKeyClick* audioKeyClickCreate(Mixer* mixer)
 
     keyClick->mixer = mixer;
 
-    keyClick->handle = mixerRegisterChannel(mixer, MIXER_CHANNEL_KEYBOARD, 0, audioKeyClickSync, keyClick);
+    keyClick->handle = mixerRegisterChannel(mixer, MIXER_CHANNEL_KEYBOARD, 0, audioKeyClickSync, NULL, keyClick);
 
     return keyClick;
 }

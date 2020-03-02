@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/VideoChips/FrameBuffer.c,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/VideoChips/FrameBuffer.c,v $
 **
-** $Revision: 1.31 $
+** $Revision: 1.32 $
 **
-** $Date: 2008/03/30 18:38:47 $
+** $Date: 2009-07-18 14:35:59 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -34,6 +34,9 @@
 #endif
 #include <stdlib.h>
 #include <string.h>
+
+
+//int xxxx = 0;
 
 #ifdef WII
 #define MAX_FRAMES_PER_FRAMEBUFFER 3
@@ -210,9 +213,11 @@ static FrameBuffer* frameBufferFlipDrawFrame3()
     return frame;
 }
 
+
 static FrameBuffer* frameBufferFlipDrawFrame4()
 {
     FrameBuffer* frame;
+    int drawFrame = currentBuffer->drawFrame;
     int drawAge = 0x7fffffff;
     int i;
 
@@ -345,6 +350,10 @@ FrameBuffer* frameBufferFlipDrawFrame()
         frameBufferBlack(currentBuffer->frame + currentBuffer->drawFrame);
     }
 
+//    ++xxxx;
+    //printf("%d\n", xxxx);
+//    confBlendFrames = xxxx < 2100 || (xxxx >= 7900 && xxxx <= 9400);
+
     switch (frameBufferCount) {
     case 2:
         frameBuffer = frameBufferFlipDrawFrame2();
@@ -417,6 +426,7 @@ void frameBufferDataDestroy(FrameBufferData* frameData)
         semaphore = NULL;
     }
 }
+
 
 void frameBufferSetActive(FrameBufferData* frameData)
 {
@@ -627,6 +637,7 @@ static FrameBuffer* mixFrameInterlace(FrameBuffer* d, FrameBuffer* a, FrameBuffe
 #endif
         }
     }
+
 
     return d;
 }

@@ -1,27 +1,27 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/SoundChips/YM2413.cpp,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/SoundChips/YM2413.cpp,v $
 **
 ** $Revision: 1.19 $
 **
-** $Date: 2007/05/23 09:41:56 $
+** $Date: 2007-05-23 09:41:56 $
 **
 ** More info: http://www.bluemsx.com
 **
 ** Copyright (C) 2003-2006 Daniel Vik
 **
-** This program is free software; you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation; either version 2 of the License, or
-** (at your option) any later version.
-** 
-** This program is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-** GNU General Public License for more details.
-**
-** You should have received a copy of the GNU General Public License
-** along with this program; if not, write to the Free Software
-** Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+** This program is free software; you can redistribute it and/or modify
+** it under the terms of the GNU General Public License as published by
+** the Free Software Foundation; either version 2 of the License, or
+** (at your option) any later version.
+** 
+** This program is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+** GNU General Public License for more details.
+**
+** You should have received a copy of the GNU General Public License
+** along with this program; if not, write to the Free Software
+** Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 **
 ******************************************************************************
 */
@@ -129,38 +129,44 @@ static Int32* ym2413Sync(void* ref, UInt32 count)
     }
 
     return ym2413->buffer;
-}
+}
 
 static char* regText(int d)
 {
     static char text[5];
     sprintf(text, "R%.2x", d);
     return text;
-}
-
-static char regsAvailYM2413[] = {
-    1,1,1,1,1,1,1,1,0,0,0,0,0,0,1,0,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,
-    1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0
-};
-
+}
+
+static char regsAvailYM2413[] = {
+    1,1,1,1,1,1,1,1,0,0,0,0,0,0,1,0,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,
+    1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0
+};
+
 void ym2413GetDebugInfo(YM_2413* ym2413, DbgDevice* dbgDevice)
-{
-    DbgRegisterBank* regBank;
-
-    // Add YM2413 registers
-    int c = 0;
-    for (int r = 0; r < sizeof(regsAvailYM2413); r++) {
-        c += regsAvailYM2413[r];
-    }
-
+{
+    DbgRegisterBank* regBank;
+
+    // Add YM2413 registers
+    int c = 0;
+    for (int r = 0; r < sizeof(regsAvailYM2413); r++) {
+        c += regsAvailYM2413[r];
+    }
+
     regBank = dbgDeviceAddRegisterBank(dbgDevice, langDbgRegsYm2413(), c);
-    
-    c = 0;
+    
+    c = 0;
     for (int r = 0; r < sizeof(regsAvailYM2413); r++) {
         if (regsAvailYM2413[r]) {
-            dbgRegisterBankAddRegister(regBank, c++, regText(r), 8, ym2413->ym2413->peekReg(r));
-        }
+            dbgRegisterBankAddRegister(regBank, c++, regText(r), 8, ym2413->ym2413->peekReg(r));
+        }
     }
+}
+
+void ym2413SetSampleRate(void* ref, UInt32 rate)
+{
+    YM_2413* ym2413 = (YM_2413*)ref;
+    ym2413->ym2413->setSampleRate(rate, boardGetYm2413Oversampling());
 }
 
 YM_2413* ym2413Create(Mixer* mixer)
@@ -171,9 +177,9 @@ YM_2413* ym2413Create(Mixer* mixer)
 
     ym2413->mixer = mixer;
 
-    ym2413->handle = mixerRegisterChannel(mixer, MIXER_CHANNEL_MSXMUSIC, 0, ym2413Sync, ym2413);
+    ym2413->handle = mixerRegisterChannel(mixer, MIXER_CHANNEL_MSXMUSIC, 0, ym2413Sync, ym2413SetSampleRate, ym2413);
 
-    ym2413->ym2413->setSampleRate(AUDIO_SAMPLERATE, boardGetYm2413Oversampling());
+    ym2413->ym2413->setSampleRate(mixerGetSampleRate(mixer), boardGetYm2413Oversampling());
 	ym2413->ym2413->setVolume(32767 * 9 / 10);
 
     return ym2413;

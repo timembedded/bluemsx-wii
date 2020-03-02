@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Language/LanguageMinimal.c,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Language/LanguageMinimal.c,v $
 **
-** $Revision: 1.20 $
+** $Revision: 1.21 $
 **
-** $Date: 2008/03/31 19:42:21 $
+** $Date: 2009-04-04 20:57:19 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -101,6 +101,7 @@ char* langRomTypeTc8566afTrFdc()    { return "TC8566AF Turbo-R Disk Controller";
 char* langRomTypeMicrosolFdc()      { return "Microsol Disk Controller"; }
 char* langRomTypeNationalFdc()      { return "National Disk Controller"; }
 char* langRomTypePhilipsFdc()       { return "Philips Disk Controller"; }
+char* langRomTypeSvi707Fdc()        { return "SVI-707 Disk Controller"; }
 char* langRomTypeSvi738Fdc()        { return "SVI-738 Disk Controller"; }
 char* langRomTypeMappedRam()        { return "Mapped RAM"; }
 char* langRomTypeMirroredRam1k()    { return "1kB Mirrored RAM"; }
@@ -160,6 +161,7 @@ char* langRomTypeSvi328Fdc()        { return "SVI-328 Disk Controller"; }
 char* langRomTypeSvi328Prn()        { return "SVI-328 Printer"; }
 char* langRomTypeSvi328Uart()       { return "SVI-328 Serial Port"; }
 char* langRomTypeSvi328col80()      { return "SVI-328 80 Column Card"; }
+char* langRomTypeSvi328RsIde()      { return "SVI-328 RS IDE"; }
 char* langRomTypeSvi727col80()      { return "SVI-727 80 Column Card"; }
 char* langRomTypeColecoCart()       { return "Coleco Cartridge"; }
 char* langRomTypeSg1000Cart()       { return "SG-1000 Cartridge"; }
@@ -203,6 +205,8 @@ char* langRomTypeEseSCC256()        { return "256kB Ese-SCC"; }
 char* langRomTypeEseSCC512()        { return "512kB Ese-SCC"; }
 char* langRomTypeNoWind()           { return "NoWind USB"; }
 char* langRomTypeGoudaSCSI()        { return "Gouda SCSI"; }
+char* langRomTypeMasushitaSramInv() { return "Matsushita SRAM - Turbo 5.37MHz"; }
+char* langRomTypeMsxMidiExternal()  { return "External MIDI"; }
 
 //----------------------
 // Debug type lines
@@ -229,6 +233,7 @@ char* langDbgDevRamMapper()         { return "RAM Mapper"; }
 char* langDbgDevRam()               { return "RAM"; }
 char* langDbgDevIdeBeer()           { return "Beer IDE"; }
 char* langDbgDevIdeGide()           { return "GIDE"; }
+char* langDbgDevIdeSviRs()          { return "SVI-328 RS IDE"; }
 char* langDbgDevScsiGouda()         { return "Gouda SCSI"; }
 char* langDbgDevF4Device()          { return "F4 Device"; }
 char* langDbgDevFmpac()             { return "FMPAC"; }

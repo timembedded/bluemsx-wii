@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Memory/romMapperKonamiKeyboardMaster.c,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperKonamiKeyboardMaster.c,v $
 **
 ** $Revision: 1.6 $
 **
-** $Date: 2008/03/30 18:38:44 $
+** $Date: 2008-03-30 18:38:44 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -119,7 +119,7 @@ static void getDebugInfo(RomMapperKonamiKeyboardMaster* rm, DbgDevice* dbgDevice
     dbgIoPortsAddPort(ioPorts, 1, 0x20, DBG_IO_READWRITE, read(rm, 0x20));
 }
 
-int romMapperKonamiKeyboardMasterCreate(char* filename, UInt8* romData, 
+int romMapperKonamiKeyboardMasterCreate(const char* filename, UInt8* romData, 
                                         int size, int slot, int sslot, 
                                         int startPage,
                                        void* voiceRom, int voiceSize) 
@@ -154,7 +154,7 @@ int romMapperKonamiKeyboardMasterCreate(char* filename, UInt8* romData,
         memcpy(rm->voiceData, voiceData, 0x4000);
     }
 
-    rm->vlm5030 = vlm5030Create(boardGetMixer(), voiceData, 0x4000);
+    rm->vlm5030 = vlm5030Create(boardGetMixer(), rm->voiceData, 0x4000);
     rm->slot  = slot;
     rm->sslot = sslot;
     rm->startPage  = startPage;

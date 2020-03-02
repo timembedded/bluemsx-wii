@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Emulator/Actions.h,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Emulator/Actions.h,v $
 **
 ** $Revision: 1.34 $
 **
-** $Date: 2007/03/24 05:20:32 $
+** $Date: 2007-03-24 05:20:32 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -13,7 +13,7 @@
 ** it under the terms of the GNU General Public License as published by
 ** the Free Software Foundation; either version 2 of the License, or
 ** (at your option) any later version.
-**
+** 
 ** This program is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -60,6 +60,7 @@ void actionCartInsert1();
 void actionCartInsert2();
 void actionEmuTogglePause();
 void actionEmuStep();
+void actionEmuStepBack();
 void actionEmuStop();
 void actionDiskInsertA();
 void actionDiskInsertB();
@@ -67,6 +68,8 @@ void actionDiskDirInsertA();
 void actionDiskDirInsertB();
 void actionMaxSpeedSet();
 void actionMaxSpeedRelease();
+void actionStartPlayReverse();
+void actionStopPlayReverse();
 void actionDiskQuickChange();
 void actionWindowSizeSmall();
 void actionWindowSizeNormal();
@@ -77,7 +80,7 @@ void actionEmuSpeedDecrease();
 void actionEmuSpeedIncrease();
 void actionCasInsert();
 void actionCasRewind();
-void actionCasSetPosition();
+void actionCasSetPosition(); 
 void actionEmuResetSoft();
 void actionEmuResetHard();
 void actionEmuResetClean();
@@ -94,11 +97,11 @@ void actionCasSave();
 void actionPropShowEmulation();
 void actionPropShowVideo();
 void actionPropShowAudio();
-void actionPropShowPerformance();
 void actionPropShowSettings();
 void actionPropShowDisk();
 void actionPropShowApearance();
 void actionPropShowPorts();
+void actionPropShowEffects();
 void actionOptionsShowLanguage();
 void actionToolsShowMachineEditor();
 void actionToolsShowShorcutEditor();
@@ -138,6 +141,8 @@ void actionToggleDiskAutoReset();
 void actionToggleCasAutoRewind();
 void actionToggleSpriteEnable();
 void actionToggleFdcTiming();
+void actionToggleNoSpriteLimits();
+void actionToggleMsxKeyboardQuirk();
 void actionToggleMsxAudioSwitch();
 void actionToggleFrontSwitch();
 void actionTogglePauseSwitch();
@@ -180,6 +185,7 @@ void actionSetCasAutoRewind(int value);
 void actionSetSpriteEnable(int value);
 void actionSetMsxAudioSwitch(int value);
 void actionSetFdcTiming(int value);
+void actionSetNoSpriteLimits(int value);
 void actionSetFrontSwitch(int value);
 void actionSetPauseSwitch(int value);
 void actionSetWaveCapture(int value);

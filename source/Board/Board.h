@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Board/Board.h,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Board/Board.h,v $
 **
 ** $Revision: 1.40 $
 **
-** $Date: 2007/03/20 02:30:31 $
+** $Date: 2007-03-20 02:30:31 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -81,6 +81,8 @@ typedef struct {
     void   (*clearBreakpoint)(void*, UInt16);
 
     void   (*changeCartridge)(void*, int, int);
+
+    UInt32   (*getTimeTrace)(int);
 } BoardInfo;
 
 void boardInit(UInt32* systemTime);
@@ -90,7 +92,13 @@ int boardRun(Machine* machine,
              Mixer* mixer,
              char* stateFile,
              int frequency,
+             int reversePeriod,
+             int reverseBufferCnt,
              int (*syncCallback)(int, int));
+
+int boardRewind();
+int boardRewindOne();
+void boardEnableSnapshots(int enable);
 
 BoardType boardGetType();
 
@@ -110,7 +118,7 @@ int boardCaptureCompleteAmount();
 
 UInt8 boardCaptureUInt8(UInt8 logId, UInt8 value);
 
-void boardSaveState(const char* stateFile);
+void boardSaveState(const char* stateFile, int screenshot);
 
 void boardSetFrequency(int frequency);
 int  boardGetRefreshRate();
@@ -131,14 +139,16 @@ int boardUseMegaRom();
 int boardUseMegaRam();
 int boardUseFmPac();
 
+void boardSetNoSpriteLimits(int enable);
+int boardGetNoSpriteLimits();
+
 RomType boardGetRomType(int cartNo);
 
-typedef enum { HD_NONE, HD_SUNRISEIDE, HD_BEERIDE, HD_GIDE,
+typedef enum { HD_NONE, HD_SUNRISEIDE, HD_BEERIDE, HD_GIDE, HD_RSIDE,
                HD_MEGASCSI, HD_WAVESCSI, HD_GOUDASCSI, HD_NOWIND } HdType;
 HdType boardGetHdType(int hdIndex);
 
-
-char* boardGetBaseDirectory();
+const char* boardGetBaseDirectory();
 
 Mixer* boardGetMixer();
 
@@ -165,7 +175,7 @@ BoardTimer* boardTimerCreate(BoardTimerCb callback, void* ref);
 void boardTimerDestroy(BoardTimer* timer);
 void boardTimerAdd(BoardTimer* timer, UInt32 timeout);
 void boardTimerRemove(BoardTimer* timer);
-UInt32 boardTimerCheckTimeout(void* dummy);
+void boardTimerCheckTimeout(void* dummy);
 UInt32 boardCalcRelativeTimeout(UInt32 timerFrequency, UInt32 nextTimeout);
 
 void   boardOnBreakpoint(UInt16 pc);
@@ -175,7 +185,7 @@ int boardRemoveExternalDevices();
 
 // The following methods are more generic config than board specific
 // They should be moved from board.
-void boardSetDirectory(char* dir);
+void boardSetDirectory(const char* dir);
 
 void boardSetFdcTimingEnable(int enable);
 int  boardGetFdcTimingEnable();

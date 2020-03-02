@@ -28,9 +28,7 @@
 #ifndef ZIPHELPER_H
 #define ZIPHELPER_H
 
-#include "zip.h"
 #include "unzip.h"
-#include "ZipFromMem.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -38,25 +36,23 @@ extern "C" {
 
 typedef void(*ZIP_EXTRACT_CB)(int, int);
 
-typedef struct {
-    zipFile zip;
-    const char *fileName;
-    MemZip *memzip;
-} ZipFile;
+void memZipFileSystemCreate(int maxFiles);
+void memZipFileSystemDestroy();
 
-ZipFile* zipOpenFileForRead(const char* zipName, int cached);
-void* zipLoadFileFromOpenZip(ZipFile* zip, const char* fileName, int* size);
+void zipCacheReadOnlyZip(const char* zipName);
 void* zipLoadFile(const char* zipName, const char* fileName, int* size);
-int zipCreateFile(const char* zipName);
-int zipAppendFile(const char* fileName, void* buffer, int size);
-void zipCloseReadFile(ZipFile *zip);
-void zipCloseWriteFile(void);
+int zipSaveFile(const char* zipName, const char* fileName, int append, void* buffer, int size);
 int zipFileExists(const char* zipName, const char* fileName);
 char* zipGetFileList(const char* zipName, const char* ext, int* count);
 int zipHasFileType(char* zipName, char* ext);
 int zipExtractCurrentfile(unzFile uf, int overwrite, const char* password);
 int zipExtract(unzFile uf, int overwrite, const char* password, ZIP_EXTRACT_CB progress_callback);
 void* zipCompress(void* buffer, int size, unsigned long* retSize);
+// Note: retSize in zipUncompress is input/output parameter and need to be set to unzipped buffer size
+void* zipUncompress(void* buffer, int size, unsigned long* retSize); 
+
+unzFile UnzipFromMemoryOpen(void *filedata, int filesize);
+void UnzipFromMemoryClose(unzFile zip);
 
 #ifdef __cplusplus
 }

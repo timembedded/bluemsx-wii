@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Memory/romMapperMatraINK.h,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperMatraINK.h,v $
 **
 ** $Revision: 1.2 $
 **
-** $Date: 2008/03/22 10:12:57 $
+** $Date: 2008-03-22 10:12:57 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -29,7 +29,7 @@
  
 #include "MsxTypes.h"
 
-int romMapperMatraINKCreate(char* filename, UInt8* romData, 
+int romMapperMatraINKCreate(const char* filename, UInt8* romData, 
                              int size, int slot, int sslot, int startPage);
 
 #endif

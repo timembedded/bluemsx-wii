@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Language/LanguageGerman.h,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Language/LanguageGerman.h,v $
 **
-** $Revision: 1.52 $ 
+** $Revision: 1.53 $ 
 **
-** $Date: 2008/10/26 19:48:18 $
+** $Date: 2009-04-04 20:57:19 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -156,7 +156,7 @@ void langInitGerman(LanguageStrings* ls)
     ls->menuPropsVideo           = "Video";
     ls->menuPropsSound           = "Sound";
     ls->menuPropsControls        = "Controls";
-    ls->menuPropsPerformance     = "Performance";
+    ls->menuPropsEffects        = "Effects";               // New in 2.9
     ls->menuPropsSettings        = "Einstellungen";
     ls->menuPropsFile            = "Files";
     ls->menuPropsDisk            = "Disks";               // New in 2.7
@@ -202,6 +202,7 @@ void langInitGerman(LanguageStrings* ls)
     ls->menuToolsShortcuts       = "Shortcuts-Editor";
     ls->menuToolsCtrlEditor      = "Controllers / Keyboard-Editor"; // New in 2.6
     ls->menuToolsMixer           = "Audio-Mixer";
+    ls->menuToolsLoadMemory      = "Laden Speicher";
     ls->menuToolsDebugger        = "Debugger";               
     ls->menuToolsTrainer         = "Trainer";                
     ls->menuToolsTraceLogger     = "Trace Logger";           
@@ -295,6 +296,7 @@ void langInitGerman(LanguageStrings* ls)
     ls->propSound                = "Sound";
     ls->propControls             = "Controls";
     ls->propPerformance          = "Performance";
+    ls->propEffects              = "Effects";             // New in 2.9
     ls->propSettings             = "Einstellungen";
     ls->propFile                 = "Files";
     ls->propDisk                 = "Disks";              // New in 2.7
@@ -309,7 +311,10 @@ void langInitGerman(LanguageStrings* ls)
     ls->propEmuSpeedText         = "Emulationsgeschwindigkeit:";
     ls->propEmuFrontSwitchGB     = "Panasonic-Schalter";              // "Panasonic Switches ";
     ls->propEmuFrontSwitch       = " Frontschalter";                  // " Front Switch";
+    ls->propEmuNoSpriteLimits   = " Disable Sprites Limitation";  // New in 2.9
+    ls->propEnableMsxKeyboardQuirk = " Emulate MSX keyboard quirk";  // New in 2.9
     ls->propEmuFdcTiming         = " Floppy-Drive-Timing sperren";
+    ls->propEmuReversePlay      = " Enable reverse playback"; // New in 2.8.3
     ls->propEmuPauseSwitch       = " Unterbrechungstaste";
     ls->propEmuAudioSwitch       = " MSX-AUDIO-Cartridge-Schalter";
     ls->propVideoFreqText        = "Videofrequenz:";
@@ -396,6 +401,19 @@ void langInitGerman(LanguageStrings* ls)
     ls->propCdromMethodAspi      = "ASPI";              // New in 2.7
     ls->propCdromDrive           = "Laufwerk:";         // New in 2.7 -- "Drive:";
 
+    ls->propD3DParametersGB         = "Parameters ";                // New in 2.9
+    ls->propD3DAspectRatioText      = "Aspect ratio";               // New in 2.9
+    ls->propD3DLinearFilteringText  = " Linear filtering";          // New in 2.9
+    ls->propD3DForceHighResText     = " Force high resolution";     // New in 2.9
+    ls->propD3DExtendBorderColorText    = " Extend border color";   // New in 2.9
+
+    ls->propD3DCroppingGB               = "Cropping ";              // New in 2.9
+    ls->propD3DCroppingTypeText         = "Cropping type:";         // New in 2.9
+    ls->propD3DCroppingLeftText         = "Left:";                  // New in 2.9
+    ls->propD3DCroppingRightText        = "Right:";                 // New in 2.9
+    ls->propD3DCroppingTopText          = "Top:";                   // New in 2.9
+    ls->propD3DCroppingBottomText       = "Bottom:";                // New in 2.9
+
 
     //----------------------
     // Dropdown related lines
@@ -425,6 +443,7 @@ void langInitGerman(LanguageStrings* ls)
     ls->enumVideoDrvDirectDrawHW = "DirectDraw HW accel."; 
     ls->enumVideoDrvDirectDraw   = "DirectDraw";
     ls->enumVideoDrvGDI          = "GDI";
+    ls->enumVideoDrvD3D         = "Direct3D";
 
     ls->enumVideoFrameskip0      = "Nichts";
     ls->enumVideoFrameskip1      = "1 Frame";
@@ -432,6 +451,19 @@ void langInitGerman(LanguageStrings* ls)
     ls->enumVideoFrameskip3      = "3 Frames";
     ls->enumVideoFrameskip4      = "4 Frames";
     ls->enumVideoFrameskip5      = "5 Frames";
+
+    ls->enumD3DARAuto           = "Auto";           // New in 2.9
+    ls->enumD3DARStretch        = "Stretch";        // New in 2.9
+    ls->enumD3DARPAL            = "PAL";            // New in 2.9
+    ls->enumD3DARNTSC           = "NTSC";           // New in 2.9
+    ls->enumD3DAR11             = "1:1";            // New in 2.9
+
+    ls->enumD3DCropNone         = "None";           // New in 2.9
+    ls->enumD3DCropMSX1         = "MSX1";           // New in 2.9
+    ls->enumD3DCropMSX1Plus8    = "MSX1+8";         // New in 2.9
+    ls->enumD3DCropMSX2         = "MSX2";           // New in 2.9
+    ls->enumD3DCropMSX2Plus8    = "MSX2+8";         // New in 2.9
+    ls->enumD3DCropCustom       = "Custom";         // New in 2.9
 
     ls->enumSoundDrvNone         = "Kein Sound";
     ls->enumSoundDrvWMM          = "WMM-Treiber";
@@ -505,6 +537,7 @@ void langInitGerman(LanguageStrings* ls)
     ls->confChipVideoChip        = "Videochip:";
     ls->confChipVideoRam         = "Video-RAM:";
     ls->confChipSoundGB          = "Sound ";
+    ls->confChipPsgStereoText    = " PSG Stereo";
 
     ls->confCmosGB               = "CMOS ";
     ls->confCmosEnable           = " CMOS einschalten";
@@ -594,6 +627,7 @@ void langInitGerman(LanguageStrings* ls)
     ls->shortcutSwitchPause        = "Unterbrechungstaste umschalten";
     ls->shortcutToggleMouseLock    = "Maussperre umschalten";
     ls->shortcutEmuSpeedMax        = "Max. Emulationsgeschwindigkeit";
+    ls->shortcutEmuPlayReverse  = "Rewind emulation";                     // New in 2.8.3
     ls->shortcutEmuSpeedToggle     = "Max. Emulationsgeschwindigkeit umschalten";
     ls->shortcutEmuSpeedNormal     = "Normale Emulationsgeschwindigkeit";
     ls->shortcutEmuSpeedInc        = "Emulationsgeschwindigkeit erhöhen";
@@ -603,7 +637,7 @@ void langInitGerman(LanguageStrings* ls)
     ls->shortcutShowVideoProp      = "Zeige Video-Eigenschaften";
     ls->shortcutShowAudioProp      = "Zeige Audio-Eigenschaften";
     ls->shortcutShowCtrlProp       = "Zeige Control-Eigenschaften";
-    ls->shortcutShowPerfProp       = "Zeige Leistungseigenschaften";
+    ls->shortcutShowEffectsProp = "Show Effects Properties";     // New in 2.9
     ls->shortcutShowSettProp       = "Zeige Einstellungseigenschaften";
     ls->shortcutShowPorts          = "Zeige Ports-Eigenschaften";
     ls->shortcutShowLanguage       = "Zeige Sprachdialog";
@@ -618,6 +652,8 @@ void langInitGerman(LanguageStrings* ls)
     ls->shortcutShowFiles          = "Zeige File-Eigenschaften";
     ls->shortcutToggleSpriteEnable = "Sprites zeigen/verdecken";
     ls->shortcutToggleFdcTiming    = "Freigabe/Sperren des Floppy-Drive-Timings";
+    ls->shortcutToggleNoSpriteLimits = "Toggle Sprites Limitation";                 // New in 2.9
+    ls->shortcutEnableMsxKeyboardQuirk = "Emulate MSX Keyboard Quirk";              // New in 2.9
     ls->shortcutToggleCpuTrace     = "Freigabe/Sperren des CPU-Trace";   // "Enable/Disable CPU Trace";
     ls->shortcutVideoLoad          = "Video-Aufnahme laden";             // New in 2.6 -- "Load Video Capture";
     ls->shortcutVideoPlay          = "Letzte Video-Aufnahme abspielen";  // New in 2.6 -- "Play Last Video Capture";
@@ -655,6 +691,7 @@ void langInitGerman(LanguageStrings* ls)
     ls->romTypeMicrosolFdc       = "Microsol Disk Controller";
     ls->romTypeNationalFdc       = "National Disk Controller";
     ls->romTypePhilipsFdc        = "Philips Disk Controller";
+    ls->romTypeSvi707Fdc         = "SVI-707 Disk Controller";
     ls->romTypeSvi738Fdc         = "SVI-738 Disk Controller";
     ls->romTypeMappedRam         = "Mapped RAM";
     ls->romTypeMirroredRam1k     = "1kB Mirrored RAM";

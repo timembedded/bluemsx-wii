@@ -29,6 +29,7 @@
 #include "Board.h"
 #include "AY8910.h"
 #include "JoystickPort.h"
+#include "SaveState.h"
 #include "DeviceManager.h"
 #include "Led.h"
 #include "Switches.h"
@@ -75,27 +76,41 @@ static void joystickPortHandler(MsxPsg* msxPsg, int port, JoystickPortType type)
     case JOYSTICK_PORT_NONE:
         msxPsg->devFun[port] = NULL;
         break;
+#ifndef EXCLUDE_JOYSTICK_PORT_GUNSTICK
     case JOYSTICK_PORT_GUNSTICK:
         msxPsg->devFun[port] = msxGunstickCreate();
         break;
+#endif
+#ifndef EXCLUDE_JOYSTICK_PORT_ASCIILASER
     case JOYSTICK_PORT_ASCIILASER:
         msxPsg->devFun[port] = msxAsciiLaserCreate();
         break;
+#endif
+#ifndef EXCLUDE_JOYSTICK_PORT_JOYSTICK
     case JOYSTICK_PORT_JOYSTICK:
         msxPsg->devFun[port] = msxJoystickCreate(port);
         break;
+#endif
+#ifndef EXCLUDE_JOYSTICK_PORT_MOUSE
     case JOYSTICK_PORT_MOUSE:
         msxPsg->devFun[port] = msxMouseCreate();
         break;
+#endif
+#ifndef EXCLUDE_JOYSTICK_PORT_TETRIS2DONGLE
     case JOYSTICK_PORT_TETRIS2DONGLE:
         msxPsg->devFun[port] = msxTetrisDongleCreate();
         break;
+#endif
+#ifndef EXCLUDE_JOYSTICK_PORT_MAGICKEYDONGLE
     case JOYSTICK_PORT_MAGICKEYDONGLE:
         msxPsg->devFun[port] = magicKeyDongleCreate();
         break;
+#endif
+#ifndef EXCLUDE_JOYSTICK_PORT_ARKANOID_PAD
     case JOYSTICK_PORT_ARKANOID_PAD:
         msxPsg->devFun[port] = msxArkanoidPadCreate();
         break;
+#endif
     }
 }
 
@@ -177,6 +192,13 @@ static void write(MsxPsg* msxPsg, UInt16 address, UInt8 value)
 
 static void saveState(MsxPsg* msxPsg)
 {
+    // dink: fix for certain games where buttons are stuck after reload of state
+    SaveState* state = saveStateOpenForWrite("MsxPsg");
+    saveStateSet(state, "currentport", msxPsg->currentPort);
+    saveStateSet(state, "registers0", msxPsg->registers[0]);
+    saveStateSet(state, "registers1", msxPsg->registers[1]);
+    saveStateClose(state);
+
     if (msxPsg->devFun[0] != NULL && msxPsg->devFun[0]->saveState != NULL) {
 	    msxPsg->devFun[0]->saveState(msxPsg->devFun[0]);
     }
@@ -189,13 +211,20 @@ static void saveState(MsxPsg* msxPsg)
 
 static void loadState(MsxPsg* msxPsg)
 {
+    // dink: fix for certain games where buttons are stuck after reload of state
+    SaveState* state = saveStateOpenForRead("MsxPsg");
+    msxPsg->currentPort =          saveStateGet(state, "currentport", 0);
+    msxPsg->registers[0] = (UInt8) saveStateGet(state, "registers0", 0);
+    msxPsg->registers[1] = (UInt8) saveStateGet(state, "registers1", 0);
+    saveStateClose(state);
+
     if (msxPsg->devFun[0] != NULL && msxPsg->devFun[0]->loadState != NULL) {
 	    msxPsg->devFun[0]->loadState(msxPsg->devFun[0]);
     }
     if (msxPsg->devFun[1] != NULL && msxPsg->devFun[1]->loadState != NULL) {
 	    msxPsg->devFun[1]->loadState(msxPsg->devFun[1]);
     }
-    
+
     ay8910LoadState(msxPsg->ay8910);
 }
 
@@ -239,12 +268,12 @@ void msxPsgRegisterCassetteRead(MsxPsg* msxPsg, CassetteCb cb, void* ref)
     msxPsg->casRef = ref;
 }
 
-MsxPsg* msxPsgCreate(PsgType type, int maxPorts)
+MsxPsg* msxPsgCreate(PsgType type, int stereo, int* pan, int maxPorts)
 {
     DeviceCallbacks callbacks = { destroy, reset, saveState, loadState };
     MsxPsg* msxPsg = (MsxPsg*)calloc(1, sizeof(MsxPsg));
 
-    msxPsg->ay8910 = ay8910Create(boardGetMixer(), AY8910_MSX, type);
+    msxPsg->ay8910 = ay8910Create(boardGetMixer(), AY8910_MSX, type, stereo, pan);
     msxPsg->maxPorts = maxPorts;
 
     msxPsg->dac = dacCreate(boardGetMixer(), DAC_MONO);

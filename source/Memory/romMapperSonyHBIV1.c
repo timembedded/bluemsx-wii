@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Memory/romMapperSonyHBIV1.c,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperSonyHBIV1.c,v $
 **
 ** $Revision: 1.13 $
 **
-** $Date: 2008/03/31 19:42:22 $
+** $Date: 2008-03-31 19:42:22 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -360,7 +360,7 @@ static void reset(RomMapperSonyHbiV1* rm)
     rm->delay       = 0;
 }
 
-int romMapperSonyHbiV1Create(char* filename, UInt8* romData, int size,
+int romMapperSonyHbiV1Create(const char* filename, UInt8* romData, int size,
                              int slot, int sslot, int startPage) 
 {
     DeviceCallbacks callbacks = { destroy, reset, saveState, loadState };

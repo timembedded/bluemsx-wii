@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Language/LanguageFrench.h,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Language/LanguageFrench.h,v $
 **
-** $Revision: 1.59 $
+** $Revision: 1.60 $
 **
-** $Date: 2008/10/26 19:48:18 $
+** $Date: 2009-04-04 20:57:19 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -156,13 +156,13 @@ void langInitFrench(LanguageStrings* ls)
     ls->menuPropsVideo          = "Vidéo";
     ls->menuPropsSound          = "Son";
     ls->menuPropsControls       = "Contrôles";
-    ls->menuPropsPerformance    = "Performances";
+    ls->menuPropsEffects        = "Effects";               // New in 2.9
     ls->menuPropsSettings       = "Réglages";
     ls->menuPropsFile           = "Fichiers";
     ls->menuPropsDisk           = "Disques";               // New in 2.7
     ls->menuPropsLanguage       = "Langue";
     ls->menuPropsPorts          = "Ports";
-
+    
     ls->menuVideoChipAutodetect = "Détection automatique"; 
     ls->menuVideoSource         = "Sortie vidéo";                   
     ls->menuVideoSourceDefault  = "Sortie vidéo non connectée";      
@@ -202,6 +202,7 @@ void langInitFrench(LanguageStrings* ls)
     ls->menuToolsShortcuts      = "Editeur de raccourcis";
     ls->menuToolsCtrlEditor     = "Editeur de contrôleurs/clavier";  
     ls->menuToolsMixer          = "Mélangeur audio";
+    ls->menuToolsLoadMemory     = "Charger en mémoire";
     ls->menuToolsDebugger       = "Débogueur";               
     ls->menuToolsTrainer        = "Trainer";                
     ls->menuToolsTraceLogger    = "Trace Logger";           
@@ -291,10 +292,12 @@ void langInitFrench(LanguageStrings* ls)
 
     ls->propTitle               = "blueMSX - Configuration";
     ls->propEmulation           = "Emulation";
+    ls->propD3D                 = "Direct3D";
     ls->propVideo               = "Video";
     ls->propSound               = "Son";
     ls->propControls            = "Contrôles";
     ls->propPerformance         = "Performances";
+    ls->propEffects             = "Effects";             // New in 2.9
     ls->propSettings             = "Réglages";
     ls->propFile                = "Fichiers"; 
     ls->propDisk                = "Disques";              // New in 2.7
@@ -310,16 +313,19 @@ void langInitFrench(LanguageStrings* ls)
     ls->propEmuFrontSwitchGB    = "Commutateurs Panasonic "; 
     ls->propEmuFrontSwitch      = " Commutateur frontal"; 
     ls->propEmuFdcTiming        = " Ne pas synchroniser le lecteur de disquettes"; 
+    ls->propEmuNoSpriteLimits   = " Pas de limite de sprites";  // New in 2.9
+    ls->propEnableMsxKeyboardQuirk = " Emulate MSX keyboard quirk";  // New in 2.9
+    ls->propEmuReversePlay      = " Enable reverse playback"; // New in 2.8.3
     ls->propEmuPauseSwitch      = " Commutateur Pause";
     ls->propEmuAudioSwitch      = " Commutateur MSX-AUDIO"; 
     ls->propVideoFreqText       = "Fréquence Vidéo:";
     ls->propVideoFreqAuto       = "Auto";
     ls->propSndOversampleText   = "Suréchantillonner:";
-    ls->propSndYkInGB           = "Entrée YK-01/YK-10/YK-20 ";                
+    ls->propSndYkInGB           = "Entrée YK-01/YK-10/YK-20 ";
     ls->propSndMidiInGB         = "Entrée MIDI ";
     ls->propSndMidiOutGB        = "Sortie MIDI ";
-    ls->propSndMidiChannel      = "Canal MIDI:";                      
-    ls->propSndMidiAll          = "Tous";                                
+    ls->propSndMidiChannel      = "Canal MIDI:";
+    ls->propSndMidiAll          = "Tous";
 
     ls->propMonMonGB            = "Moniteur ";
     ls->propMonTypeText         = "Type de moniteur:";
@@ -329,7 +335,7 @@ void langInitFrench(LanguageStrings* ls)
     ls->propMonHorizStretch     = " Etirement Horizontal";
     ls->propMonVertStretch      = " Etirement Vertical"; 
     ls->propMonDeInterlace      = " Dé-entrelacé";
-    ls->propBlendFrames         = " Mixer des images consécutives";           
+    ls->propBlendFrames         = " Mixer des images consécutives";
     ls->propMonBrightness       = "Brillance:";
     ls->propMonContrast         = "Contraste:";
     ls->propMonSaturation       = "Saturation:";
@@ -396,6 +402,18 @@ void langInitFrench(LanguageStrings* ls)
     ls->propCdromMethodAspi     = "ASPI";            // New in 2.7
     ls->propCdromDrive          = "Lecteur:";          // New in 2.7
 
+    ls->propD3DParametersGB         = "Paramètres ";
+    ls->propD3DAspectRatioText      = "Format d'image";
+    ls->propD3DLinearFilteringText  = " Fitrage linéaire";
+    ls->propD3DForceHighResText     = " Forcer haute résolution";
+    ls->propD3DExtendBorderColorText    = " Étendre la couleur du bord";
+
+    ls->propD3DCroppingGB               = "Rognage ";
+    ls->propD3DCroppingTypeText         = "Type de rognage:";
+    ls->propD3DCroppingLeftText         = "Gauche:";
+    ls->propD3DCroppingRightText        = "Droite:";
+    ls->propD3DCroppingTopText          = "Haut:";
+    ls->propD3DCroppingBottomText       = "Bas:";
 
     //----------------------
     // Dropdown related lines
@@ -425,6 +443,7 @@ void langInitFrench(LanguageStrings* ls)
     ls->enumVideoDrvDirectDrawHW = "DirectDraw HW accél.";
     ls->enumVideoDrvDirectDraw  = "DirectDraw";
     ls->enumVideoDrvGDI         = "GDI";
+    ls->enumVideoDrvD3D         = "Direct3D";
 
     ls->enumVideoFrameskip0     = "Aucune";
     ls->enumVideoFrameskip1     = "1 image";
@@ -432,6 +451,19 @@ void langInitFrench(LanguageStrings* ls)
     ls->enumVideoFrameskip3     = "3 images";
     ls->enumVideoFrameskip4     = "4 images";
     ls->enumVideoFrameskip5     = "5 images";
+
+	ls->enumD3DARAuto           = "Automatique";
+	ls->enumD3DARStretch        = "Étirer";
+	ls->enumD3DARPAL            = "PAL";
+	ls->enumD3DARNTSC           = "NTSC";
+	ls->enumD3DAR11             = "1:1";
+
+	ls->enumD3DCropNone         = "Aucun";
+	ls->enumD3DCropMSX1         = "MSX1";
+	ls->enumD3DCropMSX1Plus8    = "MSX1+8";
+	ls->enumD3DCropMSX2         = "MSX2";
+	ls->enumD3DCropMSX2Plus8    = "MSX2+8";
+	ls->enumD3DCropCustom       = "Personnalisé";
 
     ls->enumSoundDrvNone        = "Pas de son";
     ls->enumSoundDrvWMM         = "Pilote WMM";
@@ -505,6 +537,7 @@ void langInitFrench(LanguageStrings* ls)
     ls->confChipVideoChip       = "Puce Video:";
     ls->confChipVideoRam        = "Video RAM:";
     ls->confChipSoundGB         = "Son ";
+    ls->confChipPsgStereoText    = " PSG Stéréo";
 
     ls->confCmosGB                = "CMOS "; 
     ls->confCmosEnable            = " Activer la CMOS"; 
@@ -594,6 +627,7 @@ void langInitFrench(LanguageStrings* ls)
     ls->shortcutSwitchPause     = "Actionner le commutateur Pause";
     ls->shortcutToggleMouseLock = "Activer/désactiver le blocage de la souris";
     ls->shortcutEmuSpeedMax     = "Vitesse maximale d'émulation";
+    ls->shortcutEmuPlayReverse  = "Rewind emulation";                     // New in 2.8.3
     ls->shortcutEmuSpeedToggle  = "Balance vitesse maximale d'émulation";
     ls->shortcutEmuSpeedNormal  = "Vitesse normale d'émulation";
     ls->shortcutEmuSpeedInc     = "Augmenter la vitesse d'émulation";
@@ -603,7 +637,7 @@ void langInitFrench(LanguageStrings* ls)
     ls->shortcutShowVideoProp   = "Accéder au menu Video";
     ls->shortcutShowAudioProp   = "Accéder au menu Son";
     ls->shortcutShowCtrlProp    = "Accéder au menu Contrôles";
-    ls->shortcutShowPerfProp    = "Accéder au menu Performances";
+    ls->shortcutShowEffectsProp = "Show Effects Properties";     // New in 2.9
     ls->shortcutShowSettProp    = "Accéder au menu Réglages";
     ls->shortcutShowPorts       = "Accéder au menu Ports";
     ls->shortcutShowLanguage    = "Accéder au menu Langue";
@@ -618,6 +652,8 @@ void langInitFrench(LanguageStrings* ls)
     ls->shortcutShowFiles       = "Accéder au menu Fichiers";
     ls->shortcutToggleSpriteEnable = "Montrer/Cacher les sprites";
     ls->shortcutToggleFdcTiming = "Synchroniser ou non le lecteur de disquettes"; 
+    ls->shortcutToggleNoSpriteLimits = "Basculer limitation de l'affichage des sprites";
+    ls->shortcutEnableMsxKeyboardQuirk = "Emulate MSX Keyboard Quirk";              // New in 2.9
     ls->shortcutToggleCpuTrace  = "Valider/Invalider la trace du CPU";
     ls->shortcutVideoLoad       = "Charger une capture vidéo";             
     ls->shortcutVideoPlay       = "Voir la plus récente capture vidéo";   
@@ -655,6 +691,7 @@ void langInitFrench(LanguageStrings* ls)
     ls->romTypeMicrosolFdc      = "Microsol Disk Controller";
     ls->romTypeNationalFdc      = "National Disk Controller";
     ls->romTypePhilipsFdc       = "Philips Disk Controller";
+    ls->romTypeSvi707Fdc        = "SVI-707 Disk Controller";
     ls->romTypeSvi738Fdc        = "SVI-738 Disk Controller";
     ls->romTypeMappedRam        = "Mapped RAM";
     ls->romTypeMirroredRam1k    = "1kB Mirrored RAM";

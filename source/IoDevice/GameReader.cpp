@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/IoDevice/GameReader.cpp,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/IoDevice/GameReader.cpp,v $
 **
 ** $Revision: 1.8 $
 **
-** $Date: 2008/03/30 18:38:40 $
+** $Date: 2008-03-30 18:38:40 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -29,7 +29,7 @@ extern "C" {
 #include "GameReader.h"
 };
 
-#ifdef _WIN32
+#ifdef HAVE_WIN32_MSX_MANAGER
 #include "msxgr.h"
 #else
 class CMSXGr
@@ -53,8 +53,10 @@ class CMSXGr
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-#ifdef _WIN32
-#include <Windows.h>
+#if defined(_WIN32) && defined(_XBOX)
+#include <xtl.h>
+#elif defined(_WIN32)
+#include <windows.h>
 #else
 #define GlobalAlloc(xxx, addr) malloc(addr)
 #define GlobalFree(addr) free(addr)
@@ -112,6 +114,7 @@ bool GameReader::readMemory(UInt16 address, void* buffer, int length)
     }
     
     if (inserted) {
+        //printf("### Reading address %.4x - %.4x\n", address, address + length - 1);
         if (MsxGr->ReadMemory(slot, globalBuffer, address, length) != 0) {
             inserted = MsxGr->IsCartridgeInserted(slot);
             return false;
@@ -133,6 +136,7 @@ bool GameReader::writeMemory(UInt16 address, void* buffer, int length)
     
     if (inserted) {
         memcpy(globalBuffer, buffer, length);
+        //printf("### Writing address %.4x - %.4x\n", address, address + length - 1);
         if (MsxGr->WriteMemory(slot, globalBuffer, address, length) != 0) {
             inserted = MsxGr->IsCartridgeInserted(slot);
             return false;

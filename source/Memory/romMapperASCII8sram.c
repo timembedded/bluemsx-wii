@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Memory/romMapperASCII8sram.c,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperASCII8sram.c,v $
 **
 ** $Revision: 1.9 $
 **
-** $Date: 2008/05/30 13:57:03 $
+** $Date: 2008-05-30 13:57:03 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -125,7 +125,7 @@ static void write(RomMapperASCII8sram* rm, UInt16 address, UInt8 value)
     }
 }
 
-int romMapperASCII8sramCreate(char* filename, UInt8* romData, 
+int romMapperASCII8sramCreate(const char* filename, UInt8* romData, 
                               int size, int slot, int sslot, int startPage) 
 {
     DeviceCallbacks callbacks = { destroy, NULL, saveState, loadState };

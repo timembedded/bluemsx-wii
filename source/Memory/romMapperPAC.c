@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Memory/romMapperPAC.c,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperPAC.c,v $
 **
 ** $Revision: 1.7 $
 **
-** $Date: 2008/03/30 18:38:44 $
+** $Date: 2008-03-30 18:38:44 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -132,7 +132,7 @@ static void write(RomMapperPAC* rm, UInt16 address, UInt8 value)
     }
 }
 
-int romMapperPACCreate(char* filename, UInt8* romData, 
+int romMapperPACCreate(const char* filename, UInt8* romData, 
                          int size, int slot, int sslot, int startPage) 
 {
     DeviceCallbacks callbacks = { destroy, NULL, saveState, loadState };

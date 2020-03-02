@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/VideoChips/VDP.h,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/VideoChips/VDP.h,v $
 **
 ** $Revision: 1.16 $
 **
-** $Date: 2008/06/25 22:26:17 $
+** $Date: 2008-06-25 22:26:17 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -43,6 +43,8 @@ int  vdpGetRefreshRate();
 
 void vdpSetSpritesEnable(int enable);
 int  vdpGetSpritesEnable();
+void vdpSetNoSpriteLimits(int enable);
+int  vdpGetNoSpritesLimit();
 void vdpSetDisplayEnable(int enable);
 int  vdpGetDisplayEnable();
 

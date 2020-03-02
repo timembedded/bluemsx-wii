@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Memory/romMapperMsxMusic.c,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperMsxMusic.c,v $
 **
-** $Revision: 1.10 $
+** $Revision: 1.11 $
 **
-** $Date: 2008/03/30 18:38:44 $
+** $Date: 2009-07-18 14:35:59 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -13,7 +13,7 @@
 ** it under the terms of the GNU General Public License as published by
 ** the Free Software Foundation; either version 2 of the License, or
 ** (at your option) any later version.
-**
+** 
 ** This program is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -65,7 +65,7 @@ static void destroy(MsxMusic* rm)
     free(rm);
 }
 
-static void reset(MsxMusic* rm)
+static void reset(MsxMusic* rm) 
 {
     if (rm->ym2413 != NULL) {
         ym2413Reset(rm->ym2413);
@@ -109,12 +109,12 @@ static void getDebugInfo(MsxMusic* rm, DbgDevice* dbgDevice)
     ioPorts = dbgDeviceAddIoPorts(dbgDevice, langDbgDevMsxMusic(), 2);
     dbgIoPortsAddPort(ioPorts, 0, 0x7c, DBG_IO_WRITE, 0);
     dbgIoPortsAddPort(ioPorts, 1, 0x7d, DBG_IO_WRITE, 0);
-
+    
     ym2413GetDebugInfo(rm->ym2413, dbgDevice);
 }
 
-int romMapperMsxMusicCreate(char* filename, UInt8* romData,
-                            int size, int slot, int sslot, int startPage)
+int romMapperMsxMusicCreate(const char* filename, UInt8* romData, 
+                            int size, int slot, int sslot, int startPage) 
 {
     DeviceCallbacks callbacks = { destroy, reset, saveState, loadState };
     DebugCallbacks dbgCallbacks = { getDebugInfo, NULL, NULL, NULL };
@@ -123,11 +123,12 @@ int romMapperMsxMusicCreate(char* filename, UInt8* romData,
     int i;
 
     if (pages == 0 || (startPage + pages) > 8) {
+        free(rm);
         return 0;
     }
 
     rm->deviceHandle = deviceManagerRegister(ROM_MSXMUSIC, &callbacks, rm);
-
+    
     rm->ym2413 = NULL;
     if (boardGetYm2413Enable()) {
         rm->ym2413 = ym2413Create(boardGetMixer());

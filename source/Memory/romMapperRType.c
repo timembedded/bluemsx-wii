@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Memory/romMapperRType.c,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperRType.c,v $
 **
-** $Revision: 1.7 $
+** $Revision: 1.8 $
 **
-** $Date: 2008/03/30 18:38:44 $
+** $Date: 2009-04-02 22:32:06 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -71,7 +71,8 @@ static void loadState(RomMapperRType* rm)
     }
 
     saveStateClose(state);
-
+    //DINK: Nov 27, 2013 - fix for save state load at level2+
+    bank = 2;
     bankData = rm->romData + (rm->romMapper[bank] << 14);
     slotMapPage(rm->slot, rm->sslot, rm->startPage + bank,     bankData, 1, 0);
     slotMapPage(rm->slot, rm->sslot, rm->startPage + bank + 1, bankData + 0x2000, 1, 0);
@@ -109,7 +110,7 @@ static void write(RomMapperRType* rm, UInt16 address, UInt8 value)
     }
 }
 
-int romMapperRTypeCreate(char* filename, UInt8* romData, 
+int romMapperRTypeCreate(const char* filename, UInt8* romData, 
                          int size, int slot, int sslot, int startPage) 
 {
     DeviceCallbacks callbacks = { destroy, NULL, saveState, loadState };

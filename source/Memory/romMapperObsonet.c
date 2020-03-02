@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Memory/romMapperObsonet.c,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperObsonet.c,v $
 **
 ** $Revision: 1.14 $
 **
-** $Date: 2008/09/09 04:33:47 $
+** $Date: 2008-09-09 04:33:47 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -150,7 +150,7 @@ static void write(RomMapperObsonet* rm, UInt16 address, UInt8 value)
     }
 }
 
-int romMapperObsonetCreate(char* filename, UInt8* romData, 
+int romMapperObsonetCreate(const char* filename, UInt8* romData, 
                            int size, int slot, int sslot, int startPage) 
 {
     DeviceCallbacks callbacks = { destroy, reset, saveState, loadState };

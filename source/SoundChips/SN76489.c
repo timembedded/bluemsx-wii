@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/SoundChips/SN76489.c,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/SoundChips/SN76489.c,v $
 **
-** $Revision: 1.20 $
+** $Revision: 1.21 $
 **
-** $Date: 2008/05/19 19:25:59 $
+** $Date: 2009-04-10 04:38:10 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -13,7 +13,7 @@
 ** it under the terms of the GNU General Public License as published by
 ** the Free Software Foundation; either version 2 of the License, or
 ** (at your option) any later version.
-**
+** 
 ** This program is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -55,7 +55,7 @@
 #define SR_INIT       0x4000
 #define PSG_CUTOFF    0x6
 
-static int VoltTables[2][16] =
+static int VoltTables[2][16] = 
 {
     { 9897, 9897, 9897, 8432, 6912, 5514, 4482, 3584, 2851, 2196, 1764, 1365, 1065,  832,  666, 0 },
     { 9897, 7867, 6248, 4962, 3937, 3127, 2487, 1978, 1567, 1247,  992,  783,  627,  496,  392, 0 }
@@ -73,7 +73,7 @@ struct SN76489 {
     int voltTableIdx;
     int whiteNoiseFeedback;
     int shiftRegisterWidth;
-
+    
     /* State params */
     float clock;
 
@@ -81,7 +81,7 @@ struct SN76489 {
     int latch;
     int shiftReg;
     int noiseFreq;
-
+    
     int toneFrequency[4];
     int toneFlipFlop[4];
     float toneInterpol[4];
@@ -104,7 +104,7 @@ void sn76489LoadState(SN76489* sn76489)
     SaveState* state = saveStateOpenForRead("sn76489");
     char tag[32];
     int i;
-
+    
     sn76489->latch            = saveStateGet(state, "latch",           0);
     sn76489->shiftReg         = saveStateGet(state, "shiftReg",        0);
     sn76489->noiseFreq        = saveStateGet(state, "noiseFreq",       1);
@@ -154,7 +154,7 @@ void sn76489SaveState(SN76489* sn76489)
 
         sprintf(tag, "toneFlipFlop%d", i);
         saveStateSet(state, tag, sn76489->toneFlipFlop[i]);
-
+        
         sn76489->toneInterpol[i] = 0;
     }
 
@@ -163,11 +163,30 @@ void sn76489SaveState(SN76489* sn76489)
     saveStateClose(state);
 }
 
-static void setDebugInfo(SN76489* sn76489, DbgDevice* dbgDevice)
+static void getDebugInfo(SN76489* sn76489, DbgDevice* dbgDevice)
 {
     DbgRegisterBank* regBank;
+    int i;
 
-    regBank = dbgDeviceAddRegisterBank(dbgDevice, langDbgRegs(), 16);
+    regBank = dbgDeviceAddRegisterBank(dbgDevice, langDbgRegs(), 8);
+
+    for (i = 0; i < 4; i++) {
+        char reg[4];
+        sprintf(reg, "V%d", i + 1);
+        dbgRegisterBankAddRegister(regBank,  i, reg, 8, sn76489->regs[2 * i + 1] & 0x0f);
+    }
+    
+    for (i = 0; i < 4; i++) {
+        char reg[4];
+        sprintf(reg, "T%d", i + 1);
+        if (i < 3) {
+            dbgRegisterBankAddRegister(regBank,  i + 4, reg, 16, sn76489->regs[2 * i] & 0x03ff);
+        }
+        else {
+            dbgRegisterBankAddRegister(regBank,  i + 4, reg, 8, sn76489->regs[2 * i] & 0x03);
+        }
+    }
+
 }
 
 void sn76489Destroy(SN76489* sn76489)
@@ -199,11 +218,14 @@ void sn76489Reset(SN76489* sn76489)
 
 SN76489* sn76489Create(Mixer* mixer)
 {
+    DebugCallbacks dbgCallbacks = { getDebugInfo, NULL, NULL, NULL };
     SN76489* sn76489 = (SN76489*)calloc(1, sizeof(SN76489));
 
     sn76489->mixer = mixer;
 
-    sn76489->handle = mixerRegisterChannel(mixer, MIXER_CHANNEL_PSG, 0, sn76489Sync, sn76489);
+    sn76489->handle = mixerRegisterChannel(mixer, MIXER_CHANNEL_PSG, 0, sn76489Sync, NULL, sn76489);
+    sn76489->debugHandle = debugDeviceRegister(DBGTYPE_AUDIO, "SN76489 PSG", &dbgCallbacks, sn76489);
+
 
     sn76489->voltTableIdx       = VOL_FULL;
     sn76489->whiteNoiseFeedback = FB_COLECO;
@@ -223,7 +245,7 @@ void sn76489WriteData(SN76489* sn76489, UInt16 ioPort, UInt8 data)
     if (data & 0x80) {
         p->latch = ( data >> 4 ) & 0x07;
         p->regs[p->latch] = (p->regs[p->latch] & 0x3f0) | (data & 0x0f);
-    }
+    } 
     else {
         if ((p->latch & 1) == 0 && p->latch < 5) {
             p->regs[p->latch] = (p->regs[p->latch] & 0x0f) | ((data & 0x3f) << 4);
@@ -236,9 +258,6 @@ void sn76489WriteData(SN76489* sn76489, UInt16 ioPort, UInt8 data)
     case 0:
     case 2:
     case 4:
-        if ( p->regs[p->latch] == 0 ) {
-            p->regs[p->latch] = 1;
-        }
         if (p->latch == 4 && (p->regs[6] & 3) == 0x03) {
             p->noiseFreq = p->regs[4];
         }
@@ -249,7 +268,7 @@ void sn76489WriteData(SN76489* sn76489, UInt16 ioPort, UInt8 data)
             p->noiseFreq = p->regs[4];
         }
         else {
-        p->noiseFreq = 0x10 << (p->regs[6] & 0x3);
+            p->noiseFreq = 0x10 << (p->regs[6] & 0x3);
         }
         break;
     }
@@ -282,7 +301,7 @@ static Int32* sn76489Sync(void* ref, UInt32 count)
 
         /* Perform simple 1 pole low pass IIR filtering */
         p->daVolume += 2 * (p->ctrlVolume - p->daVolume) / 3;
-
+        
         /* Store calclulated sample value */
         p->buffer[j] = 4 * p->daVolume;
 
@@ -290,7 +309,7 @@ static Int32* sn76489Sync(void* ref, UInt32 count)
         p->clock += DELTA_CLOCK;
         clocksPerSample = (int)p->clock;
         p->clock -= clocksPerSample;
-
+    
         for (i = 0; i <= 2; i++) {
             p->toneFrequency[i] -= clocksPerSample;
         }
@@ -301,9 +320,14 @@ static Int32* sn76489Sync(void* ref, UInt32 count)
         else {
             p->toneFrequency[3] -= clocksPerSample;
         }
-
+    
         for (i = 0; i <= 2; i++) {
-            if (p->toneFrequency[i] <= 0) {
+            if (p->regs[2 * i] == 0) {
+                p->toneFlipFlop[i] = 1;
+                p->toneInterpol[i] = FLT_MIN;
+                p->toneFrequency[i] = 0;
+            }
+            else if (p->toneFrequency[i] <= 0) {
                 if (p->regs[i * 2] > PSG_CUTOFF) {
                     p->toneInterpol[i] = (clocksPerSample - p->clock + 2 * p->toneFrequency[i]) * p->toneFlipFlop[i] / (clocksPerSample + p->clock);
                     p->toneFlipFlop[i] = -p->toneFlipFlop[i];
@@ -319,7 +343,11 @@ static Int32* sn76489Sync(void* ref, UInt32 count)
             }
         }
 
-        if (p->toneFrequency[3] <= 0) {
+        if (p->noiseFreq == 0) {
+            p->toneFlipFlop[3] = 1;
+            p->toneFrequency[3] = 0;
+        }
+        else if (p->toneFrequency[3] <= 0) {
             p->toneFlipFlop[3] = -p->toneFlipFlop[3];
             if (p->noiseFreq != 0x80) {
                 p->toneFrequency[3] += p->noiseFreq * (clocksPerSample / p->noiseFreq + 1);
@@ -327,12 +355,12 @@ static Int32* sn76489Sync(void* ref, UInt32 count)
             if (p->toneFlipFlop[3] == 1) {
                 int feedback;
                 if ( p->regs[6] & 0x4 ) {
-                        feedback = p->shiftReg & p->whiteNoiseFeedback;
-                        feedback ^= feedback >> 8;
-                        feedback ^= feedback >> 4;
-                        feedback ^= feedback >> 2;
-                        feedback ^= feedback >> 1;
-                        feedback &= 1;
+                    feedback = p->shiftReg & p->whiteNoiseFeedback;
+                    feedback ^= feedback >> 8;
+                    feedback ^= feedback >> 4;
+                    feedback ^= feedback >> 2;
+                    feedback ^= feedback >> 1;
+                    feedback &= 1;
                 } else {
                     feedback = p->shiftReg & 1;
                 }
@@ -350,7 +378,7 @@ static Int32* sn76489Sync(void* ref, UInt32 count)
 #define BASE_PHASE_STEP 0x28959becUL  /* = (1 << 28) * 3579545 / 32 / 44100 */
 
 static const Int16 voltTableIdx[16] = {
-    0x26a9, 0x1eb5, 0x1864, 0x1360, 0x0f64, 0x0c39, 0x09b6, 0x07b6,
+    0x26a9, 0x1eb5, 0x1864, 0x1360, 0x0f64, 0x0c39, 0x09b6, 0x07b6, 
     0x0620, 0x04dd, 0x03dd, 0x0312, 0x0270, 0x01f0, 0x018a, 0x0000
 };
 
@@ -459,7 +487,7 @@ SN76489* sn76489Create(Mixer* mixer)
     sn76489Reset(sn76489);
 
     {
-        double v = 0x26a9;
+        DoubleT v = 0x26a9;
         for (i = 0; i < 15; i++) {
             v /= 1.258925412;
         }
@@ -472,7 +500,7 @@ void sn76489Reset(SN76489* sn76489)
 {
     if (sn76489 != NULL) {
         int i;
-
+    
         for (i = 0; i < 4; i++) {
             sn76489->regs[2 * i] = 1;
             sn76489->regs[2 * i + 1] = 0x0f;
@@ -510,7 +538,7 @@ void sn76489WriteData(SN76489* sn76489, UInt16 ioPort, UInt8 data)
 		sn76489->regs[reg] = (sn76489->regs[reg] & 0x3f0) | (data & 0x0f);
 
 //        if (reg >=4) printf("W %d:\t %.2x  %.4x\n", framecounter, reg, sn76489->regs[reg]);
-    }
+    } 
     else {
 		reg = sn76489->latch;
 
@@ -563,19 +591,19 @@ static Int32* sn76489Sync(void* ref, UInt32 count)
         UInt32 tonePhase = sn76489->tonePhase[3];
         UInt32 tone = 0;
         Int32  count = 16;
-
+    
         while (count--) {
             tonePhase += phaseStep;
             while (tonePhase >> 28) {
                 tonePhase -= 1 << 28;
-                sn76489->noiseRand = (sn76489->noiseRand >> 1) |
-                    ((sn76489->regs[6] & 0x04) ?
-                        ((sn76489->noiseRand ^ (sn76489->noiseRand >> 1)) & 1) << 14 :
+                sn76489->noiseRand = (sn76489->noiseRand >> 1) | 
+                    ((sn76489->regs[6] & 0x04) ? 
+                        ((sn76489->noiseRand ^ (sn76489->noiseRand >> 1)) & 1) << 14 : 
                         (sn76489->noiseRand & 1) << 14);
             }
             tone += sn76489->noiseRand & 1;
         }
-
+    
         /* Store phase */
         sn76489->tonePhase[3] = tonePhase;
 
@@ -588,12 +616,12 @@ static Int32* sn76489Sync(void* ref, UInt32 count)
             UInt32 tonePhase = sn76489->tonePhase[channel];
             UInt32 tone = 0;
             Int32  count = 16;
-
+            
             /* Perform 16x oversampling */
             while (count--) {
                 /* Update phase of tone */
                 tonePhase += phaseStep;
-
+     
                 /* Calculate if tone is on or off */
                 tone += tonePhase >> 31;
             }
@@ -611,7 +639,7 @@ static Int32* sn76489Sync(void* ref, UInt32 count)
 
         /* Perform simple 1 pole low pass IIR filtering */
         sn76489->daVolume += 2 * (sn76489->ctrlVolume - sn76489->daVolume) / 3;
-
+        
         /* Store calclulated sample value */
         sn76489->buffer[index] = 9 * sn76489->daVolume;
     }

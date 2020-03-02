@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Board/MSX.c,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Board/MSX.c,v $
 **
 ** $Revision: 1.71 $
 **
-** $Date: 2008/04/18 04:09:54 $
+** $Date: 2008-04-18 04:09:54 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -120,6 +120,10 @@ static int getRefreshRate()
     return vdpGetRefreshRate();
 }
 
+static UInt32 getTimeTrace(int offset) {
+    return r800GetTimeTrace(r800, offset);
+}
+
 static UInt8* getRamPage(int page) {
     int start;
 
@@ -190,7 +194,7 @@ int msxCreate(Machine* machine,
         cpuFlags |= CPU_VDP_IO_DELAY;
     }
 
-    r800 = r800Create(cpuFlags, slotRead, slotWrite, ioPortRead, ioPortWrite, PatchZ80, boardTimerCheckTimeout, NULL, NULL, NULL, NULL);
+    r800 = r800Create(cpuFlags, slotRead, slotWrite, ioPortRead, ioPortWrite, PatchZ80, boardTimerCheckTimeout, NULL, NULL, NULL, NULL, NULL, NULL);
 
     boardInfo->cartridgeCount   = machine->board.type == BOARD_MSX_FORTE_II ? 0 : 2;
     boardInfo->diskdriveCount   = machine->board.type == BOARD_MSX_FORTE_II ? 0 : 2;
@@ -212,6 +216,8 @@ int msxCreate(Machine* machine,
     boardInfo->setBreakpoint    = r800SetBreakpoint;
     boardInfo->clearBreakpoint  = r800ClearBreakpoint;
     boardInfo->setDataBus       = r800SetDataBus;
+    
+    boardInfo->getTimeTrace     = getTimeTrace;
 
     deviceManagerCreate();
     boardInit(&r800->systemTime);
@@ -249,6 +255,8 @@ int msxCreate(Machine* machine,
     msxPsg = msxPsgCreate(machine->board.type == BOARD_MSX || 
                           machine->board.type == BOARD_MSX_FORTE_II 
                           ? PSGTYPE_AY8910 : PSGTYPE_YM2149,
+                          machine->audio.psgstereo,
+                          machine->audio.psgpan,
                           machine->board.type == BOARD_MSX_FORTE_II ? 1 : 2);
 
     if (machine->board.type == BOARD_MSX_FORTE_II) {

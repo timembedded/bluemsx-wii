@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Memory/romMapperNoWind.cpp,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperNoWind.cpp,v $
 **
 ** $Revision: 1.2 $
 **
-** $Date: 2009/04/29 00:05:05 $
+** $Date: 2009-04-29 00:05:05 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -13,7 +13,7 @@
 ** it under the terms of the GNU General Public License as published by
 ** the Free Software Foundation; either version 2 of the License, or
 ** (at your option) any later version.
-**
+** 
 ** This program is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -25,8 +25,13 @@
 **
 ******************************************************************************
 */
+#include <cstdlib>
+#include <cstring>
+#include <cstdio>
 
 extern "C" {
+
+#include  <stdlib.h>
 
 #include "romMapperNoWind.h"
 #include "AmdFlash.h"
@@ -38,9 +43,6 @@ extern "C" {
 #include "sramLoader.h"
 #include "Properties.h"
 
-#include <stdlib.h>
-#include <string.h>
-
 #ifdef USE_NOWIND_DLL
 #include "Disk.h"
 #include "Properties.h"
@@ -48,7 +50,7 @@ extern "C" {
 
 static int DeviceIds[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
 
-static int deviceIdAlloc()
+static int deviceIdAlloc() 
 {
     int i;
     for (i = 0; i < sizeof(DeviceIds) / sizeof(DeviceIds[0]); ++i) {
@@ -170,10 +172,10 @@ static void diskInsert(RomMapperNoWind* rm, int driveId, int driveNo)
     FileProperties* disk = &propGetGlobalProperties()->media.disks[diskGetHdDriveId(driveId, driveNo)];
     int diskHasPartitionTable = 0;
     FILE* f;
-
+    
     UInt8 header[512];
 
-    f = fopen(disk->fileName, "rb");
+    f = fopen(disk->fileName, "rb");    
     if (f == NULL) {
         rm->deviceId[driveNo] = -1;
         return;
@@ -186,14 +188,14 @@ static void diskInsert(RomMapperNoWind* rm, int driveId, int driveNo)
 
     if (fread(header, 1, sizeof(header), f) != 0) {
         diskHasPartitionTable =
-                header[510] == 0x55 &&
+                header[510] == 0x55 && 
                 header[511] == 0xaa;
     }
     fclose(f);
 
     if (diskHasPartitionTable) {
         if (nowindusb_set_harddisk_image) {
-            nowindusb_set_harddisk_image(rm->deviceId[driveNo], prop->partitionNumber,
+            nowindusb_set_harddisk_image(rm->deviceId[driveNo], prop->partitionNumber, 
                 prop->ignoreBootFlag != 0, disk->fileName);
         }
     }
@@ -247,7 +249,7 @@ static void loadState(void* _rm)
     updateMapper(rm, rm->romMapper);
 }
 
-static void destroy(void* _rm)
+static void RomMapperNoWinddestroy(void* _rm)
 {
     RomMapperNoWind* rm = (RomMapperNoWind*)_rm;
     int i;
@@ -257,8 +259,9 @@ static void destroy(void* _rm)
     for (i = 0; i < 4; i++) {
         if (rm->deviceId[i] != -1) {
             deviceIdFree(rm->deviceId[i]);
-        }
+        } 
     }
+
     if (--nowindLoaded == 0) {
         if (nowindusb_cleanup) nowindusb_cleanup();
         nowindUnloadDll();
@@ -279,9 +282,9 @@ static void reset(void* _rm)
     updateMapper(rm, 0);
 }
 
-static UInt8 read(RomMapperNoWind* rm, UInt16 address)
+static UInt8 RomMapperNoWindread(RomMapperNoWind* rm, UInt16 address) 
 {
-    if ((address >= 0x2000 && address < 0x4000) ||
+    if ((address >= 0x2000 && address < 0x4000) || 
         (address >= 0x8000 && address < 0xa000))
     {
 #ifdef USE_NOWIND_DLL
@@ -295,20 +298,20 @@ static UInt8 read(RomMapperNoWind* rm, UInt16 address)
     return 0xff;
 }
 
-static UInt8 peek(RomMapperNoWind* rm, UInt16 address)
+static UInt8 RomMapperNoWindpeek(RomMapperNoWind* rm, UInt16 address) 
 {
     return 0xff;
 }
 
-static void write(RomMapperNoWind* rm, UInt16 address, UInt8 value)
-{
+static void RomMapperNoWindwrite(RomMapperNoWind* rm, UInt16 address, UInt8 value) 
+{   
     if (address < 0x4000) {
         amdFlashWrite(rm->amdFlash, address + 0x4000 * rm->romMapper, value);
         return;
     }
 
-    if ((address >= 0x4000 && address < 0x6000) ||
-        (address >= 0x8000 && address < 0xa000))
+    if ((address >= 0x4000 && address < 0x6000) || 
+        (address >= 0x8000 && address < 0xa000)) 
     {
 #ifdef USE_NOWIND_DLL
         if (nowindusb_write) nowindusb_write(value);
@@ -316,26 +319,26 @@ static void write(RomMapperNoWind* rm, UInt16 address, UInt8 value)
         return;
     }
 
-    if ((address >= 0x6000 && address < 0x8000) ||
-        (address >= 0xa000 && address < 0xc000))
+    if ((address >= 0x6000 && address < 0x8000) || 
+        (address >= 0xa000 && address < 0xc000)) 
     {
         // FIXME: Is the page selected based on address or data lines?
         updateMapper(rm, value & 0x1f);
     }
 }
 
-int romMapperNoWindCreate(int driveId, char* filename, UInt8* romData,
-                         int size, int slot, int sslot, int startPage)
+int romMapperNoWindCreate(int driveId, const char* filename, UInt8* romData, 
+                         int size, int slot, int sslot, int startPage) 
 {
     NoWindProperties* prop = &propGetGlobalProperties()->nowind;
-    DeviceCallbacks callbacks = { destroy, reset, saveState, loadState };
+    DeviceCallbacks callbacks = { RomMapperNoWinddestroy, reset, saveState, loadState };
     RomMapperNoWind* rm;
     int i;
 
     rm = (RomMapperNoWind*)malloc(sizeof(RomMapperNoWind));
 
     rm->deviceHandle = deviceManagerRegister(ROM_NOWIND, &callbacks, rm);
-    slotRegister(slot, sslot, startPage, 6, (SlotRead)read, (SlotRead)peek, (SlotWrite)write, destroy, rm);
+    slotRegister(slot, sslot, startPage, 6, (SlotRead)RomMapperNoWindread, (SlotRead)RomMapperNoWindpeek, (SlotWrite)RomMapperNoWindwrite, RomMapperNoWinddestroy, rm);
 
     if (filename == NULL) {
         filename = "nowind.rom";

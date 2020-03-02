@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Memory/romMapperKorean90.c,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperKorean90.c,v $
 **
 ** $Revision: 1.9 $
 **
-** $Date: 2008/06/08 13:02:48 $
+** $Date: 2008-06-08 13:02:48 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -125,7 +125,7 @@ static void getDebugInfo(RomMapperKorean90* rm, DbgDevice* dbgDevice)
     dbgIoPortsAddPort(ioPorts, 0, 0x77, DBG_IO_WRITE, 0);
 }
 
-int romMapperKorean90Create(char* filename, UInt8* romData, 
+int romMapperKorean90Create(const char* filename, UInt8* romData, 
                             int size, int slot, int sslot, int startPage) 
 {
     DeviceCallbacks callbacks = { destroy, NULL, saveState, loadState };

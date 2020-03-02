@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Language/LanguageChineseSimplified.h,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Language/LanguageChineseSimplified.h,v $
 **
-** $Revision: 1.52 $
+** $Revision: 1.53 $
 **
-** $Date: 2008/10/26 19:48:18 $
+** $Date: 2009-04-04 20:57:19 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -156,7 +156,7 @@ void langInitChineseSimplified(LanguageStrings* ls)
     ls->menuPropsVideo          = "视频";
     ls->menuPropsSound          = "声音";
     ls->menuPropsControls       = "控制器";
-    ls->menuPropsPerformance    = "性能";
+    ls->menuPropsEffects        = "Effects";               // New in 2.9
     ls->menuPropsSettings        = "设定";
     ls->menuPropsFile           = "文件";
     ls->menuPropsDisk           = "Disks";               // New in 2.7
@@ -295,6 +295,7 @@ void langInitChineseSimplified(LanguageStrings* ls)
     ls->propSound               = "声音";
     ls->propControls            = "控制器";
     ls->propPerformance         = "性能";
+    ls->propEffects             = "Effects";             // New in 2.9
     ls->propSettings             = "其他";
     ls->propFile                = "文件";
     ls->propDisk                = "Disks";              // New in 2.7
@@ -309,7 +310,10 @@ void langInitChineseSimplified(LanguageStrings* ls)
     ls->propEmuSpeedText        = "模拟速度:";
     ls->propEmuFrontSwitchGB     = "Panasonic 开关 ";
     ls->propEmuFrontSwitch       = " 前端开关";
+    ls->propEmuNoSpriteLimits   = " Disable Sprites Limitation";  // New in 2.9
+    ls->propEnableMsxKeyboardQuirk = " Emulate MSX keyboard quirk";  // New in 2.9
     ls->propEmuFdcTiming        = " 禁用软盘驱动器计时";
+    ls->propEmuReversePlay      = " Enable reverse playback"; // New in 2.8.3
     ls->propEmuPauseSwitch      = " 暂停开关";
     ls->propEmuAudioSwitch       = " MSX-AUDIO 卡开关";
     ls->propVideoFreqText       = "视频频率:";
@@ -396,6 +400,19 @@ void langInitChineseSimplified(LanguageStrings* ls)
     ls->propCdromMethodAspi     = "ASPI";            // New in 2.7
     ls->propCdromDrive          = "Drive:";          // New in 2.7
 
+    ls->propD3DParametersGB         = "Parameters ";                // New in 2.9
+    ls->propD3DAspectRatioText      = "Aspect ratio";               // New in 2.9
+    ls->propD3DLinearFilteringText  = " Linear filtering";          // New in 2.9
+    ls->propD3DForceHighResText     = " Force high resolution";     // New in 2.9
+    ls->propD3DExtendBorderColorText    = " Extend border color";   // New in 2.9
+
+    ls->propD3DCroppingGB               = "Cropping ";              // New in 2.9
+    ls->propD3DCroppingTypeText         = "Cropping type:";         // New in 2.9
+    ls->propD3DCroppingLeftText         = "Left:";                  // New in 2.9
+    ls->propD3DCroppingRightText        = "Right:";                 // New in 2.9
+    ls->propD3DCroppingTopText          = "Top:";                   // New in 2.9
+    ls->propD3DCroppingBottomText       = "Bottom:";                // New in 2.9
+
 
     //----------------------
     // Dropdown related lines
@@ -425,6 +442,7 @@ void langInitChineseSimplified(LanguageStrings* ls)
     ls->enumVideoDrvDirectDrawHW = "DirectDraw HW 加速"; 
     ls->enumVideoDrvDirectDraw  = "DirectDraw";
     ls->enumVideoDrvGDI         = "GDI";
+    ls->enumVideoDrvD3D         = "Direct3D";
 
     ls->enumVideoFrameskip0     = "无";
     ls->enumVideoFrameskip1     = "1个帧";
@@ -432,6 +450,19 @@ void langInitChineseSimplified(LanguageStrings* ls)
     ls->enumVideoFrameskip3     = "3个帧";
     ls->enumVideoFrameskip4     = "4个帧";
     ls->enumVideoFrameskip5     = "5个帧";
+
+    ls->enumD3DARAuto           = "Auto";           // New in 2.9
+    ls->enumD3DARStretch        = "Stretch";        // New in 2.9
+    ls->enumD3DARPAL            = "PAL";            // New in 2.9
+    ls->enumD3DARNTSC           = "NTSC";           // New in 2.9
+    ls->enumD3DAR11             = "1:1";            // New in 2.9
+
+    ls->enumD3DCropNone         = "None";           // New in 2.9
+    ls->enumD3DCropMSX1         = "MSX1";           // New in 2.9
+    ls->enumD3DCropMSX1Plus8    = "MSX1+8";         // New in 2.9
+    ls->enumD3DCropMSX2         = "MSX2";           // New in 2.9
+    ls->enumD3DCropMSX2Plus8    = "MSX2+8";         // New in 2.9
+    ls->enumD3DCropCustom       = "Custom";         // New in 2.9
 
     ls->enumSoundDrvNone        = "无声";
     ls->enumSoundDrvWMM         = "WMM 驱动";
@@ -505,6 +536,7 @@ void langInitChineseSimplified(LanguageStrings* ls)
     ls->confChipVideoChip        = "显示芯片:";
     ls->confChipVideoRam         = "显示内存:";
     ls->confChipSoundGB          = "声音 ";
+    ls->confChipPsgStereoText    = " PSG 立体声";
 
     ls->confCmosGB                = "CMOS ";
     ls->confCmosEnable            = " 启用 CMOS";
@@ -594,6 +626,7 @@ void langInitChineseSimplified(LanguageStrings* ls)
     ls->shortcutSwitchPause     = "切换暂停开关";
     ls->shortcutToggleMouseLock = "切换鼠标锁定";
     ls->shortcutEmuSpeedMax     = "最高速模拟";
+    ls->shortcutEmuPlayReverse  = "Rewind emulation";                     // New in 2.8.3
     ls->shortcutEmuSpeedToggle  = "锁定最高速模拟";
     ls->shortcutEmuSpeedNormal  = "正常模拟速度";
     ls->shortcutEmuSpeedInc     = "加快模拟速度";
@@ -603,7 +636,7 @@ void langInitChineseSimplified(LanguageStrings* ls)
     ls->shortcutShowVideoProp   = "显示视频属性";
     ls->shortcutShowAudioProp   = "显示音频属性";
     ls->shortcutShowCtrlProp    = "显示控制属性";
-    ls->shortcutShowPerfProp    = "显示性能属性";
+    ls->shortcutShowEffectsProp = "Show Effects Properties";     // New in 2.9
     ls->shortcutShowSettProp    = "显示其他属性";
     ls->shortcutShowPorts       = "显示端口设定";
     ls->shortcutShowLanguage    = "显示语言对话框";
@@ -618,6 +651,8 @@ void langInitChineseSimplified(LanguageStrings* ls)
     ls->shortcutShowFiles       = "显示文件设定";
     ls->shortcutToggleSpriteEnable = "显示/隐藏活动块";
     ls->shortcutToggleFdcTiming = "启用/禁用软盘驱动器计时";
+    ls->shortcutToggleNoSpriteLimits = "Toggle Sprites Limitation";                 // New in 2.9
+    ls->shortcutEnableMsxKeyboardQuirk = "Emulate MSX Keyboard Quirk";              // New in 2.9
     ls->shortcutToggleCpuTrace  = "启用/禁用 CPU 追踪";
     ls->shortcutVideoLoad       = "读取截取视频";        
     ls->shortcutVideoPlay       = "播放上一个截取视频";   
@@ -655,6 +690,7 @@ void langInitChineseSimplified(LanguageStrings* ls)
     ls->romTypeMicrosolFdc      = "Microsol Disk Controller";
     ls->romTypeNationalFdc      = "National Disk Controller";
     ls->romTypePhilipsFdc       = "Philips Disk Controller";
+    ls->romTypeSvi707Fdc        = "SVI-707 Disk Controller";
     ls->romTypeSvi738Fdc        = "SVI-738 Disk Controller";
     ls->romTypeMappedRam        = "Mapped RAM";
     ls->romTypeMirroredRam1k    = "1kB Mirrored RAM";

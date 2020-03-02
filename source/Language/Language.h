@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Language/Language.h,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Language/Language.h,v $
 **
-** $Revision: 1.98 $
+** $Revision: 1.99 $
 **
-** $Date: 2008/10/26 19:48:18 $
+** $Date: 2009-04-04 20:57:19 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -182,12 +182,12 @@ char* langMenuPropsEmulation();
 char* langMenuPropsVideo();
 char* langMenuPropsSound();
 char* langMenuPropsControls();
-char* langMenuPropsPerformance();
 char* langMenuPropsSettings();
 char* langMenuPropsFile();
 char* langMenuPropsDisk();
 char* langMenuPropsLanguage();
 char* langMenuPropsPorts();
+char* langMenuPropsEffects();
 
 char* langMenuVideoSource();
 char* langMenuVideoSourceDefault();
@@ -227,6 +227,7 @@ char* langMenuToolsMachine();
 char* langMenuToolsShortcuts();
 char* langMenuToolsCtrlEditor();
 char* langMenuToolsMixer();
+char* langMenuToolsLoadMemory();
 char* langMenuToolsDebugger();
 char* langMenuToolsTrainer();
 char* langMenuToolsTraceLogger();
@@ -311,10 +312,12 @@ char* langDlgRenderVideoCapture();
 
 char* langPropTitle();
 char* langPropEmulation();
+char* langPropD3D();
 char* langPropVideo();
 char* langPropSound();
 char* langPropControls();
 char* langPropPerformance();
+char* langPropEffects();
 char* langPropSettings();
 char* langPropFile();
 char* langPropDisk();
@@ -330,6 +333,9 @@ char* langPropEmuSpeedText();
 char* langPropEmuFrontSwitchGB();
 char* langPropEmuFrontSwitch();
 char* langPropEmuFdcTiming();
+char* langPropEmuReversePlay();
+char* langPropEmuNoSpriteLimits();
+char* langPropEnableMsxKeyboardQuirk();
 char* langPropEmuPauseSwitch();
 char* langPropEmuAudioSwitch();
 char* langPropVideoFreqText();
@@ -416,6 +422,19 @@ char* langPropCdromMethodIoctl();
 char* langPropCdromMethodAspi();
 char* langPropCdromDrive();
 
+char* langPropD3DParametersGB();
+char* langPropD3DAspectRatioText();
+char* langPropD3DLinearFilteringText();
+char* langPropD3DForceHighResText();
+char* langPropD3DExtendBorderColorText();
+
+char* langpropD3DCroppingGB();
+char* langpropD3DCroppingTypeText();
+char* langpropD3DCroppingLeftText();
+char* langpropD3DCroppingRightText();
+char* langpropD3DCroppingTopText();
+char* langpropD3DCroppingBottomText();
+
 //----------------------
 // Dropdown related lines
 //----------------------
@@ -445,6 +464,7 @@ char* langEnumVideoSizeFullscreen();
 char* langEnumVideoDrvDirectDrawHW();
 char* langEnumVideoDrvDirectDraw();
 char* langEnumVideoDrvGDI();
+char* langEnumVideoDrvD3D();
 
 char* langEnumVideoFrameskip0();
 char* langEnumVideoFrameskip1();
@@ -452,6 +472,19 @@ char* langEnumVideoFrameskip2();
 char* langEnumVideoFrameskip3();
 char* langEnumVideoFrameskip4();
 char* langEnumVideoFrameskip5();
+
+char* langEnumD3DARAuto();
+char* langEnumD3DARStretch();
+char* langEnumD3DARPAL();
+char* langEnumD3DARNTSC();
+char* langEnumD3DAR11();
+
+char* langEnumD3DCropNone();
+char* langEnumD3DCropMSX1();
+char* langEnumD3DCropMSX1Plus8();
+char* langEnumD3DCropMSX2();
+char* langEnumD3DCropMSX2Plus8();
+char* langEnumD3DCropCustom();
 
 char* langEnumSoundDrvNone();
 char* langEnumSoundDrvWMM();
@@ -524,6 +557,7 @@ char* langConfChipVideoGB();
 char* langConfChipVideoChip();
 char* langConfChipVideoRam();
 char* langConfChipSoundGB();
+char* langConfChipPsgStereoText();
 
 char* langConfCmosGB();
 char* langConfCmosEnableText();
@@ -613,6 +647,7 @@ char* langShortcutSwitchFront();
 char* langShortcutSwitchPause();
 char* langShortcutToggleMouseLock();
 char* langShortcutEmuSpeedMax();
+char* langShortcutEmuPlayReverse();
 char* langShortcutEmuSpeedMaxToggle();
 char* langShortcutEmuSpeedNormal();
 char* langShortcutEmuSpeedInc();
@@ -622,7 +657,7 @@ char* langShortcutShowEmuProp();
 char* langShortcutShowVideoProp();
 char* langShortcutShowAudioProp();
 char* langShortcutShowCtrlProp();
-char* langShortcutShowPerfProp();
+char* langShortcutShowEffectsProp();
 char* langShortcutShowSettProp();
 char* langShortcutShowPorts();
 char* langShortcutShowLanguage();
@@ -637,6 +672,8 @@ char* langShortcutShowAbout();
 char* langShortcutShowFiles();
 char* langShortcutToggleSpriteEnable();
 char* langShortcutToggleFdcTiming();
+char* langShortcutToggleNoSpriteLimits();
+char* langShortcutEnableMsxKeyboardQuirk();
 char* langShortcutToggleCpuTrace();
 char* langShortcutVideoLoad();
 char* langShortcutVideoPlay();
@@ -695,6 +732,7 @@ char* langRomTypeTc8566afTrFdc();
 char* langRomTypeMicrosolFdc();
 char* langRomTypeNationalFdc();
 char* langRomTypePhilipsFdc();
+char* langRomTypeSvi707Fdc();
 char* langRomTypeSvi738Fdc();
 char* langRomTypeMappedRam();
 char* langRomTypeMirroredRam1k();
@@ -703,6 +741,7 @@ char* langRomTypeNormalRam();
 char* langRomTypeKanji();
 char* langRomTypeHolyQuran();
 char* langRomTypeMatsushitaSram();
+char* langRomTypeMasushitaSramInv();
 char* langRomTypePanasonic8();
 char* langRomTypePanasonicWx16();
 char* langRomTypePanasonic16();
@@ -719,6 +758,7 @@ char* langRomTypeTurborPause();
 char* langRomTypeF4deviceNormal();
 char* langRomTypeF4deviceInvert();
 char* langRomTypeMsxMidi();
+char* langRomTypeMsxMidiExternal();
 char* langRomTypeTurborTimer();
 char* langRomTypeKoei();
 char* langRomTypeBasic();
@@ -754,6 +794,7 @@ char* langRomTypeSvi328Fdc();
 char* langRomTypeSvi328Prn();
 char* langRomTypeSvi328Uart();
 char* langRomTypeSvi328col80();
+char* langRomTypeSvi328RsIde();
 char* langRomTypeSvi727col80();
 char* langRomTypeColecoCart();
 char* langRomTypeSg1000Cart();
@@ -823,6 +864,7 @@ char* langDbgDevRamMapper();
 char* langDbgDevRam();
 char* langDbgDevIdeBeer();
 char* langDbgDevIdeGide();
+char* langDbgDevIdeSviRs();
 char* langDbgDevScsiGouda();
 char* langDbgDevF4Device();
 char* langDbgDevFmpac();

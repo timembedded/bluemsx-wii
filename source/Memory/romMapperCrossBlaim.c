@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Memory/romMapperCrossBlaim.c,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperCrossBlaim.c,v $
 **
 ** $Revision: 1.9 $
 **
-** $Date: 2008/06/14 12:20:25 $
+** $Date: 2008-06-14 12:20:25 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -125,7 +125,7 @@ static void write(RomMapperCrossBlaim* rm, UInt16 address, UInt8 value)
     }
 }
 
-int romMapperCrossBlaimCreate(char* filename, UInt8* romData, 
+int romMapperCrossBlaimCreate(const char* filename, UInt8* romData, 
                               int size, int slot, int sslot, int startPage) 
 {
     DeviceCallbacks callbacks = { destroy, NULL, saveState, loadState };

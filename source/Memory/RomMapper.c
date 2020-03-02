@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Memory/RomMapper.c,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/RomMapper.c,v $
 **
 ** $Revision: 1.8 $
 **
-** $Date: 2008/03/30 18:38:42 $
+** $Date: 2008-03-30 18:38:42 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -157,6 +157,7 @@ RomType romMapperTypeFromString(const char* name)
     if (0 == strcmpnocase(name, "diskpatch"))    return ROM_DISKPATCH;
     if (0 == strcmpnocase(name, "caspatch"))     return ROM_CASPATCH;
     if (0 == strcmpnocase(name, "wd2793"))       return ROM_PHILIPSFDC;
+    if (0 == strcmpnocase(name, "svi707fdc"))    return ROM_SVI707FDC;
     if (0 == strcmpnocase(name, "svi738fdc"))    return ROM_SVI738FDC;
     if (0 == strcmpnocase(name, "microsol"))     return ROM_MICROSOL;
     if (0 == strcmpnocase(name, "rtype"))        return ROM_RTYPE;
@@ -172,7 +173,7 @@ RomType romMapperTypeFromString(const char* name)
     if (0 == strcmpnocase(name, "jisyo"))        return ROM_JISYO;    
     if (0 == strcmpnocase(name, "bunsetsu"))     return ROM_BUNSETU;
     if (0 == strcmpnocase(name, "coleco"))       return ROM_COLECO;
-    if (0 == strcmpnocase(name, "svi328"))       return ROM_SVI328;
+    if (0 == strcmpnocase(name, "svi328"))       return ROM_SVI328CART;
 
     return ROM_UNKNOWN;
 }    
@@ -272,8 +273,8 @@ RomType romMapperGuessRom(const void *buffer, int size, int guess, char* extende
     romType = romMapperRomFromFile(romData, size, extendedName);
 
     if (romType == ROM_UNKNOWN &&
-        size < 0x8001 && romData[0] == 0xF3 && romData[1] == 0x31) {
-            romType = ROM_SVI328;
+        size < 0x10000 && romData[0] == 0xF3 && romData[1] == 0x31) {
+            romType = ROM_SVI328CART;
     }
 
     if (romType == ROM_UNKNOWN &&

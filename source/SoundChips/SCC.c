@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/SoundChips/SCC.c,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/SoundChips/SCC.c,v $
 **
 ** $Revision: 1.27 $
 **
-** $Date: 2008/03/30 18:38:45 $
+** $Date: 2008-03-30 18:38:45 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -13,7 +13,7 @@
 ** it under the terms of the GNU General Public License as published by
 ** the Free Software Foundation; either version 2 of the License, or
 ** (at your option) any later version.
-**
+** 
 ** This program is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -33,6 +33,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+
+//#define BASE_PHASE_STEP 0x28959becUL  /* = (1 << 28) * 3579545 / 32 / 44100 */
 #define BASE_PHASE_STEP 0xA2566FBUL  /* = (1 << 28) * 3579545 / 32 / (44100 * 4) */
 
 #define ROTATE_OFF 32
@@ -48,7 +50,7 @@ struct SCC
     Mixer* mixer;
     Int32  handle;
     Int32  debugHandle;
-
+    
     SccMode mode;
     UInt8 deformReg;
     Int8 curWave[5];
@@ -81,7 +83,7 @@ void sccLoadState(SCC* scc)
 
     scc->mode      =         saveStateGet(state, "mode", SCC_COMPATIBLE);
     scc->deformReg = (UInt8) saveStateGet(state, "deformReg", 0);
-
+    
     for (i = 0; i < 5; i++) {
         int j;
         for (j = 0; j < 32; j++) {
@@ -91,25 +93,25 @@ void sccLoadState(SCC* scc)
 
         sprintf(tag, "period%d", i);
         scc->period[i] = saveStateGet(state, tag, 0);
-
+        
         sprintf(tag, "phase%d", i);
         scc->phase[i] = saveStateGet(state, tag, 0);
-
+        
         sprintf(tag, "step%d", i);
         scc->phaseStep[i] = saveStateGet(state, tag, 0);
-
+        
         sprintf(tag, "volume%d", i);
         scc->volume[i] = saveStateGet(state, tag, 0);
-
+        
         sprintf(tag, "nextVolume%d", i);
         scc->nextVolume[i] = saveStateGet(state, tag, 0);
-
+        
         sprintf(tag, "rotate%d", i);
         scc->rotate[i] = saveStateGet(state, tag, 0);
-
+        
         sprintf(tag, "readOnly%d", i);
         scc->readOnly[i] = saveStateGet(state, tag, 0);
-
+        
         sprintf(tag, "daVolume%d", i);
         scc->daVolume[i] = saveStateGet(state, tag, 0);
 
@@ -128,7 +130,7 @@ void sccSaveState(SCC* scc)
 
     saveStateSet(state, "mode", scc->mode);
     saveStateSet(state, "deformReg", scc->deformReg);
-
+    
     for (i = 0; i < 5; i++) {
         int j;
         for (j = 0; j < 32; j++) {
@@ -138,25 +140,25 @@ void sccSaveState(SCC* scc)
 
         sprintf(tag, "period%d", i);
         saveStateSet(state, tag, scc->period[i]);
-
+        
         sprintf(tag, "phase%d", i);
         saveStateSet(state, tag, scc->phase[i]);
-
+        
         sprintf(tag, "step%d", i);
         saveStateSet(state, tag, scc->phaseStep[i]);
-
+        
         sprintf(tag, "volume%d", i);
         saveStateSet(state, tag, scc->volume[i]);
-
+        
         sprintf(tag, "nextVolume%d", i);
         saveStateSet(state, tag, scc->nextVolume[i]);
-
+        
         sprintf(tag, "rotate%d", i);
         saveStateSet(state, tag, scc->rotate[i]);
-
+        
         sprintf(tag, "readOnly%d", i);
         saveStateSet(state, tag, scc->readOnly[i]);
-
+        
         sprintf(tag, "daVolume%d", i);
         saveStateSet(state, tag, scc->daVolume[i]);
 
@@ -173,7 +175,7 @@ static UInt8 sccGetWave(SCC* scc, UInt8 channel, UInt8 address)
         UInt8 value = scc->wave[channel][address & 0x1f];
         scc->bus = value;
         return value;
-    }
+    } 
     else {
         UInt8 periodCh = channel;
         UInt8 value;
@@ -244,7 +246,7 @@ static void sccUpdateFreqAndVol(SCC* scc, UInt8 address, UInt8 value)
 
         if (address & 1) {
             scc->period[channel] = ((value & 0xf) << 8) | (scc->period[channel] & 0xff);
-        }
+        } 
         else {
             scc->period[channel] = (scc->period[channel] & 0xf00) | (value & 0xff);
         }
@@ -259,16 +261,16 @@ static void sccUpdateFreqAndVol(SCC* scc, UInt8 address, UInt8 value)
         else if (scc->deformReg & 1) {
             period >>= 8;
         }
-
+        
         scc->phaseStep[channel] = period > 0 ? BASE_PHASE_STEP / (1 + period) : 0;
-
+        
         scc->volume[channel] = scc->nextVolume[channel];
         scc->phase[channel] &= 0x1f << 23;
         scc->oldSample[channel] = 0xff;
-    }
+    } 
     else if (address < 0x0f) {
         scc->nextVolume[address - 0x0a] = value & 0x0f;
-    }
+    } 
     else {
         scc->enable = value;
     }
@@ -285,7 +287,7 @@ static void sccUpdateDeformation(SCC* scc, UInt8 value)
     mixerSync(scc->mixer);
 
     scc->deformReg = value;
-
+    
     for (channel = 0; channel < 5; channel++) {
         scc->deformSample[channel] = scc->oldSample[channel];
     }
@@ -380,7 +382,7 @@ SCC* sccCreate(Mixer* mixer)
 
 //    scc->debugHandle = debugDeviceRegister(DBGTYPE_AUDIO, langDbgDevScc(), &dbgCallbacks, scc);
 
-    scc->handle = mixerRegisterChannel(mixer, MIXER_CHANNEL_SCC, 0, sccSync, scc);
+    scc->handle = mixerRegisterChannel(mixer, MIXER_CHANNEL_SCC, 0, sccSync, NULL, scc);
 
     sccReset(scc);
 
@@ -401,12 +403,12 @@ UInt8 sccRead(SCC* scc, UInt8 address)
     case SCC_REAL:
         if (address < 0x80) {
             return sccGetWave(scc, address >> 5, address);
-        }
-
+        } 
+        
         if (address < 0xa0) {
             return sccGetFreqAndVol(scc, address);
-        }
-
+        } 
+        
         if (address < 0xe0) {
             return 0xff;
         }
@@ -418,32 +420,32 @@ UInt8 sccRead(SCC* scc, UInt8 address)
     case SCC_COMPATIBLE:
         if (address < 0x80) {
             return sccGetWave(scc, address >> 5, address);
-        }
-
+        } 
+        
         if (address < 0xa0) {
             return sccGetFreqAndVol(scc, address);
         }
-
+        
         if (address < 0xc0) {
             return sccGetWave(scc, 4, address);
-        }
+        } 
 
         if (address < 0xe0) {
             sccUpdateDeformation(scc, 0xff);
             return 0xff;
         }
-
+ 
         return 0xff;
 
     case SCC_PLUS:
         if (address < 0xa0) {
             return sccGetWave(scc, address >> 5, address);
-        }
-
+        } 
+        
         if (address < 0xc0) {
             return sccGetFreqAndVol(scc, address);
-        }
-
+        } 
+        
         if (address < 0xe0) {
             sccUpdateDeformation(scc, 0xff);
             return 0xff;
@@ -464,12 +466,12 @@ UInt8 sccPeek(SCC* scc, UInt8 address)
     case SCC_REAL:
         if (address < 0x80) {
             return sccGetWave(scc, address >> 5, address);
-        }
-
+        } 
+        
         if (address < 0xa0) {
             return sccGetFreqAndVol(scc, address);
-        }
-
+        } 
+        
         if (address < 0xe0) {
             return 0xff;
         }
@@ -479,31 +481,31 @@ UInt8 sccPeek(SCC* scc, UInt8 address)
     case SCC_COMPATIBLE:
         if (address < 0x80) {
             return sccGetWave(scc, address >> 5, address);
-        }
-
+        } 
+        
         if (address < 0xa0) {
             return sccGetFreqAndVol(scc, address);
         }
-
+        
         if (address < 0xc0) {
             result = sccGetWave(scc, 4, address);
-        }
+        } 
 
         if (address < 0xe0) {
             return 0xff;
         }
-
+ 
         result = 0xff;
 
     case SCC_PLUS:
         if (address < 0xa0) {
             return sccGetWave(scc, address >> 5, address);
-        }
-
+        } 
+        
         if (address < 0xc0) {
             return sccGetFreqAndVol(scc, address);
-        }
-
+        } 
+        
         if (address < 0xe0) {
             return 0xff;
         }
@@ -523,13 +525,13 @@ void sccWrite(SCC* scc, UInt8 address, UInt8 value)
         if (address < 0x80) {
             sccUpdateWave(scc, address >> 5, address, value);
             return;
-        }
-
+        } 
+        
         if (address < 0xa0) {
             sccUpdateFreqAndVol(scc, address, value);
             return;
-        }
-
+        } 
+        
         if (address < 0xe0) {
             return;
         }
@@ -541,21 +543,21 @@ void sccWrite(SCC* scc, UInt8 address, UInt8 value)
         if (address < 0x80) {
             sccUpdateWave(scc, address >> 5, address, value);
             return;
-        }
-
+        } 
+        
         if (address < 0xa0) {
             sccUpdateFreqAndVol(scc, address, value);
             return;
-        }
-
+        } 
+        
         if (address < 0xc0) {
             return;
-        }
-
+        } 
+        
         if (address < 0xe0) {
             sccUpdateDeformation(scc, value);
             return;
-        }
+        } 
 
         return;
 
@@ -563,13 +565,13 @@ void sccWrite(SCC* scc, UInt8 address, UInt8 value)
         if (address < 0xa0) {
             sccUpdateWave(scc, address >> 5, address, value);
             return;
-        }
-
+        } 
+        
         if (address < 0xc0) {
             sccUpdateFreqAndVol(scc, address, value);
             return;
-        }
-
+        } 
+        
         if (address < 0xe0) {
             sccUpdateDeformation(scc, value);
             return;
@@ -610,7 +612,7 @@ static Int32 filter(SCC* scc, Int32 input) {
 static Int32 filter4(SCC* scc, Int32 in1, Int32 in2, Int32 in3, Int32 in4)
 {
     int i;
-    double res;
+    DoubleT res;
 
     for (i = 0; i < 91; ++i) {
         scc->in[i] = scc->in[i + 4];
@@ -707,7 +709,7 @@ static Int32* sccSync(SCC* scc, UInt32 count)
                     scc->curWave[channel] = scc->wave[channel][sample];
 #endif
 
-                    scc->oldSample[channel] = sample;
+                    scc->oldSample[channel] = sample;   
                 }
 
                 refVolume = 25 * ((scc->enable >> channel) & 1) * (Int32)scc->volume[channel];
@@ -716,7 +718,7 @@ static Int32* sccSync(SCC* scc, UInt32 count)
                 }
 
                 masterVolume[i] += scc->curWave[channel] * scc->daVolume[channel];
-
+                
                 if (scc->daVolume[channel] > refVolume) {
                     scc->daVolume[channel] = scc->daVolume[channel] * 9 / 10;
                 }

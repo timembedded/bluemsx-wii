@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Memory/romMapperMoonsound.c,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperMoonsound.c,v $
 **
 ** $Revision: 1.9 $
 **
-** $Date: 2008/03/30 18:38:44 $
+** $Date: 2008-03-30 18:38:44 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -126,7 +126,7 @@ static void getDebugInfo(RomMapperMoonsound* rm, DbgDevice* dbgDevice)
     dbgIoPortsAddPort(ioPorts, 5, 0xc7, DBG_IO_READWRITE, peek(rm, 0xc7));
 }
 
-int romMapperMoonsoundCreate(char* filename, UInt8* romData, int size, int sramSize)
+int romMapperMoonsoundCreate(const char* filename, UInt8* romData, int size, int sramSize)
 {
     DeviceCallbacks callbacks = { destroy, reset, saveState, loadState };
     DebugCallbacks dbgCallbacks = { getDebugInfo, NULL, NULL, NULL };

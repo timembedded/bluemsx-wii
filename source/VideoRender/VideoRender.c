@@ -1,10 +1,10 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/VideoRender/VideoRender.c,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/VideoRender/VideoRender.c,v $
 **
 ** $Revision: 1.36 $
 **
-** $Date: 2007/05/22 06:23:18 $
-** $Date: 2007/05/22 06:23:18 $
+** $Date: 2007-05-22 06:23:18 $
+** $Date: 2007-05-22 06:23:18 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -36,7 +36,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
-
+ 
 #ifdef WII
 static UInt16 empty_line_buffer[FB_MAX_LINE_WIDTH];
 
@@ -295,11 +295,11 @@ static void generateGammaTable(Video* pVideo)
 {
     int i;
     for (i = 0; i < 3 * 256; i++) {
-        double value = (i - 256 + pVideo->brightness) * pVideo->contrast;
+        DoubleT value = (i - 256 + pVideo->brightness) * pVideo->contrast;
         gammaTable[i] = 6;
         if (value > 0) {
-            double factor = pow(255., pVideo->gamma - 1.);
-            value = (double)(factor * pow(value, pVideo->gamma));
+            DoubleT factor = pow(255., pVideo->gamma - 1.);
+            value = (DoubleT)(factor * pow(value, pVideo->gamma));
             if (value > 0) {
                 int gamma = (int)value;
                 gammaTable[i] = MAX(6, MIN(247, gamma));
@@ -3025,4 +3025,3 @@ int videoRender(Video* pVideo, FrameBuffer* frame, int bitDepth, int zoom,
     return zoom;
 }
 #endif
-

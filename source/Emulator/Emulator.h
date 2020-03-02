@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Emulator/Emulator.h,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Emulator/Emulator.h,v $
 **
 ** $Revision: 1.12 $
 **
-** $Date: 2008/03/30 18:38:40 $
+** $Date: 2008-03-30 18:38:40 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -32,7 +32,7 @@
 #include "Properties.h"
 #include "AudioMixer.h"
 
-typedef enum { EMU_RUNNING, EMU_PAUSED, EMU_STOPPED, EMU_SUSPENDED, EMU_STEP } EmuState;
+typedef enum { EMU_RUNNING, EMU_PAUSED, EMU_STOPPED, EMU_SUSPENDED, EMU_STEP, EMU_STEP_BACK } EmuState;
 
 void emulatorInit(Properties* properties, Mixer* mixer);
 void emulatorExit();
@@ -49,6 +49,8 @@ void emulatorStart(const char* stateName);
 void emulatorStop();
 void emulatorSetMaxSpeed(int enable);
 int  emulatorGetMaxSpeed();
+void emulatorPlayReverse(int enable);
+int  emulatorGetPlayReverse();
 int emulatorGetCpuOverflow();
 int emulatorGetSyncPeriod();
 EmuState emulatorGetState();

@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Memory/romMapperMoonsound.h,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperMoonsound.h,v $
 **
 ** $Revision: 1.4 $
 **
-** $Date: 2008/03/30 18:38:44 $
+** $Date: 2008-03-30 18:38:44 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -30,6 +30,6 @@
 
 #include "MsxTypes.h"
 
-int romMapperMoonsoundCreate(char* filename, UInt8* romData, int size, int sramSize);
+int romMapperMoonsoundCreate(const char* filename, UInt8* romData, int size, int sramSize);
 
 #endif

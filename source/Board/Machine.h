@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Board/Machine.h,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Board/Machine.h,v $
 **
 ** $Revision: 1.18 $
 **
-** $Date: 2008/03/30 18:38:39 $
+** $Date: 2008-03-30 18:38:39 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -30,6 +30,7 @@
  
 #include "MsxTypes.h"
 #include "MediaDb.h"
+#include "ArrayList.h"
 #include "VDP.h"
 #include "AY8910.h"
 #include <stdio.h>
@@ -80,6 +81,10 @@ typedef struct {
         int vramSize;
     } video;
     struct {
+        int psgstereo;
+        int psgpan[3];
+    } audio;
+    struct {
         int enable;
         int batteryBacked;
     } cmos;
@@ -94,13 +99,15 @@ typedef struct {
     } fdc;
     int slotInfoCount;
     SlotInfo slotInfo[32];
+    int isZipped;
+    char *zipFile;
 } Machine;
 
 
 Machine* machineCreate(const char* machineName);
 void machineDestroy(Machine* machine);
 
-char** machineGetAvailable(int checkRoms);
+void machineFillAvailable(ArrayList *list, int checkRoms);
 
 int machineIsValid(const char* machineName, int checkRoms);
 
@@ -112,6 +119,11 @@ int machineInitialize(Machine* machine, UInt8** mainRam, UInt32* mainRamSize, UI
 
 void machineLoadState(Machine* machine);
 void machineSaveState(Machine* machine);
+
+void machineSetDirectory(const char* dir);
+
+extern UInt8* g_mainRam;
+extern UInt32 g_mainRamSize;
 
 #endif
 

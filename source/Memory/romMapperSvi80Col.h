@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Memory/romMapperSvi80Col.h,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperSvi80Col.h,v $
 **
 ** $Revision: 1.5 $
 **
-** $Date: 2008/03/31 19:42:22 $
+** $Date: 2008-03-31 19:42:22 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -31,10 +31,10 @@
 
 #include "MsxTypes.h"
 
-void svi80colMemWrite(UInt16 address, UInt8 value);
-UInt8 svi80colMemRead(UInt16 address);
-int svi80colMemBankCtrlStatus(void);
+void svi328Col80MemWrite(UInt16 address, UInt8 value);
+UInt8 svi328Col80MemRead(UInt16 address);
+int svi328Col80MemBankCtrlStatus(void);
 
-int romMapperSvi80ColCreate(int frameRate, UInt8* romData, int size);
+int romMapperSvi328Col80Create(int frameRate, UInt8* romData, int size);
 
 #endif

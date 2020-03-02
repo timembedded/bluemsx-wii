@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Memory/sramMapperMegaSCSI.c,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/sramMapperMegaSCSI.c,v $
 **
 ** $Revision: 1.8 $
 **
-** $Date: 2007/03/28 17:35:35 $
+** $Date: 2007-03-28 17:35:35 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -295,7 +295,7 @@ static void write(SramMapperMegaSCSI* rm, UInt16 address, UInt8 value)
     }
 }
 
-int sramMapperMegaSCSICreate(char* filename, UInt8* buf, int size, int pSlot, int sSlot, int startPage, int hdId, int flag)
+int sramMapperMegaSCSICreate(const char* filename, UInt8* buf, int size, int pSlot, int sSlot, int startPage, int hdId, int flag)
 {
     DeviceCallbacks callbacks = {
         (void*)destroy, (void*)reset, (void*)saveState, (void*)loadState };

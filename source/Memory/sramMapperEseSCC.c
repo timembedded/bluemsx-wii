@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Memory/sramMapperEseSCC.c,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/sramMapperEseSCC.c,v $
 **
 ** $Revision: 1.8 $
 **
-** $Date: 2007/03/28 17:35:35 $
+** $Date: 2007-03-28 17:35:35 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -448,7 +448,7 @@ static void write(SramMapperEseSCC* rm, UInt16 address, UInt8 value)
     DBGLOG1("can't write: %x\n", address);
 }
 
-int sramMapperEseSCCCreate(char* filename, UInt8* buf, int size, int pSlot, int sSlot, int startPage, int hdId, int mode)
+int sramMapperEseSCCCreate(const char* filename, UInt8* buf, int size, int pSlot, int sSlot, int startPage, int hdId, int mode)
 {
     DeviceCallbacks callbacks = { (void*)destroy, (void*)reset, (void*)saveState, (void*)loadState };
 

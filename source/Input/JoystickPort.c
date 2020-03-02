@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Input/JoystickPort.c,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Input/JoystickPort.c,v $
 **
 ** $Revision: 1.10 $
 **
-** $Date: 2008/03/30 18:38:40 $
+** $Date: 2008-03-30 18:38:40 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -63,17 +63,24 @@ void joystickPortUpdateBoardInfo()
             joystickConfig.typeEnabled[i][JOYSTICK_PORT_MAGICKEYDONGLE] = 1;
             joystickConfig.typeEnabled[i][JOYSTICK_PORT_ASCIILASER] = 1;
             joystickConfig.typeEnabled[i][JOYSTICK_PORT_ARKANOID_PAD] = 1;
-            joystickConfig.defaultType[i] = JOYSTICK_PORT_NONE;
+            joystickConfig.defaultType[i] = JOYSTICK_PORT_JOYSTICK;
         }
+        //DINK: added line below
+        joystickConfig.defaultType[0] = JOYSTICK_PORT_JOYSTICK;
         joystickConfig.keyboardEnabled = 1;
         break;
 
     case BOARD_SG1000:
     case BOARD_SVI:
         for (i = 0; i < 2; i++) {
-            joystickConfig.typeEnabled[i][JOYSTICK_PORT_NONE] = 1;
+            //joystickConfig.typeEnabled[i][JOYSTICK_PORT_NONE] = 1;
             joystickConfig.typeEnabled[i][JOYSTICK_PORT_JOYSTICK] = 1;
-            joystickConfig.defaultType[i] = JOYSTICK_PORT_NONE;
+            joystickConfig.defaultType[i] = JOYSTICK_PORT_JOYSTICK;
+        }
+        //DINK: added line below
+        joystickConfig.defaultType[0] = JOYSTICK_PORT_JOYSTICK;
+        if (boardType==BOARD_SG1000) {  // enable port2 on SEGA SG-*
+            joystickConfig.defaultType[1] = JOYSTICK_PORT_JOYSTICK;
         }
         joystickConfig.keyboardEnabled = 1;
         break;
@@ -81,6 +88,8 @@ void joystickPortUpdateBoardInfo()
     case BOARD_COLECO:
         for (i = 0; i < 2; i++) {
             joystickConfig.typeEnabled[i][JOYSTICK_PORT_COLECOJOYSTICK] = 1;
+            joystickConfig.typeEnabled[i][JOYSTICK_PORT_SUPERACTION] = 1;
+            joystickConfig.typeEnabled[i][JOYSTICK_PORT_STEERINGWHEEL] = 1;
             joystickConfig.defaultType[i] = JOYSTICK_PORT_COLECOJOYSTICK;
         }
         joystickConfig.keyboardEnabled = 0;
@@ -125,14 +134,16 @@ void joystickPortSetType(int port, JoystickPortType type)
 
     if (inputType[0] == JOYSTICK_PORT_MOUSE || 
         inputType[0] == JOYSTICK_PORT_ARKANOID_PAD || 
+        inputType[0] == JOYSTICK_PORT_COLECOJOYSTICK || 
         inputType[1] == JOYSTICK_PORT_MOUSE || 
-        inputType[1] == JOYSTICK_PORT_ARKANOID_PAD)
+        inputType[1] == JOYSTICK_PORT_ARKANOID_PAD || 
+        inputType[1] == JOYSTICK_PORT_COLECOJOYSTICK)
     {
         mode = AM_ENABLE_MOUSE;
     }
 
     if (inputType[0] == JOYSTICK_PORT_GUNSTICK || 
-        inputType[0] == JOYSTICK_PORT_ASCIILASER || 
+        inputType[0] == JOYSTICK_PORT_ASCIILASER ||
         inputType[1] == JOYSTICK_PORT_GUNSTICK || 
         inputType[1] == JOYSTICK_PORT_ASCIILASER)
     {
@@ -182,6 +193,8 @@ char* joystickPortGetDescription(JoystickPortType type, int translate)
         case JOYSTICK_PORT_MAGICKEYDONGLE:  return langEnumControlsJoyMagicKeyDongle();
         case JOYSTICK_PORT_ASCIILASER:      return langEnumControlsJoyAsciiLaser();
         case JOYSTICK_PORT_ARKANOID_PAD:    return langEnumControlsJoyArkanoidPad();
+        case JOYSTICK_PORT_SUPERACTION:     return "Super Action Controller";
+        case JOYSTICK_PORT_STEERINGWHEEL:   return "Expansion Module #2";
         }
 
         return langTextUnknown();
@@ -198,6 +211,8 @@ char* joystickPortGetDescription(JoystickPortType type, int translate)
     case JOYSTICK_PORT_MAGICKEYDONGLE:  return "magic key dongle";
     case JOYSTICK_PORT_ASCIILASER:      return "ascii laser";
     case JOYSTICK_PORT_ARKANOID_PAD:    return "arkanoid pad";
+    case JOYSTICK_PORT_SUPERACTION:     return "Super Action Controller";
+    case JOYSTICK_PORT_STEERINGWHEEL:   return "Expansion Module #2";
     }
 
     return "unknown";
@@ -219,6 +234,8 @@ JoystickPortType joystickPortNameToType(int port, char* name, int translate)
         if (0 == strcmp(name, langEnumControlsJoyMagicKeyDongle())) return JOYSTICK_PORT_MAGICKEYDONGLE;
         if (0 == strcmp(name, langEnumControlsJoyAsciiLaser())) return JOYSTICK_PORT_ASCIILASER;
         if (0 == strcmp(name, langEnumControlsJoyArkanoidPad())) return JOYSTICK_PORT_ARKANOID_PAD;
+        if (0 == strcmp(name, "Super Action Controller")) return JOYSTICK_PORT_SUPERACTION;
+        if (0 == strcmp(name, "Expansion Module #2")) return JOYSTICK_PORT_STEERINGWHEEL;
 
         return JOYSTICK_PORT_NONE;
     }
@@ -231,6 +248,8 @@ JoystickPortType joystickPortNameToType(int port, char* name, int translate)
     if (0 == strcmp(name, "magic key dongle")) return JOYSTICK_PORT_MAGICKEYDONGLE;
     if (0 == strcmp(name, "ascii laser")) return JOYSTICK_PORT_ASCIILASER;
     if (0 == strcmp(name, "arkanoid pad")) return JOYSTICK_PORT_ARKANOID_PAD;
+    if (0 == strcmp(name, "Super Action Controller")) return JOYSTICK_PORT_SUPERACTION;
+    if (0 == strcmp(name, "Expansion Module #2")) return JOYSTICK_PORT_STEERINGWHEEL;
 
     return JOYSTICK_PORT_NONE;
 }

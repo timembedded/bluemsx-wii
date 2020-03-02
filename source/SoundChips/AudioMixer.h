@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/SoundChips/AudioMixer.h,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/SoundChips/AudioMixer.h,v $
 **
-** $Revision: 1.13 $
+** $Revision: 1.14 $
 **
-** $Date: 2008/03/30 18:38:45 $
+** $Date: 2009-07-03 21:27:14 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -13,7 +13,7 @@
 ** it under the terms of the GNU General Public License as published by
 ** the Free Software Foundation; either version 2 of the License, or
 ** (at your option) any later version.
-**
+** 
 ** This program is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -38,7 +38,7 @@ typedef struct Mixer Mixer;
 
 #define AUDIO_SAMPLERATE       44100
 
-typedef enum {
+typedef enum { 
     MIXER_CHANNEL_PSG = 0,
     MIXER_CHANNEL_SCC,
     MIXER_CHANNEL_MSXMUSIC,
@@ -60,6 +60,7 @@ typedef enum {
 #define MAX_CHANNELS 16
 
 typedef Int32* (*MixerUpdateCallback)(void*, UInt32);
+typedef void (*MixerSetSampleRateCallback)(void*, UInt32);
 typedef Int32 (*MixerWriteCallback)(void*, Int16*, UInt32);
 
 /* Constructor and destructor */
@@ -72,6 +73,8 @@ Int32 mixerGetMasterVolume(Mixer* mixer, int leftRight);
 void mixerSetMasterVolume(Mixer* mixer, Int32 volume);
 void mixerEnableMaster(Mixer* mixer, Int32 enable);
 void mixerSetStereo(Mixer* mixer, Int32 stereo);
+UInt32 mixerGetSampleRate(Mixer* mixer);
+void mixerSetSampleRate(Mixer* mixer, UInt32 rate);
 
 Int32 mixerGetChannelTypeVolume(Mixer* mixer, Int32 channelType, int leftRight);
 void mixerSetChannelTypeVolume(Mixer* mixer, Int32 channelType, Int32 volume);
@@ -91,8 +94,9 @@ void mixerStopLog(Mixer* mixer);
 void mixerReset(Mixer* mixer);
 void mixerSync(Mixer* mixer);
 
-Int32 mixerRegisterChannel(Mixer* mixer, Int32 audioType, Int32 stereo,
-                           MixerUpdateCallback callback, void*param);
+Int32 mixerRegisterChannel(Mixer* mixer, Int32 audioType, Int32 stereo, 
+                           MixerUpdateCallback callback, MixerSetSampleRateCallback rateCallback,
+                           void*param);
 void mixerSetEnable(Mixer* mixer, int enable);
 void mixerUnregisterChannel(Mixer* mixer, Int32 handle);
 

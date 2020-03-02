@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/IoDevice/Disk.h,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/IoDevice/Disk.h,v $
 **
-** $Revision: 1.19 $
+** $Revision: 1.20 $
 **
-** $Date: 2007/03/24 05:20:34 $
+** $Date: 2009-07-18 15:08:04 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -13,7 +13,7 @@
 ** it under the terms of the GNU General Public License as published by
 ** the Free Software Foundation; either version 2 of the License, or
 ** (at your option) any later version.
-**
+** 
 ** This program is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -47,7 +47,7 @@ typedef enum {
     DSKE_CRC_ERROR
 } DSKE;
 
-UInt8 diskChange(int driveId, char* fileName, const char* fileInZipFile);
+UInt8 diskChange(int driveId, const char* fileName, const char* fileInZipFile);
 void diskSetInfo(int driveId, char* fileName, const char* fileInZipFile);
 void  diskEnable(int driveId, int enable);
 UInt8 diskEnabled(int driveId);
@@ -68,7 +68,7 @@ int   _diskGetTotalSectors(int driveId);
 static int diskGetHdDriveId(int hdId, int driveNo) {
     return MAX_FDC_COUNT + MAX_DRIVES_PER_HD * hdId + driveNo;
 }
-static int diskGetUsbDriveId(int driveId, int driveNo) {
+static int diskGetUsbDriveId(int driveId, int driveNo) { 
     return MAX_FDC_COUNT + MAX_DRIVES_PER_HD * driveId + driveNo;
 }
 

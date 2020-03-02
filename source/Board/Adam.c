@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Board/Adam.c,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Board/Adam.c,v $
 **
 ** $Revision: 1.7 $
 **
-** $Date: 2008/04/18 04:09:54 $
+** $Date: 2008-04-18 04:09:54 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -47,7 +47,8 @@
 #include "MegaromCartridge.h"
 #include "JoystickPort.h"
 #include "ColecoJoystick.h"
-
+#include "ColecoSuperAction.h"
+#include "ColecoSteeringWheel.h"
 
 /* Hardware */
 static SN76489*    sn76489;
@@ -152,7 +153,7 @@ static void colecoJoyIoWrite(void* dummy, UInt16 ioPort, UInt8 value)
 static UInt8 colecoJoyIoRead(void* dummy, UInt16 ioPort)
 {
     ColecoJoystickDevice* device = joyDevice[(ioPort >> 1) & 1];
-    UInt8 joyState = 0x3f;
+    UInt16 joyState = 0xffff;
     UInt8 value;
 
     if (device != NULL && device->read != NULL) {
@@ -160,15 +161,21 @@ static UInt8 colecoJoyIoRead(void* dummy, UInt16 ioPort)
     }
 
     if (joyMode != 0) {
-        return ((joyState & 0x01) ? 0x01 : 0) |
-               ((joyState & 0x08) ? 0x02 : 0) |
-               ((joyState & 0x02) ? 0x04 : 0) |
-               ((joyState & 0x04) ? 0x08 : 0) |
-               ((joyState & 0x10) ? 0x40 : 0) |
-               0x30;
+        return boardCaptureUInt8(ioPort & 2, ((joyState & 0x100) ? 0x10 : 0) |
+                                             ((joyState & 0x200) ? 0x20 : 0) |
+                                             ((joyState & 0x001) ? 0x01 : 0) |
+                                             ((joyState & 0x008) ? 0x02 : 0) |
+                                             ((joyState & 0x002) ? 0x04 : 0) |
+                                             ((joyState & 0x004) ? 0x08 : 0) |
+                                             ((joyState & 0x010) ? 0x40 : 0) |
+                                             0x30);
     }
 
-    value = 0x30 | ((joyState & 0x20) ? 0x40 : 0);
+    value = ((joyState & 0x100) ? 0x10 : 0) |
+            ((joyState & 0x200) ? 0x20 : 0) |
+            ((joyState & 0x020) ? 0x40 : 0) |
+            ((joyState & 0x040) ? 0x0d : 0) |
+            ((joyState & 0x080) ? 0x0b : 0) ;
 
 	if (ioPort & 2) {
 		if      (inputEventGetState(EC_COLECO2_0))    value |= 0x0A;
@@ -219,6 +226,12 @@ static void colecoJoyIoHandler(void* dummy, int port, JoystickPortType type)
         break;
     case JOYSTICK_PORT_COLECOJOYSTICK:
         joyDevice[port] = colecoJoystickCreate(port);
+        break;
+    case JOYSTICK_PORT_SUPERACTION:
+        joyDevice[port] = colecoSuperActionCreate(port);
+        break;
+    case JOYSTICK_PORT_STEERINGWHEEL:
+        joyDevice[port] = colecoSteeringWheelCreate(port);
         break;
     }
 }
@@ -327,6 +340,10 @@ static int getRefreshRate()
     return vdpGetRefreshRate();
 }
 
+static UInt32 getTimeTrace(int offset) {
+    return r800GetTimeTrace(r800, offset);
+}
+
 static void saveState()
 {    
     r800SaveState(r800);
@@ -351,7 +368,7 @@ int adamCreate(Machine* machine,
     int success;
     int i;
 
-    r800 = r800Create(0, slotRead, slotWrite, ioPortRead, ioPortWrite, NULL, boardTimerCheckTimeout, NULL, NULL, NULL, NULL);
+    r800 = r800Create(0, slotRead, slotWrite, ioPortRead, ioPortWrite, NULL, boardTimerCheckTimeout, NULL, NULL, NULL, NULL, NULL, NULL);
 
     boardInfo->cartridgeCount   = 1;
     boardInfo->diskdriveCount   = 2;
@@ -373,6 +390,7 @@ int adamCreate(Machine* machine,
     boardInfo->setBreakpoint    = r800SetBreakpoint;
     boardInfo->clearBreakpoint  = r800ClearBreakpoint;
     boardInfo->setDataBus       = r800SetDataBus;
+    boardInfo->getTimeTrace     = getTimeTrace;
 
     deviceManagerCreate();
 

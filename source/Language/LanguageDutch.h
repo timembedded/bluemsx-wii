@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Language/LanguageDutch.h,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Language/LanguageDutch.h,v $
 **
-** $Revision: 1.60 $
+** $Revision: 1.61 $
 **
-** $Date: 2008/10/26 19:48:18 $
+** $Date: 2009-04-04 20:57:19 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -156,7 +156,7 @@ void langInitDutch(LanguageStrings* ls)
     ls->menuPropsVideo          = "Beeld";
     ls->menuPropsSound          = "Geluid";
     ls->menuPropsControls       = "Besturing";
-    ls->menuPropsPerformance    = "Prestatie";
+    ls->menuPropsEffects        = "Effects";               // New in 2.9
     ls->menuPropsSettings       = "Instellingen";
     ls->menuPropsFile           = "Bestand";
     ls->menuPropsDisk           = "Diskettes";
@@ -202,6 +202,7 @@ void langInitDutch(LanguageStrings* ls)
     ls->menuToolsShortcuts      = "Snelkoppelingen";
     ls->menuToolsCtrlEditor     = "Besturing";
     ls->menuToolsMixer          = "Geluidsmixer";
+    ls->menuToolsLoadMemory     = "Laden Geheugen";
     ls->menuToolsDebugger       = "Debugger";
     ls->menuToolsTrainer        = "Trainer";
     ls->menuToolsTraceLogger    = "Trace Logger";
@@ -295,6 +296,7 @@ void langInitDutch(LanguageStrings* ls)
     ls->propSound               = "Geluid";
     ls->propControls            = "Besturing";
     ls->propPerformance         = "Prestaties";
+    ls->propEffects             = "Effects";             // New in 2.9
     ls->propSettings            = "Instellingen";
     ls->propFile                = "Bestand";
     ls->propDisk                = "Diskettes";
@@ -309,7 +311,10 @@ void langInitDutch(LanguageStrings* ls)
     ls->propEmuSpeedText        = "Emulatiesnelheid:";
     ls->propEmuFrontSwitchGB    = "Panasonic schakelaars ";
     ls->propEmuFrontSwitch      = " Voorpanel Schakelaar";
+    ls->propEmuNoSpriteLimits   = " Disable Sprites Limitation";  // New in 2.9
+    ls->propEnableMsxKeyboardQuirk = " Emulate MSX keyboard quirk";  // New in 2.9
     ls->propEmuFdcTiming        = " Diskettestation niet synchroniseren";
+    ls->propEmuReversePlay      = " Enable reverse playback"; // New in 2.8.3
     ls->propEmuPauseSwitch      = " Pauze Schakelaar";
     ls->propEmuAudioSwitch      = " MSX-AUDIO cartridge Schakelaar";
     ls->propVideoFreqText       = "Videofrequentie:";
@@ -396,6 +401,19 @@ void langInitDutch(LanguageStrings* ls)
     ls->propCdromMethodAspi     = "ASPI";
     ls->propCdromDrive          = "Station:";
 
+    ls->propD3DParametersGB         = "Parameters ";                // New in 2.9
+    ls->propD3DAspectRatioText      = "Aspect ratio";               // New in 2.9
+    ls->propD3DLinearFilteringText  = " Linear filtering";          // New in 2.9
+    ls->propD3DForceHighResText     = " Force high resolution";     // New in 2.9
+    ls->propD3DExtendBorderColorText    = " Extend border color";   // New in 2.9
+
+    ls->propD3DCroppingGB               = "Cropping ";              // New in 2.9
+    ls->propD3DCroppingTypeText         = "Cropping type:";         // New in 2.9
+    ls->propD3DCroppingLeftText         = "Left:";                  // New in 2.9
+    ls->propD3DCroppingRightText        = "Right:";                 // New in 2.9
+    ls->propD3DCroppingTopText          = "Top:";                   // New in 2.9
+    ls->propD3DCroppingBottomText       = "Bottom:";                // New in 2.9
+
 
     //----------------------
     // Dropdown related lines
@@ -425,6 +443,7 @@ void langInitDutch(LanguageStrings* ls)
     ls->enumVideoDrvDirectDrawHW = "DirectDraw HW accel.";
     ls->enumVideoDrvDirectDraw  = "DirectDraw";
     ls->enumVideoDrvGDI         = "GDI";
+    ls->enumVideoDrvD3D         = "Direct3D";
 
     ls->enumVideoFrameskip0     = "Geen";
     ls->enumVideoFrameskip1     = "1 frame";
@@ -432,6 +451,19 @@ void langInitDutch(LanguageStrings* ls)
     ls->enumVideoFrameskip3     = "3 frames";
     ls->enumVideoFrameskip4     = "4 frames";
     ls->enumVideoFrameskip5     = "5 frames";
+
+    ls->enumD3DARAuto           = "Auto";           // New in 2.9
+    ls->enumD3DARStretch        = "Stretch";        // New in 2.9
+    ls->enumD3DARPAL            = "PAL";            // New in 2.9
+    ls->enumD3DARNTSC           = "NTSC";           // New in 2.9
+    ls->enumD3DAR11             = "1:1";            // New in 2.9
+
+    ls->enumD3DCropNone         = "None";           // New in 2.9
+    ls->enumD3DCropMSX1         = "MSX1";           // New in 2.9
+    ls->enumD3DCropMSX1Plus8    = "MSX1+8";         // New in 2.9
+    ls->enumD3DCropMSX2         = "MSX2";           // New in 2.9
+    ls->enumD3DCropMSX2Plus8    = "MSX2+8";         // New in 2.9
+    ls->enumD3DCropCustom       = "Custom";         // New in 2.9
 
     ls->enumSoundDrvNone        = "Geen Geluid";
     ls->enumSoundDrvWMM         = "WMM-stuurprogramma";
@@ -505,6 +537,7 @@ void langInitDutch(LanguageStrings* ls)
     ls->confChipVideoChip       = "Videochip:";
     ls->confChipVideoRam        = "VideoRAM:";
     ls->confChipSoundGB         = "Geluid ";
+    ls->confChipPsgStereoText    = " PSG Stereo";
 
     ls->confCmosGB              = "CMOS ";
     ls->confCmosEnable          = " Aanzetten CMOS";
@@ -594,6 +627,7 @@ void langInitDutch(LanguageStrings* ls)
     ls->shortcutSwitchPause     = "Pauze schakelaar aan/uit";
     ls->shortcutToggleMouseLock = "Muis vastzetten aan/uit";
     ls->shortcutEmuSpeedMax     = "Maximale emulatie snelheid";
+    ls->shortcutEmuPlayReverse  = "Rewind emulation";                     // New in 2.8.3
     ls->shortcutEmuSpeedToggle  = "Maximum snelheid van de emulatie aan/uit";
     ls->shortcutEmuSpeedNormal  = "Normale emulatie snelheid";
     ls->shortcutEmuSpeedInc     = "Verhoog emulatie snelheid";
@@ -603,7 +637,7 @@ void langInitDutch(LanguageStrings* ls)
     ls->shortcutShowVideoProp   = "Toon Beeldeigenschappen";
     ls->shortcutShowAudioProp   = "Toon Geluidseigenschappen";
     ls->shortcutShowCtrlProp    = "Toon Besturingseigenschappen";
-    ls->shortcutShowPerfProp    = "Toon Prestatie-eigenschappen";
+    ls->shortcutShowEffectsProp = "Show Effects Properties";     // New in 2.9
     ls->shortcutShowSettProp    = "Toon Instellingen eigenschappen";
     ls->shortcutShowPorts       = "Toon Poorteigenschappen";
     ls->shortcutShowLanguage    = "Taalconfiguratie weergeven";
@@ -618,6 +652,8 @@ void langInitDutch(LanguageStrings* ls)
     ls->shortcutShowFiles       = "Toon Bestandseigenschappen";
     ls->shortcutToggleSpriteEnable = "Tonen/Verbergen sprites";
     ls->shortcutToggleFdcTiming = "Synchroniseren/Niet synchroniseren";
+    ls->shortcutToggleNoSpriteLimits = "Toggle Sprites Limitation";                 // New in 2.9
+    ls->shortcutEnableMsxKeyboardQuirk = "Emulate MSX Keyboard Quirk";              // New in 2.9
     ls->shortcutToggleCpuTrace  = "CPU tracer aan/uit";
     ls->shortcutVideoLoad       = "Videoclip laden";
     ls->shortcutVideoPlay       = "Laatste videoclip afspelen";
@@ -655,6 +691,7 @@ void langInitDutch(LanguageStrings* ls)
     ls->romTypeMicrosolFdc      = "Microsol Disk Controller";
     ls->romTypeNationalFdc      = "National Disk Controller";
     ls->romTypePhilipsFdc       = "Philips Disk Controller";
+    ls->romTypeSvi707Fdc        = "SVI-707 Disk Controller";
     ls->romTypeSvi738Fdc        = "SVI-738 Disk Controller";
     ls->romTypeMappedRam        = "Mapped RAM";
     ls->romTypeMirroredRam1k    = "1kB Mirrored RAM";

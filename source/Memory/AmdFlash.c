@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Memory/AmdFlash.c,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/AmdFlash.c,v $
 **
 ** $Revision: 1.15 $
 **
-** $Date: 2008/03/30 18:38:42 $
+** $Date: 2008-03-30 18:38:42 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -222,7 +222,7 @@ void amdFlashLoadState(AmdFlash* rm)
     saveStateClose(state);
 }
 
-AmdFlash* amdFlashCreate(AmdType type, int flashSize, int sectorSize, UInt32 writeProtectMask, void* romData, int size, char* sramFilename, int loadSram)
+AmdFlash* amdFlashCreate(AmdType type, int flashSize, int sectorSize, UInt32 writeProtectMask, void* romData, int size, const char* sramFilename, int loadSram)
 {
     AmdFlash* rm = (AmdFlash*)calloc(1, sizeof(AmdFlash));
 

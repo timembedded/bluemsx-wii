@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/IoDevice/Microwire93Cx6.c,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/IoDevice/Microwire93Cx6.c,v $
 **
 ** $Revision: 1.4 $
 **
-** $Date: 2008/03/30 18:38:40 $
+** $Date: 2008-03-30 18:38:40 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -98,7 +98,7 @@ static void onTimer(Microwire93Cx6* rm, UInt32 time)
     }
 }
 
-Microwire93Cx6* microwire93Cx6Create(int size, int mode, void* imgData, int imgSize, char* sramFilename)
+Microwire93Cx6* microwire93Cx6Create(int size, int mode, void* imgData, int imgSize, const char* sramFilename)
 {
     Microwire93Cx6* rm = calloc(1, sizeof(Microwire93Cx6));
 

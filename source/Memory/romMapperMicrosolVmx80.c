@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Memory/romMapperMicrosolVmx80.c,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperMicrosolVmx80.c,v $
 **
 ** $Revision: 1.10 $
 **
-** $Date: 2008/03/31 19:42:22 $
+** $Date: 2008-03-31 19:42:22 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -99,7 +99,7 @@ static void reset(RomMapperMicrosolVmx80* rm)
 {
 }
 
-int romMapperMicrosolVmx80Create(char* filename, UInt8* romData, int size,
+int romMapperMicrosolVmx80Create(const char* filename, UInt8* romData, int size,
                                  int slot, int sslot, int startPage,
                                  void* charRom, int charSize) 
 {

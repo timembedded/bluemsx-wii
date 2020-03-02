@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Language/LanguageKorean.h,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Language/LanguageKorean.h,v $
 **
-** $Revision: 1.61 $ + additions 2005/03/03
+** $Revision: 1.62 $ + additions 2005/03/03
 **
-** $Date: 2008/10/26 19:48:18 $
+** $Date: 2009-04-04 20:57:19 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -156,7 +156,7 @@ void langInitKorean(LanguageStrings* ls)
     ls->menuPropsVideo          = "비디오";
     ls->menuPropsSound          = "사운드";
     ls->menuPropsControls       = "컨트롤";
-    ls->menuPropsPerformance    = "성능";
+    ls->menuPropsEffects        = "Effects";               // New in 2.9
     ls->menuPropsSettings        = "외부 설정";
     ls->menuPropsFile           = "파일";
     ls->menuPropsDisk           = "디스크";               // New in 2.7
@@ -295,6 +295,7 @@ void langInitKorean(LanguageStrings* ls)
     ls->propSound               = "사운드";
     ls->propControls            = "콘트롤";
     ls->propPerformance         = "성능";
+    ls->propEffects             = "Effects";             // New in 2.9
     ls->propSettings             = "외부 설정";
     ls->propFile                = "파일";
     ls->propDisk                = "디스크";              // New in 2.7
@@ -309,7 +310,10 @@ void langInitKorean(LanguageStrings* ls)
     ls->propEmuSpeedText        = "에뮬레이션 속도:";
     ls->propEmuFrontSwitchGB     = "파나소닉 스위치 ";
     ls->propEmuFrontSwitch       = " 프론트 스위치";
+    ls->propEmuNoSpriteLimits   = " Disable Sprites Limitation";  // New in 2.9
+    ls->propEnableMsxKeyboardQuirk = " Emulate MSX keyboard quirk";  // New in 2.9
     ls->propEmuFdcTiming        = " 플로피 드라이브 타이밍 사용 안함";
+    ls->propEmuReversePlay      = " Enable reverse playback"; // New in 2.8.3
     ls->propEmuPauseSwitch      = " 일시 정지 스위치";
     ls->propEmuAudioSwitch       = " MSX-AUDIO 카트리지 스위치";
     ls->propVideoFreqText       = "비디오 주파수:";
@@ -396,6 +400,19 @@ void langInitKorean(LanguageStrings* ls)
     ls->propCdromMethodAspi     = "ASPI";            // New in 2.7
     ls->propCdromDrive          = "드라이브:";          // New in 2.7
 
+    ls->propD3DParametersGB         = "Parameters ";                // New in 2.9
+    ls->propD3DAspectRatioText      = "Aspect ratio";               // New in 2.9
+    ls->propD3DLinearFilteringText  = " Linear filtering";          // New in 2.9
+    ls->propD3DForceHighResText     = " Force high resolution";     // New in 2.9
+    ls->propD3DExtendBorderColorText    = " Extend border color";   // New in 2.9
+
+    ls->propD3DCroppingGB               = "Cropping ";              // New in 2.9
+    ls->propD3DCroppingTypeText         = "Cropping type:";         // New in 2.9
+    ls->propD3DCroppingLeftText         = "Left:";                  // New in 2.9
+    ls->propD3DCroppingRightText        = "Right:";                 // New in 2.9
+    ls->propD3DCroppingTopText          = "Top:";                   // New in 2.9
+    ls->propD3DCroppingBottomText       = "Bottom:";                // New in 2.9
+
 
     //----------------------
     // Dropdown related lines
@@ -425,6 +442,7 @@ void langInitKorean(LanguageStrings* ls)
     ls->enumVideoDrvDirectDrawHW = "DirectDraw HW 가속";
     ls->enumVideoDrvDirectDraw  = "DirectDraw";
     ls->enumVideoDrvGDI         = "GDI";
+    ls->enumVideoDrvD3D         = "Direct3D";
 
     ls->enumVideoFrameskip0     = "없음";
     ls->enumVideoFrameskip1     = "1 프레임";
@@ -432,6 +450,19 @@ void langInitKorean(LanguageStrings* ls)
     ls->enumVideoFrameskip3     = "3 프레임";
     ls->enumVideoFrameskip4     = "4 프레임";
     ls->enumVideoFrameskip5     = "5 프레임";
+
+    ls->enumD3DARAuto           = "Auto";           // New in 2.9
+    ls->enumD3DARStretch        = "Stretch";        // New in 2.9
+    ls->enumD3DARPAL            = "PAL";            // New in 2.9
+    ls->enumD3DARNTSC           = "NTSC";           // New in 2.9
+    ls->enumD3DAR11             = "1:1";            // New in 2.9
+
+    ls->enumD3DCropNone         = "None";           // New in 2.9
+    ls->enumD3DCropMSX1         = "MSX1";           // New in 2.9
+    ls->enumD3DCropMSX1Plus8    = "MSX1+8";         // New in 2.9
+    ls->enumD3DCropMSX2         = "MSX2";           // New in 2.9
+    ls->enumD3DCropMSX2Plus8    = "MSX2+8";         // New in 2.9
+    ls->enumD3DCropCustom       = "Custom";         // New in 2.9
 
     ls->enumSoundDrvNone        = "소리없음";
     ls->enumSoundDrvWMM         = "WMM 드라이버";
@@ -505,6 +536,7 @@ void langInitKorean(LanguageStrings* ls)
     ls->confChipVideoChip        = "비디오 칩:";
     ls->confChipVideoRam         = "비디오 램:";
     ls->confChipSoundGB          = "사운드 ";
+    ls->confChipPsgStereoText    = " PSG 스테레오 변환";
 
     ls->confCmosGB                = "CMOS ";
     ls->confCmosEnable            = " CMOS 사용";
@@ -594,6 +626,7 @@ void langInitKorean(LanguageStrings* ls)
     ls->shortcutSwitchPause     = "일시 정지 스위치";
     ls->shortcutToggleMouseLock = "마우스 고정 변환";
     ls->shortcutEmuSpeedMax     = "최대 에뮬레이션 속도";
+    ls->shortcutEmuPlayReverse  = "Rewind emulation";                     // New in 2.8.3
     ls->shortcutEmuSpeedToggle  = "에뮬레이션 속도 최대화 변환";
     ls->shortcutEmuSpeedNormal  = "보통 에뮬레이션 속도";
     ls->shortcutEmuSpeedInc     = "에뮬레이션 속도 증가";
@@ -603,7 +636,7 @@ void langInitKorean(LanguageStrings* ls)
     ls->shortcutShowVideoProp   = "비디오 속성 보기";
     ls->shortcutShowAudioProp   = "오디오 속성 보기";
     ls->shortcutShowCtrlProp    = "콘트롤 속성 보기";
-    ls->shortcutShowPerfProp    = "성능 속성 보기";
+    ls->shortcutShowEffectsProp = "Show Effects Properties";     // New in 2.9
     ls->shortcutShowSettProp    = "외부 설정 속성 보기";
     ls->shortcutShowPorts       = "포트 속성 보기";
     ls->shortcutShowLanguage    = "언어 보기";
@@ -618,6 +651,8 @@ void langInitKorean(LanguageStrings* ls)
     ls->shortcutShowFiles       = "파일 속성 보기";
     ls->shortcutToggleSpriteEnable = "스프라이트 보이기/숨기기 변환";
     ls->shortcutToggleFdcTiming = "플로피 드라이브 타이밍 사용/않함 변환";
+    ls->shortcutToggleNoSpriteLimits = "Toggle Sprites Limitation";                 // New in 2.9
+    ls->shortcutEnableMsxKeyboardQuirk = "Emulate MSX Keyboard Quirk";              // New in 2.9
     ls->shortcutToggleCpuTrace  = "CPU 트레이스 변환";
     ls->shortcutVideoLoad       = "녹화된 영상 불러오기";             
     ls->shortcutVideoPlay       = "마지막으로 녹화한 영상 재생";   
@@ -655,6 +690,7 @@ void langInitKorean(LanguageStrings* ls)
     ls->romTypeMicrosolFdc      = "Microsol Disk Controller";
     ls->romTypeNationalFdc      = "National Disk Controller";
     ls->romTypePhilipsFdc       = "Philips Disk Controller";
+    ls->romTypeSvi707Fdc        = "SVI-707 Disk Controller";
     ls->romTypeSvi738Fdc        = "SVI-738 Disk Controller";
     ls->romTypeMappedRam        = "Mapped RAM";
     ls->romTypeMirroredRam1k    = "1kB Mirrored RAM";

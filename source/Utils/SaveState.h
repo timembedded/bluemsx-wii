@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Utils/SaveState.h,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Utils/SaveState.h,v $
 **
-** $Revision: 1.6 $
+** $Revision: 1.7 $
 **
-** $Date: 2008/06/25 22:26:17 $
+** $Date: 2009-07-18 14:10:27 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -13,7 +13,7 @@
 ** it under the terms of the GNU General Public License as published by
 ** the Free Software Foundation; either version 2 of the License, or
 ** (at your option) any later version.
-**
+** 
 ** This program is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -27,14 +27,14 @@
 */
 #ifndef SAVE_STATE_H
 #define SAVE_STATE_H
-
+ 
 #include "MsxTypes.h"
-#include "ZipHelper.h"
 
 typedef struct SaveState SaveState;
 
-void saveStateCreateForRead(ZipFile *zip);
-void saveStateCreateForWrite(void);
+void saveStateCreateForRead(const char* fileName);
+void saveStateCreateForWrite(const char* fileName);
+void saveStateDestroy(void);
 
 SaveState* saveStateOpenForRead(const char* fileName);
 SaveState* saveStateOpenForWrite(const char* fileName);

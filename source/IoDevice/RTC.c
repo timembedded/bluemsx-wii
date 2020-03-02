@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/IoDevice/RTC.c,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/IoDevice/RTC.c,v $
 **
 ** $Revision: 1.8 $
 **
-** $Date: 2008/03/30 18:38:40 $
+** $Date: 2008-03-30 18:38:40 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -365,9 +365,10 @@ void rtcDestroy(RTC* rtc)
     if (rtc->cmosName[0]) {
         FILE* file = fopen(rtc->cmosName, "w");
 
-        fwrite(rtc->registers, 1, sizeof(rtc->registers), file);
-
-        fclose(file);
+        if(file != NULL) {
+            fwrite(rtc->registers, 1, sizeof(rtc->registers), file);
+            fclose(file);
+        }
     }
 
     free(rtc);

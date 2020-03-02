@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/IoDevice/rtl8019.c,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/IoDevice/rtl8019.c,v $
 **
 ** $Revision: 1.9 $
 **
-** $Date: 2008/03/30 18:38:41 $
+** $Date: 2008-03-30 18:38:41 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -58,7 +58,7 @@ typedef struct RTL8019
     UInt16 regClda;
     UInt8  regRppr;
     UInt8  regLppr;
-    UInt8  regAcnt;
+    UInt16  regAcnt;
     UInt8  regTsr;
     UInt8  regNcr;
     UInt8  regFifo;

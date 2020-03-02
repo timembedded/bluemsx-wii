@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Memory/romMapperTC8566AF.h,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperTC8566AF.h,v $
 **
 ** $Revision: 1.7 $
 **
-** $Date: 2008/03/30 18:38:44 $
+** $Date: 2008-03-30 18:38:44 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -31,7 +31,7 @@
 #include "MsxTypes.h"
 #include "MediaDb.h"
 
-int romMapperTC8566AFCreate(char* filename, UInt8* romData, 
+int romMapperTC8566AFCreate(const char* filename, UInt8* romData, 
                             int size, int slot, int sslot, int startPage,
                             RomType type);
 

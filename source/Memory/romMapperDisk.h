@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Memory/romMapperDisk.h,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperDisk.h,v $
 **
 ** $Revision: 1.5 $
 **
-** $Date: 2008/03/30 18:38:43 $
+** $Date: 2008-03-30 18:38:43 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -30,7 +30,7 @@
 
 #include "MsxTypes.h"
 
-int romMapperDiskCreate(char* filename, UInt8* romData, 
+int romMapperDiskCreate(const char* filename, UInt8* romData, 
                         int size, int slot, int sslot, int startPage);
 
 #endif

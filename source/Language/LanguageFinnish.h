@@ -1,15 +1,15 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Language/LanguageFinnish.h,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Language/LanguageFinnish.h,v $
 **
-** $Revision: 1.58 $
+** $Revision: 1.59 $
 **
-** $Date: 2008/10/26 19:48:18 $
+** $Date: 2009-04-04 20:57:19 $
 **
 ** More info: http://www.bluemsx.com
 **
-** Copyright (C) 2003-2006 Daniel Vik, NYYRIKKI
+** Copyright (C) 2003-2012 Daniel Vik, NYYRIKKI
 **
-** Translated By : NYYRIKKI 2006
+** Translated By : NYYRIKKI 2012
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -38,7 +38,7 @@ void langInitFinnish(LanguageStrings* ls)
     // Language lines
     //----------------------
 
-    ls->langCatalan             = "Catalan";
+    ls->langCatalan             = "Katalaani";
     ls->langChineseSimplified   = "Kiina, yksinkertaistettu";
     ls->langChineseTraditional  = "Kiina, perinteinen";
     ls->langDutch               = "Hollanti";
@@ -51,7 +51,7 @@ void langInitFinnish(LanguageStrings* ls)
     ls->langKorean              = "Korea";
     ls->langPolish              = "Puola";
     ls->langPortuguese          = "Portugali";
-    ls->langRussian             = "Russian";            // v2.8
+    ls->langRussian             = "Venäjä";            // v2.8
     ls->langSpanish             = "Espanja";
     ls->langSwedish             = "Ruotsi";
 
@@ -129,7 +129,7 @@ void langInitFinnish(LanguageStrings* ls)
     ls->menuCartMegaFlashRom    = "Mega Flash ROM";      // New in 2.7
 
     ls->menuDiskInsertNew       = "Uusi levytiedosto";
-    ls->menuDiskInsertCdrom     = "Insert CD-Rom";       // New in 2.7
+    ls->menuDiskInsertCdrom     = "Aseta CD-ROM";       // New in 2.7
     ls->menuDiskDirInsert       = "Aseta hakemisto";
     ls->menuDiskAutoStart       = "Käynnistä uudelleen asettamisen jälkeen";
     ls->menuCartAutoReset       = "Käynnistä uudelleen muutettaessa";
@@ -158,10 +158,10 @@ void langInitFinnish(LanguageStrings* ls)
     ls->menuPropsVideo          = "Video";
     ls->menuPropsSound          = "Ääni";
     ls->menuPropsControls       = "Kontrollit";
-    ls->menuPropsPerformance    = "Suorituskyky";
+    ls->menuPropsEffects        = "Effects";               // New in 2.9
     ls->menuPropsSettings       = "Asetukset";
     ls->menuPropsFile           = "Tiedostot";
-    ls->menuPropsDisk           = "Disks";               // New in 2.7
+    ls->menuPropsDisk           = "Levyt";               // New in 2.7
     ls->menuPropsLanguage       = "Kieli";
     ls->menuPropsPorts          = "Liitännät";
     
@@ -171,7 +171,7 @@ void langInitFinnish(LanguageStrings* ls)
     ls->menuVideoInSource       = "Videosisääntulo";
     ls->menuVideoInBitmap       = "Bittikarttatiedosto";
     
-    ls->menuEthInterface        = "Ethernet Interface"; 
+    ls->menuEthInterface        = "Verkkokortti"; 
 
     ls->menuHelpHelp            = "Ohjeen aiheet";
     ls->menuHelpAbout           = "Tietoja blueMSX:stä";
@@ -190,7 +190,7 @@ void langInitFinnish(LanguageStrings* ls)
     ls->menuFileExit            = "Poistu";
     ls->menuFileHarddisk        = "Kovalevy";
     ls->menuFileHarddiskNoPesent= "Ohjaimia ei ole kytketty";
-    ls->menuFileHarddiskRemoveAll= "Eject All Harddisk";    // New in 2.7
+    ls->menuFileHarddiskRemoveAll= "Poista kaikki kovalevyt";    // New in 2.7
 
     ls->menuRunRun              = "Käynnistä";
     ls->menuRunPause            = "Keskeytä";
@@ -203,6 +203,7 @@ void langInitFinnish(LanguageStrings* ls)
     ls->menuToolsShortcuts      = "Pikanäppäinasetukset";
     ls->menuToolsCtrlEditor     = "Peliohjaimet / Näppäimistökartta"; 
     ls->menuToolsMixer          = "Mikseri";
+    ls->menuToolsLoadMemory     = "Lataa muisti";
     ls->menuToolsDebugger       = "Debugger";               
     ls->menuToolsTrainer        = "Trainer";                
     ls->menuToolsTraceLogger    = "Seurantalogi";         
@@ -272,7 +273,7 @@ void langInitFinnish(LanguageStrings* ls)
     ls->dlgAboutBuildDate       = "Päiväys:";
     ls->dlgAboutCreat           = "Tekijä: Daniel Vik";
     ls->dlgAboutDevel           = "KEHITTÄJÄT\r\n=======";
-    ls->dlgAboutThanks          = "ERITYIS KIITOKSET\r\n===========";       // New in 2.7 (retranslate, see english)
+    ls->dlgAboutThanks          = "AVUSTAJAT\r\n===========";       // New in 2.7
     ls->dlgAboutLisence         = "LISENSSI\r\n"
                                   "=====\r\n\r\n"
                                   "Tämä ohjelmisto toimitetaan sellaisenaan ilman minkäänlaista takuuta. "
@@ -296,9 +297,10 @@ void langInitFinnish(LanguageStrings* ls)
     ls->propSound               = "Ääni";
     ls->propControls            = "Kontrollit";
     ls->propPerformance         = "Suorituskyky";
+    ls->propEffects             = "Effects";             // New in 2.9
     ls->propSettings            = "Asetukset";
     ls->propFile                = "Tiedostot";
-    ls->propDisk                = "Disks";              // New in 2.7
+    ls->propDisk                = "Levyt";              // New in 2.7
     ls->propPorts               = "Liitännät";
 
     ls->propEmuGeneralGB        = "Yleistä ";
@@ -310,7 +312,10 @@ void langInitFinnish(LanguageStrings* ls)
     ls->propEmuSpeedText        = "Emulaationopeus:";
     ls->propEmuFrontSwitchGB     = "Panasonicin kytkimet ";
     ls->propEmuFrontSwitch       = " Aplikaatiokytkin";
+    ls->propEmuNoSpriteLimits   = " Disable Sprites Limitation";  // New in 2.9
+    ls->propEnableMsxKeyboardQuirk = " Emulate MSX keyboard quirk";  // New in 2.9
     ls->propEmuFdcTiming        = " Poista käytöstä levyaseman ajoitus";
+    ls->propEmuReversePlay      = " Salli taaksepäin suoritus"; // New in 2.8.3
     ls->propEmuPauseSwitch      = " PAUSE-näppäin";
     ls->propEmuAudioSwitch       = " MSX-AUDIO modulin kytkin";
     ls->propVideoFreqText       = "Videotaajuus:";
@@ -375,7 +380,7 @@ void langInitFinnish(LanguageStrings* ls)
     ls->propDisableWinKeys      = " Ota Windows-näppäimet MSX käyttöön";
     ls->propPriorityBoost       = " Nosta blueMSX:n prioriteettia";
     ls->propScreenshotPng       = " Tallenna kuvaruutukaappaukset PNG-muodossa";
-    ls->propEjectMediaOnExit    = " Eject media when blueMSX exits";        // New in 2.8
+    ls->propEjectMediaOnExit    = " Poista mediat kun ohjelma suljetaan";        // New in 2.8
     ls->propClearHistory        = "Oletko varma, että haluat poistaa kaikki tiedostohistorian tiedot?";
     ls->propOpenRomGB           = "ROM-tiedostojen avaus ";
     ls->propDefaultRomType      = "Oletus ROM tyyppi:";
@@ -391,11 +396,24 @@ void langInitFinnish(LanguageStrings* ls)
     ls->propTheme               = "Teema:";
 
     ls->propCdromGB             = "CD-ROM ";         // New in 2.7
-    ls->propCdromMethod         = "Access Method:";  // New in 2.7
+    ls->propCdromMethod         = "Käyttötapa:";  // New in 2.7
     ls->propCdromMethodNone     = "None";            // New in 2.7
     ls->propCdromMethodIoctl    = "IOCTL";           // New in 2.7
     ls->propCdromMethodAspi     = "ASPI";            // New in 2.7
-    ls->propCdromDrive          = "Drive:";          // New in 2.7
+    ls->propCdromDrive          = "Asema:";          // New in 2.7
+
+    ls->propD3DParametersGB         = "Parameters ";                // New in 2.9
+    ls->propD3DAspectRatioText      = "Aspect ratio";               // New in 2.9
+    ls->propD3DLinearFilteringText  = " Linear filtering";          // New in 2.9
+    ls->propD3DForceHighResText     = " Force high resolution";     // New in 2.9
+    ls->propD3DExtendBorderColorText    = " Extend border color";   // New in 2.9
+
+    ls->propD3DCroppingGB               = "Cropping ";              // New in 2.9
+    ls->propD3DCroppingTypeText         = "Cropping type:";         // New in 2.9
+    ls->propD3DCroppingLeftText         = "Left:";                  // New in 2.9
+    ls->propD3DCroppingRightText        = "Right:";                 // New in 2.9
+    ls->propD3DCroppingTopText          = "Top:";                   // New in 2.9
+    ls->propD3DCroppingBottomText       = "Bottom:";                // New in 2.9
 
 
     //----------------------
@@ -426,6 +444,7 @@ void langInitFinnish(LanguageStrings* ls)
     ls->enumVideoDrvDirectDrawHW= "Kiihdytetty DirectDraw";
     ls->enumVideoDrvDirectDraw  = "DirectDraw";
     ls->enumVideoDrvGDI         = "GDI";
+    ls->enumVideoDrvD3D         = "Direct3D";
 
     ls->enumVideoFrameskip0     = "Ei käytössä";
     ls->enumVideoFrameskip1     = "1 päivitys";
@@ -433,6 +452,19 @@ void langInitFinnish(LanguageStrings* ls)
     ls->enumVideoFrameskip3     = "3 päivitystä";
     ls->enumVideoFrameskip4     = "4 päivitystä";
     ls->enumVideoFrameskip5     = "5 päivitystä";
+
+    ls->enumD3DARAuto           = "Auto";           // New in 2.9
+    ls->enumD3DARStretch        = "Stretch";        // New in 2.9
+    ls->enumD3DARPAL            = "PAL";            // New in 2.9
+    ls->enumD3DARNTSC           = "NTSC";           // New in 2.9
+    ls->enumD3DAR11             = "1:1";            // New in 2.9
+
+    ls->enumD3DCropNone         = "None";           // New in 2.9
+    ls->enumD3DCropMSX1         = "MSX1";           // New in 2.9
+    ls->enumD3DCropMSX1Plus8    = "MSX1+8";         // New in 2.9
+    ls->enumD3DCropMSX2         = "MSX2";           // New in 2.9
+    ls->enumD3DCropMSX2Plus8    = "MSX2+8";         // New in 2.9
+    ls->enumD3DCropCustom       = "Custom";         // New in 2.9
 
     ls->enumSoundDrvNone        = "Ei ääntä";
     ls->enumSoundDrvWMM         = "WMM-ajuri";
@@ -506,6 +538,7 @@ void langInitFinnish(LanguageStrings* ls)
     ls->confChipVideoChip        = "Videopiiri:";
     ls->confChipVideoRam         = "Videomuisti:";
     ls->confChipSoundGB          = "Ääni ";
+    ls->confChipPsgStereoText    = " PSG Stereo";
 
     ls->confCmosGB               = "Kellopiiri ";
     ls->confCmosEnable           = " Ota kellopiiri käyttöön";
@@ -595,6 +628,7 @@ void langInitFinnish(LanguageStrings* ls)
     ls->shortcutSwitchPause     = "Muuta Pause-näppäimen tilaa";
     ls->shortcutToggleMouseLock = "Muuta hiirenkaappauksen tilaa";
     ls->shortcutEmuSpeedMax     = "Maksimi emulointinopeus";
+    ls->shortcutEmuPlayReverse  = "Taaksepäin suoritus";                     // New in 2.8.3
     ls->shortcutEmuSpeedToggle  = "Vaihda maksimi emulointinopeus";
     ls->shortcutEmuSpeedNormal  = "Normaali emulointinopeus";
     ls->shortcutEmuSpeedInc     = "Nopeuta emulointia";
@@ -604,7 +638,7 @@ void langInitFinnish(LanguageStrings* ls)
     ls->shortcutShowVideoProp   = "Näytä videoasetukset";
     ls->shortcutShowAudioProp   = "Näytä ääniasetukset";
     ls->shortcutShowCtrlProp    = "Näytä kontrolliasetukset";
-    ls->shortcutShowPerfProp    = "Näytä suorituskykyasetukset";
+    ls->shortcutShowEffectsProp = "Show Effects Properties";     // New in 2.9
     ls->shortcutShowSettProp    = "Näytä yleisasetukset";
     ls->shortcutShowPorts       = "Näytä liitäntäasetukset";
     ls->shortcutShowLanguage    = "Näytä kielivalinnat";
@@ -619,6 +653,8 @@ void langInitFinnish(LanguageStrings* ls)
     ls->shortcutShowFiles       = "Näytä tiedosto asetukset";
     ls->shortcutToggleSpriteEnable = "Näytä/Piilota Spritet";
     ls->shortcutToggleFdcTiming = "Ota käyttöön/Poista käytöstä levyaseman ajoitus";
+    ls->shortcutToggleNoSpriteLimits = "Toggle Sprites Limitation";                 // New in 2.9
+    ls->shortcutEnableMsxKeyboardQuirk = "Emulate MSX Keyboard Quirk";              // New in 2.9
     ls->shortcutToggleCpuTrace  = "Ota käyttöön/Poista käytöstä Prosessorin jäljitystoiminto";
     ls->shortcutVideoLoad       = "Lataa Videokaappaus";             
     ls->shortcutVideoPlay       = "Toista viimeisin videokaappaus";   
@@ -631,7 +667,7 @@ void langInitFinnish(LanguageStrings* ls)
     // Keyboard config lines
     //----------------------
 
-    ls->keyconfigSelectedKey    = "kohdenäppäin:";
+    ls->keyconfigSelectedKey    = "Emuloitava näppäin:";
     ls->keyconfigMappedTo       = "PC-näppäin:";
     ls->keyconfigMappingScheme  = "Näppäinkarttaprofiili:";
 
@@ -695,7 +731,7 @@ void langInitFinnish(LanguageStrings* ls)
     ls->romTypeSg1000Cart       = "SG-1000 Moduli";
     ls->romTypeSc3000Cart       = "SC-3000 Moduli";
 
-    ls->romTypeMsxPrinter       = "MSX Tulostin";
+    ls->romTypeMsxPrinter       = "MSX tulostin";
     ls->romTypeTurborPcm        = "Turbo-R PCM piiri";
     
     ls->romTypeNms8280Digitiz   = "Philips NMS-8280 Digitoija";

@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Emulator/Actions.c,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Emulator/Actions.c,v $
 **
 ** $Revision: 1.80 $
 **
-** $Date: 2008/05/14 12:55:31 $
+** $Date: 2008-05-14 12:55:31 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -57,6 +57,11 @@
 #include <string.h>
 #include <math.h>
 
+#if defined(_WIN32) && defined(_XBOX)
+#include <xtl.h>
+#elif defined(_WIN32)
+#include <windows.h>
+#endif
 
 static struct {
     Properties* properties;
@@ -70,8 +75,8 @@ static char audioDir[PROP_MAXPATH]  = "";
 static char audioPrefix[64]         = "";
 static char videoDir[PROP_MAXPATH]  = "";
 static char videoPrefix[64]         = "";
-static char stateDir[PROP_MAXPATH]  = "";
-static char statePrefix[64]         = "";
+char stateDir[PROP_MAXPATH]  = "";
+char statePrefix[64]         = "";
 
 
 void actionCartInsert(int cartNo)
@@ -253,6 +258,14 @@ void actionToggleSpriteEnable() {
     vdpSetSpritesEnable(!vdpGetSpritesEnable());
 }
 
+void actionToggleNoSpriteLimits() {
+    vdpSetNoSpriteLimits(!vdpGetNoSpritesLimit());
+}
+
+void actionToggleMsxKeyboardQuirk() {
+    state.properties->keyboard.enableKeyboardQuirk = !state.properties->keyboard.enableKeyboardQuirk;
+}
+
 void actionToggleMsxAudioSwitch() {
     state.properties->emulation.audioSwitch = !state.properties->emulation.audioSwitch;
     switchSetAudio(state.properties->emulation.audioSwitch);
@@ -420,7 +433,7 @@ void actionSaveState() {
             }
 
             strcpy(ptr, ".sta");
-            boardSaveState(filename);
+            boardSaveState(filename, 1);
         }
         emulatorResume();
     }
@@ -435,15 +448,49 @@ void actionQuickLoadState() {
 }
 
 void actionQuickSaveState() {
-    EmuState emu_state = emulatorGetState();
-    if (emu_state != EMU_STOPPED) {
-        if( emu_state == EMU_RUNNING ) {
-            emulatorSuspend();
-        }
+    if (emulatorGetState() != EMU_STOPPED) {
+        emulatorSuspend();
         strcpy(state.properties->filehistory.quicksave, generateSaveFilename(state.properties, stateDir, statePrefix, ".sta", 2));
-        boardSaveState(state.properties->filehistory.quicksave);
-        if( emu_state == EMU_RUNNING ) {
-            emulatorResume();
+        boardSaveState(state.properties->filehistory.quicksave, 1);
+        emulatorResume();
+    }
+}
+
+void actionQuickSaveStateUndo() {
+    if (emulatorGetState() != EMU_STOPPED) {
+        // what this does:
+        // convert "c:\blah\states\blah_19.sta" to "c:\blah\states\blah_18.sta"
+        // if its at "blah_00.sta" and "blah_99.sta" exists, then wrap around
+        // (as quicksavestate goes from 99 -> 00)
+        if (state.properties->filehistory.quicksave && strlen(state.properties->filehistory.quicksave) > 10) {
+            char numstr[5], *oldstatefilename;
+            int numstrtonum;
+            int qslen=strlen(state.properties->filehistory.quicksave)-6; // focus on the 2 numbers before the ext
+            oldstatefilename = strdup(state.properties->filehistory.quicksave);
+            memset(&numstr, 0, sizeof(numstr));
+            strncpy(numstr, state.properties->filehistory.quicksave+qslen, 2);
+            numstrtonum = atoi(numstr);
+            if (numstrtonum>0) {
+                numstrtonum--;
+            } else { //wrap-around to 99 if it exists!
+                state.properties->filehistory.quicksave[qslen]='9';
+                state.properties->filehistory.quicksave[qslen+1]='9';
+                if (archFileExists(state.properties->filehistory.quicksave)) {
+                    archFileDelete(oldstatefilename);
+                    free(oldstatefilename);
+                    return;
+                }
+            }
+            state.properties->filehistory.quicksave[qslen]='0'+(numstrtonum/10);
+            state.properties->filehistory.quicksave[qslen+1]='0'+(numstrtonum%10);
+            if (archFileExists(state.properties->filehistory.quicksave) &&
+                        strcmp(oldstatefilename, state.properties->filehistory.quicksave)) {
+                archFileDelete(oldstatefilename);
+            } else { // no state to go back to, keep filehistory.quicksave the same
+                state.properties->filehistory.quicksave[qslen]=oldstatefilename[qslen];
+                state.properties->filehistory.quicksave[qslen+1]=oldstatefilename[qslen+1];
+            }
+            free(oldstatefilename);
         }
     }
 }
@@ -464,6 +511,12 @@ void actionToggleMouseCapture() {
 void actionEmuStep() {
     if (emulatorGetState() == EMU_PAUSED) {
         emulatorSetState(EMU_STEP);
+    }
+}
+
+void actionEmuStepBack() {
+    if (emulatorGetState() == EMU_PAUSED) {
+        emulatorSetState(EMU_STEP_BACK);
     }
 }
 
@@ -511,6 +564,16 @@ void actionMaxSpeedSet() {
 
 void actionMaxSpeedRelease() {
     emulatorSetMaxSpeed(0);
+}
+
+void actionStartPlayReverse()
+{
+    emulatorPlayReverse(1);
+}
+
+void actionStopPlayReverse()
+{
+    emulatorPlayReverse(0);
 }
 
 void actionDiskQuickChange() {
@@ -625,15 +688,15 @@ void actionCasInsert() {
 void actionCasRewind() {
     if (emulatorGetState() != EMU_STOPPED) {
 #ifndef WII
-        emulatorSuspend();
+            emulatorSuspend();
 #endif
-    }
-    else {
-        tapeSetReadOnly(1);
-        boardChangeCassette(0, strlen(state.properties->media.tapes[0].fileName) ? state.properties->media.tapes[0].fileName : NULL, 
-                            strlen(state.properties->media.tapes[0].fileNameInZip) ? state.properties->media.tapes[0].fileNameInZip : NULL);
-    }
-    tapeSetCurrentPos(0);
+        }
+        else {
+            tapeSetReadOnly(1);
+            boardChangeCassette(0, strlen(state.properties->media.tapes[0].fileName) ? state.properties->media.tapes[0].fileName : NULL, 
+                                strlen(state.properties->media.tapes[0].fileNameInZip) ? state.properties->media.tapes[0].fileNameInZip : NULL);
+        }
+        tapeSetCurrentPos(0);
     if (emulatorGetState() != EMU_STOPPED) {
 #ifndef WII
         emulatorResume();
@@ -825,15 +888,11 @@ void actionPropShowEmulation() {
     archShowPropertiesDialog(PROP_EMULATION);
 }
 
-void actionPropShowVideo() {
-    archShowPropertiesDialog(PROP_VIDEO);
-}
-
 void actionPropShowAudio() {
     archShowPropertiesDialog(PROP_SOUND);
 }
 
-void actionPropShowPerformance() {
+void actionPropShowVideo() {
     archShowPropertiesDialog(PROP_PERFORMANCE);
 }
 
@@ -847,6 +906,10 @@ void actionPropShowDisk() {
 
 void actionPropShowPorts() {
     archShowPropertiesDialog(PROP_PORTS);
+}
+
+void actionPropShowEffects() {
+    archShowPropertiesDialog(PROP_VIDEO);
 }
 
 void actionPropShowApearance() {
@@ -1263,6 +1326,10 @@ void actionRenshaSetLevel(int value) {
 
 void actionSetSpriteEnable(int value) {
     vdpSetSpritesEnable(value);
+}
+
+void actionSetNoSpriteLimits(int value) {
+	vdpSetNoSpriteLimits(value);
 }
 
 void actionSetMsxAudioSwitch(int value) {

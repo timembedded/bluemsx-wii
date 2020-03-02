@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Memory/romMapperKonamiWordPro.c,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperKonamiWordPro.c,v $
 **
 ** $Revision: 1.3 $
 **
-** $Date: 2008/03/30 18:38:44 $
+** $Date: 2008-03-30 18:38:44 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -97,7 +97,7 @@ static void reset(RomMapperKonamiWordPro* rm)
     rm->control = 0xff;
 }
 
-int romMapperKonamiWordProCreate(char* filename, UInt8* romData, 
+int romMapperKonamiWordProCreate(const char* filename, UInt8* romData, 
                           int size, int slot, int sslot, int startPage) 
 {
     DeviceCallbacks callbacks = { destroy, reset, saveState, loadState };

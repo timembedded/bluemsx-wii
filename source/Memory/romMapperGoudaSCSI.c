@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Memory/romMapperGoudaSCSI.c,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperGoudaSCSI.c,v $
 **
 ** $Revision: 1.6 $
 **
-** $Date: 2008/03/30 18:38:44 $
+** $Date: 2008-03-30 18:38:44 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -102,7 +102,7 @@ static void destroy(RomMapperGoudaSCSI* rm)
     free(rm);
 }
 
-int romMapperGoudaSCSICreate(int hdId, char* filename, UInt8* romData,
+int romMapperGoudaSCSICreate(int hdId, const char* filename, UInt8* romData,
                           int size, int slot, int sslot, int startPage)
 {
     DeviceCallbacks callbacks = {

@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Memory/romMapperNettouYakyuu.c,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperNettouYakyuu.c,v $
 **
 ** $Revision: 1.5 $
 **
-** $Date: 2008/05/19 19:25:59 $
+** $Date: 2008-05-19 19:25:59 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -111,7 +111,7 @@ static void write(RomMapperNettouYakyuu* rm, UInt16 address, UInt8 value)
 	rm->romMapper[bank] = value;
 }
 
-int romMapperNettouYakyuuCreate(char* filename, UInt8* romData, 
+int romMapperNettouYakyuuCreate(const char* filename, UInt8* romData, 
                           int size, int slot, int sslot, int startPage) 
 {
     DeviceCallbacks callbacks = { destroy, NULL, saveState, loadState };
@@ -228,7 +228,7 @@ static void write(RomMapperNettouYakyuu* rm, UInt16 address, UInt8 value)
 	samplePlayerSetIndex(rm->samplePlayer,index);
 }
 
-int romMapperNettouYakyuuCreate(char* filename, UInt8* romData, 
+int romMapperNettouYakyuuCreate(const char* filename, UInt8* romData, 
                           int size, int slot, int sslot, int startPage) 
 {
     DeviceCallbacks callbacks = { destroy, NULL, saveState, loadState };

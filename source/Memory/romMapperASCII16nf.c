@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Memory/romMapperASCII16nf.c,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperASCII16nf.c,v $
 **
 ** $Revision: 1.6 $
 **
-** $Date: 2008/03/30 18:38:42 $
+** $Date: 2008-03-30 18:38:42 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -115,7 +115,7 @@ static void write(RomMapperASCII16nf* rm, UInt16 address, UInt8 value)
     }
 }
 
-int romMapperASCII16nfCreate(char* filename, UInt8* romData, 
+int romMapperASCII16nfCreate(const char* filename, UInt8* romData, 
                              int size, int slot, int sslot, int startPage) 
 {
     DeviceCallbacks callbacks = { destroy, NULL, saveState, loadState };

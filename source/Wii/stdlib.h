@@ -1,5 +1,5 @@
 
-#define MALLOC_LOGGING 1
+#define MALLOC_LOGGING 0
 
 #if MALLOC_LOGGING
 

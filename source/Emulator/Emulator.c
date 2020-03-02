@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Emulator/Emulator.c,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Emulator/Emulator.c,v $
 **
-** $Revision: 1.65 $
+** $Revision: 1.67 $
 **
-** $Date: 2008/05/19 12:41:13 $
+** $Date: 2009-07-18 14:35:59 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -62,6 +62,7 @@ static int    emuExitFlag;
 static UInt32 emuSysTime = 0;
 static UInt32 emuFrequency = 3579545;
 int           emuMaxSpeed = 0;
+int           emuPlayReverse = 0;
 int           emuMaxEmuSpeed = 0; // Max speed issued by emulation
 static char   emuStateName[512];
 static volatile int      emuSuspendFlag;
@@ -199,6 +200,7 @@ static int emuUseSynchronousUpdate()
     return P_EMU_SYNCAUTO;
 }
 
+
 UInt32 emulatorGetCpuSpeed() {
     return emuCpuSpeed;
 }
@@ -241,6 +243,14 @@ void emulatorSetState(EmuState state) {
     if (state == EMU_STEP) {
         state = EMU_RUNNING;
         emuSingleStep = 1;
+    }
+    if (state == EMU_STEP_BACK) {
+        EmuState oldState = state;
+        state = EMU_RUNNING;
+        if (!boardRewindOne()) {
+            state = oldState;
+        }
+        
     }
     emuState = state;
 }
@@ -299,6 +309,11 @@ static int timerCallback(void* timer) {
 
     return 1;
 }
+
+int timerCallback_global(void* timer) {
+   timerCallback(timer);
+}
+
 #endif
 
 static void getDeviceInfo(BoardDeviceInfo* deviceInfo)
@@ -357,9 +372,17 @@ static void setDeviceInfo(BoardDeviceInfo* deviceInfo)
 
 static int emulationStartFailure = 0;
 
+static void emulatorPauseCb(void)
+{
+    emulatorSetState(EMU_PAUSED);
+    debuggerNotifyEmulatorPause();
+}
+
 static void emulatorThread() {
     int frequency;
     int success = 0;
+    int reversePeriod = 0;
+    int reverseBufferCnt = 0;
 
     emulatorSetFrequency(properties->emulation.speed, &frequency);
 
@@ -367,11 +390,18 @@ static void emulatorThread() {
     switchSetPause(properties->emulation.pauseSwitch);
     switchSetAudio(properties->emulation.audioSwitch);
 
+    if (properties->emulation.reverseEnable && properties->emulation.reverseMaxTime > 0) {
+        reversePeriod = 50;
+        reverseBufferCnt = properties->emulation.reverseMaxTime * 1000 / reversePeriod;
+    }
     success = boardRun(machine,
                        &deviceInfo,
                        mixer,
                        *emuStateName ? emuStateName : NULL,
-                       frequency, WaitForSync);
+                       frequency, 
+                       reversePeriod,
+                       reverseBufferCnt,
+                       WaitForSync);
 
     ledSetAll(0);
     emuState = EMU_STOPPED;
@@ -386,12 +416,13 @@ static void emulatorThread() {
 
     archEventSet(emuStartEvent);
 }
+//extern int xxxx;
 
 void emulatorStart(const char* stateName) {
-    dbgEnable();
+        dbgEnable();
 
     archEmulationStartNotification();
-
+//xxxx = 0;
     emulatorResume();
 
     emuExitFlag = 0;
@@ -401,6 +432,7 @@ void emulatorStart(const char* stateName) {
     mixerIsChannelTypeActive(mixer, MIXER_CHANNEL_MSXAUDIO, 1);
     mixerIsChannelTypeActive(mixer, MIXER_CHANNEL_MSXMUSIC, 1);
     mixerIsChannelTypeActive(mixer, MIXER_CHANNEL_SCC, 1);
+
 
     properties->emulation.pauseSwitch = 0;
     switchSetPause(properties->emulation.pauseSwitch);
@@ -450,14 +482,11 @@ void emulatorStart(const char* stateName) {
         archEmulationStartFailure();
     }
 #else
-    //printf("Starting emulator thread\n");
     emuThread = archThreadCreate(emulatorThread, THREAD_PRIO_HIGH);
 
-    archEventWait(emuStartEvent, -1);
-    //printf("Emulator thread running\n");
+    archEventWait(emuStartEvent, 3000);
 
     if (emulationStartFailure) {
-        //printf("Failed to start thread\n");
         archEmulationStopNotification();
         emuState = EMU_STOPPED;
         archEmulationStartFailure();
@@ -473,7 +502,6 @@ void emulatorStart(const char* stateName) {
 
         debuggerNotifyEmulatorStart();
 
-        //printf("State set to 'running'\n");
         emuState = EMU_RUNNING;
     }
 #endif
@@ -534,12 +562,10 @@ void emulatorSetFrequency(int logFrequency, int* frequency) {
 
 void emulatorSuspend() {
     if (emuState == EMU_RUNNING) {
-        //printf("Request suspend\n");
         emuState = EMU_SUSPENDED;
         do {
             archThreadSleep(10);
         } while (!emuSuspendFlag);
-        //printf("Emulator suspended\n");
         archSoundSuspend();
         archMidiEnable(0);
     }
@@ -548,9 +574,9 @@ void emulatorSuspend() {
 void emulatorResume() {
     if (emuState == EMU_SUSPENDED) {
         emuSysTime = 0;
+
         archSoundResume();
         archMidiEnable(1);
-        //printf("Emulator resuming\n");
         emuState = EMU_RUNNING;
         archUpdateEmuDisplay(0);
     }
@@ -592,6 +618,22 @@ int  emulatorGetMaxSpeed() {
     return emuMaxSpeed;
 }
 
+void emulatorPlayReverse(int enable)
+{
+    if (enable) {   
+        archSoundSuspend();
+    }
+    else {
+        archSoundResume();
+    }
+    emuPlayReverse = enable;
+}
+
+int  emulatorGetPlayReverse()
+{
+    return emuPlayReverse;
+}
+
 void emulatorResetMixer() {
     // Reset active indicators in mixer
     mixerIsChannelTypeActive(mixer, MIXER_CHANNEL_MOONSOUND, 1);
@@ -616,6 +658,7 @@ int emulatorSyncScreen()
     return rv;
 }
 
+
 void RefreshScreen(int screenMode) {
 
     lastScreenMode = screenMode;
@@ -635,19 +678,18 @@ static int WaitForSync(int maxSpeed, int breakpointHit)
 
     emuMaxEmuSpeed = maxSpeed;
 
+    emuSuspendFlag = 1;
+
     archPollInput();
 
     if (emuState != EMU_RUNNING) {
         archEventSet(emuStartEvent);
-        emuSuspendFlag = 1;
-        //printf("Not running anymore, waiting\n");
-        do {
-            archThreadSleep(100);
-        }while(!emuExitFlag && emuState != EMU_RUNNING);
-        //printf("%s\n", emuExitFlag? "Exit requested" : "Continue");
+        archThreadSleep(100);
         emuSuspendFlag = 0;
-        return emuExitFlag ? -1 : 0;
+        return emuExitFlag ? -99 : 0;
     }
+
+    emuSuspendFlag = 0;
 
     if (emuSingleStep) {
         diffTime = 0;
@@ -659,10 +701,29 @@ static int WaitForSync(int maxSpeed, int breakpointHit)
         diffTime *= 10;
     }
 
-    return emuExitFlag ? -1 : diffTime;
+    return emuExitFlag ? -99 : diffTime;
 }
 
 #else
+
+int WaitReverse()
+{
+    boardEnableSnapshots(0);
+
+    for (;;) {
+        UInt32 sysTime = archGetSystemUpTime(1000);
+        UInt32 diffTime = sysTime - emuSysTime;
+        if (diffTime >= 50) {
+            emuSysTime = sysTime;
+            break;
+        }
+        archEventWait(emuSyncEvent, -1);
+    }
+
+    boardRewind();
+
+    return -60;
+}
 
 static int WaitForSync(int maxSpeed, int breakpointHit) {
     UInt32 li1;
@@ -674,6 +735,12 @@ static int WaitForSync(int maxSpeed, int breakpointHit) {
     UInt32 syncPeriod;
     static int overflowCount = 0;
     static UInt32 kbdPollCnt = 0;
+
+    if (emuPlayReverse && properties->emulation.reverseEnable) {
+        return WaitReverse();
+    }
+
+    boardEnableSnapshots(1);
 
     emuMaxEmuSpeed = maxSpeed;
 
@@ -776,11 +843,13 @@ static int WaitForSync(int maxSpeed, int breakpointHit) {
 
     emuUsageCurrent += diffTime;
 
-    return emuExitFlag ? -1 : diffTime;
+    return emuExitFlag ? -99 : diffTime;
 }
 #endif
 
 #else
+
+#ifdef WIN32
 #include <windows.h>
 
 UInt32 getHiresTimer() {
@@ -800,6 +869,27 @@ UInt32 getHiresTimer() {
 
     return (DWORD)(li.QuadPart * 1000000 / hfFrequency);
 }
+#else
+#define getHiresTimer archGetHiresTimer
+#endif
+#if 1
+
+extern void switch_to_main_thread(void);
+
+static int WaitForSync(int maxSpeed, int breakpointHit) {
+
+   static float time_fraction = 0.0;
+   if (time_fraction > 1.0)
+      time_fraction -= 1.0;
+
+   switch_to_main_thread();
+
+   time_fraction += (1000.0 / 60.0) - 16.0;
+
+   return 16 + time_fraction;
+}
+
+#else
 
 static UInt32 busy, total, oldTime;
 
@@ -828,6 +918,7 @@ static int WaitForSync(int maxSpeed, int breakpointHit) {
         }
     } while (!emuExitFlag && emuState != EMU_RUNNING);
 
+
     emuSuspendFlag = 0;
 
     total += getHiresTimer() - oldTime;
@@ -843,5 +934,8 @@ static int WaitForSync(int maxSpeed, int breakpointHit) {
 
     return emuExitFlag ? -1 : 10;
 }
-
 #endif
+
+
+#endif // #ifndef NO_TIMERS
+

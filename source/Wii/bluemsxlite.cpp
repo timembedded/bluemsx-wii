@@ -129,6 +129,10 @@ void setDefaultPaths(const char* rootDir)
 
     propertiesSetDirectory(rootDir, rootDir);
 
+    sprintf(buffer, "%s/Machines", rootDir);
+    archCreateDirectory(buffer);
+    machineSetDirectory(buffer);
+
     sprintf(buffer, "%s/Audio Capture", rootDir);
     archCreateDirectory(buffer);
     actionSetAudioCaptureSetDirectory(buffer, "");
@@ -327,17 +331,20 @@ static void blueMsxRun(GameElement *game, char *game_dir)
     }
 
     // Start emulator
-    i = emuTryStartWithArguments(properties, game->GetCommandLine(), game_dir);
+    char* commandLine = game->GetCommandLine();
+    printf("CommandLine  : %s\n", commandLine);
+    printf("Directory    : %s\n", game_dir);
+    printf("Starting emulator...\n");
+    i = emuTryStartWithArguments(properties, commandLine, game_dir);
     if (i < 0) {
         printf("Failed to parse command line\n");
         msgbox->Remove();
         return;
     }
     if (i == 0) {
-        printf("Starting emulation\n");
         emulatorStart(NULL);
     }
-    printf("Waiting for quit event...\n");
+    printf("Emulator running...\n");
 
     msgbox->Remove();
     manager->Lock();
@@ -472,6 +479,7 @@ static void blueMsxRun(GameElement *game, char *game_dir)
     }
     delete menu;
 
+    printf("Stopping emulator...\n");
     emulatorStop();
     KBD_SetWpadOrientation(WPADO_VERTICAL);
 
@@ -551,6 +559,8 @@ int main(int argc, char **argv)
         blueMsxInit(1);
 
         msgbox->Remove();
+
+        printf("Starting main GUI\n");
 
         char *game_dir = NULL;
         char sGamesPath[100];

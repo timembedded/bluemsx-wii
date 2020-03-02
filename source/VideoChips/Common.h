@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/VideoChips/Common.h,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/VideoChips/Common.h,v $
 **
-** $Revision: 1.55 $
+** $Revision: 1.57 $
 **
-** $Date: 2008/11/23 20:26:12 $
+** $Date: 2009-04-08 02:52:32 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -26,7 +26,10 @@
 ******************************************************************************
 */
 
+#ifndef BORDER_WIDTH
 #define BORDER_WIDTH   8
+#endif
+
 #define DISPLAY_WIDTH  256
 #define SCREEN_WIDTH   (2 * BORDER_WIDTH + DISPLAY_WIDTH)
 #define SCREEN_HEIGHT  240
@@ -260,7 +263,7 @@ static void RefreshLine0(VDP* vdp, int Y, int X, int X2)
 
         X++;
         linePtr0 = RefreshBorder(vdp, Y, vdp->palette[vdp->BGColor], 0, vdp->hAdjustSc0);
-
+  
         hScroll    = vdpHScroll(vdp) % 6;
 
         y = Y - vdp->firstLine + vdpVScroll(vdp) - vdp->scr0splitLine;

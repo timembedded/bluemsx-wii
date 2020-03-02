@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Memory/romMapperFMPAC.c,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperFMPAC.c,v $
 **
 ** $Revision: 1.18 $
 **
-** $Date: 2008/03/30 18:38:44 $
+** $Date: 2008-03-30 18:38:44 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -234,7 +234,7 @@ static void getDebugInfo(RomMapperFMPAC* rm, DbgDevice* dbgDevice)
     ym2413GetDebugInfo(rm->ym2413, dbgDevice);
 }
 
-int romMapperFMPACCreate(char* filename, UInt8* romData, 
+int romMapperFMPACCreate(const char* filename, UInt8* romData, 
                          int size, int slot, int sslot, int startPage) 
 {
     DeviceCallbacks callbacks = { destroy, reset, saveState, loadState };

@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Memory/romMapperGoudaSCSI.h,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperGoudaSCSI.h,v $
 **
 ** $Revision: 1.2 $
 **
-** $Date: 2008/03/30 18:38:44 $
+** $Date: 2008-03-30 18:38:44 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -30,7 +30,7 @@
 
 #include "MsxTypes.h"
 
-int romMapperGoudaSCSICreate(int hdId, char* filename, UInt8* romData, 
+int romMapperGoudaSCSICreate(int hdId, const char* filename, UInt8* romData, 
                           int size, int slot, int sslot, int startPage);
 
 #endif

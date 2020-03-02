@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Memory/romMapperKoei.c,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperKoei.c,v $
 **
 ** $Revision: 1.7 $
 **
-** $Date: 2008/05/30 13:57:03 $
+** $Date: 2008-05-30 13:57:03 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -155,7 +155,7 @@ static void write(RomMapperKoei* rm, UInt16 address, UInt8 value)
     }
 }
 
-int romMapperKoeiCreate(char* filename, UInt8* romData, 
+int romMapperKoeiCreate(const char* filename, UInt8* romData, 
                         int size, int slot, int sslot, int startPage) 
 {
     DeviceCallbacks callbacks = { destroy, NULL, saveState, loadState };

@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/IoDevice/MSXMidi.h,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/IoDevice/MSXMidi.h,v $
 **
 ** $Revision: 1.4 $
 **
-** $Date: 2008/03/31 19:42:19 $
+** $Date: 2008-03-31 19:42:19 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -31,6 +31,6 @@
 
 #include "MsxTypes.h"
 
-int MSXMidiCreate();
+int MSXMidiCreate(int isExternal);
 
 #endif

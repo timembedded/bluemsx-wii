@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Memory/romMapperKonami4nf.c,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperKonami4nf.c,v $
 **
 ** $Revision: 1.6 $
 **
-** $Date: 2008/03/30 18:38:44 $
+** $Date: 2008-03-30 18:38:44 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -108,7 +108,7 @@ static void write(RomMapperKonami4nf* rm, UInt16 address, UInt8 value)
     }
 }
 
-int romMapperKonami4nfCreate(char* filename, UInt8* romData, 
+int romMapperKonami4nfCreate(const char* filename, UInt8* romData, 
                              int size, int slot, int sslot, int startPage) 
 {
     DeviceCallbacks callbacks = { destroy, NULL, saveState, loadState };

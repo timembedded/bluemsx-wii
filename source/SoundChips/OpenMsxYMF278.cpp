@@ -4,6 +4,8 @@
 // $Id: OpenMsxYMF278.cpp,v 1.6 2008/03/31 22:07:05 hap-hap Exp $
 
 #include "OpenMsxYMF278.h"
+
+#include <stdio.h>
 #include <cmath>
 #include <cstring>
 #include <stdlib.h>
@@ -18,7 +20,7 @@ const unsigned int EG_TIMER_OVERFLOW = 1 << EG_SH;
 // envelope output entries
 const int ENV_BITS      = 10;
 const int ENV_LEN       = 1 << ENV_BITS;
-const double ENV_STEP   = 128.0 / ENV_LEN;
+const DoubleT ENV_STEP   = 128.0 / ENV_LEN;
 const int MAX_ATT_INDEX = (1 << (ENV_BITS - 1)) - 1; //511
 const int MIN_ATT_INDEX = 0;
 
@@ -141,7 +143,7 @@ const int vib_depth[8] = {
 #undef O
 
 
-#define SC(db) (unsigned int) (db * (2.0 / ENV_STEP))
+#define SC(db) static_cast<int>(db * (2.0 / ENV_STEP))
 const int am_depth[8] = {
 	SC(0),	   SC(1.781), SC(2.906), SC(3.656),
 	SC(4.406), SC(5.906), SC(7.406), SC(11.91)
@@ -822,7 +824,7 @@ void YMF278::setInternalVolume(short newVolume)
 	// Volume table, 1 = -0.375dB, 8 = -3dB, 256 = -96dB
     int i;
 	for (i = 0; i < 256; i++) {
-		volume[i] = (int)(4.0 * (double)newVolume * pow(2.0, (-0.375 / 6) * i));
+		volume[i] = (int)(4.0 * (DoubleT)newVolume * pow(2.0, (-0.375 / 6) * i));
 	}
 	for (i = 256; i < 256 * 4; i++) {
 		volume[i] = 0;

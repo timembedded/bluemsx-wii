@@ -5,6 +5,9 @@
 //
 #include "OpenMsxYM2413_2.h"
 
+#include <cmath>
+#include <algorithm>
+
 extern "C" {
 #include "SaveState.h"
 }
@@ -14,14 +17,13 @@ extern "C" {
 #endif
 #define assert(x)
 
-
-#include <cmath>
-#include <algorithm>
+#include <stdio.h>
+#include <math.h>
 
 using std::string;
 
 static const int CLOCK_FREQ = 3579545;
-static const double PI = 3.14159265358979323846;
+static const DoubleT PI = 3.14159265358979323846;
 
 int OpenYM2413_2::pmtable[PM_PG_WIDTH];
 int OpenYM2413_2::amtable[AM_PG_WIDTH];
@@ -58,11 +60,11 @@ int OpenYM2413_2::Slot::SL2EG(int d)
 	return d * (int)(SL_STEP / EG_STEP);
 }
 
-unsigned int OpenYM2413_2::DB_POS(double x)
+unsigned int OpenYM2413_2::DB_POS(DoubleT x)
 {
 	return (unsigned int)(x / DB_STEP);
 }
-unsigned int OpenYM2413_2::DB_NEG(double x)
+unsigned int OpenYM2413_2::DB_NEG(DoubleT x)
 {
 	return (unsigned int)(2 * DB_MUTE + x / DB_STEP);
 }
@@ -79,9 +81,9 @@ static inline unsigned EXPAND_BITS(unsigned x, int s, int d)
 	return x << (d - s);
 }
 // Adjust envelope speed which depends on sampling rate
-static inline unsigned int rate_adjust(double x, int rate)
+static inline unsigned int rate_adjust(DoubleT x, int rate)
 {
-	double tmp = x * CLOCK_FREQ / 72 / rate + 0.5; // +0.5 to round
+	DoubleT tmp = x * CLOCK_FREQ / 72 / rate + 0.5; // +0.5 to round
 	assert (tmp <= 4294967295U);
 	return (unsigned int)tmp;
 }
@@ -103,8 +105,8 @@ void OpenYM2413_2::makeAdjustTable()
 {
 	AR_ADJUST_TABLE[0] = (1 << EG_BITS) - 1;
 	for (int i = 1; i < (1 << EG_BITS); ++i) {
-		AR_ADJUST_TABLE[i] = (unsigned short)((double)(1 << EG_BITS) - 1 -
-		                     ((1 << EG_BITS) - 1) * ::log((double)i) / ::log(127.0));
+		AR_ADJUST_TABLE[i] = (unsigned short)((DoubleT)(1 << EG_BITS) - 1 -
+		                     ((1 << EG_BITS) - 1) * ::log((DoubleT)i) / ::log(127.0));
 	}
 }
 
@@ -113,15 +115,15 @@ void OpenYM2413_2::makeDB2LinTable()
 {
 	for (int i = 0; i < 2 * DB_MUTE; ++i) {
 		dB2LinTab[i] = (i < DB_MUTE)
-		             ?  (short)((double)((1 << DB2LIN_AMP_BITS) - 1) *
-		                    pow(10.0, -(double)i * DB_STEP / 20))
+		             ?  (short)((DoubleT)((1 << DB2LIN_AMP_BITS) - 1) *
+		                    powf(10.0, -(DoubleT)i * DB_STEP / 20))
 		             : 0;
 		dB2LinTab[i + 2 * DB_MUTE] = -dB2LinTab[i];
 	}
 }
 
 // lin(+0.0 .. +1.0) to  dB((1<<DB_BITS)-1 .. 0)
-int OpenYM2413_2::lin2db(double d)
+int OpenYM2413_2::lin2db(DoubleT d)
 {
 	return (d == 0)
 		? DB_MUTE - 1
@@ -144,7 +146,7 @@ void OpenYM2413_2::makeSinTable()
 		halfsintable[i] = fullsintable[0];
 }
 
-static inline double saw(double phase)
+static inline DoubleT saw(DoubleT phase)
 {
   if (phase <= (PI / 2)) {
     return phase * 2 / PI;
@@ -159,8 +161,8 @@ static inline double saw(double phase)
 void OpenYM2413_2::makePmTable()
 {
 	for (int i = 0; i < PM_PG_WIDTH; ++i) {
-		 pmtable[i] = (int)((double)PM_AMP * 
-		     pow(2.0, (double)PM_DEPTH * 
+		 pmtable[i] = (int)((DoubleT)PM_AMP * 
+		     powf(2.0, (DoubleT)PM_DEPTH * 
 		            saw(2.0 * PI * i / PM_PG_WIDTH) / 1200));
 	}
 }
@@ -169,7 +171,7 @@ void OpenYM2413_2::makePmTable()
 void OpenYM2413_2::makeAmTable()
 {
 	for (int i = 0; i < AM_PG_WIDTH; ++i) {
-		amtable[i] = (int)((double)AM_DEPTH / 2 / DB_STEP *
+		amtable[i] = (int)((DoubleT)AM_DEPTH / 2 / DB_STEP *
 		                   (1.0 + saw(2.0 * PI * i / PM_PG_WIDTH)));
 	}
 }
@@ -196,7 +198,7 @@ void OpenYM2413_2::makeDphaseTable(int sampleRate)
 
 void OpenYM2413_2::makeTllTable()
 {
-	double kltable[16] = {
+	DoubleT kltable[16] = {
 		( 0.000 * 2), ( 9.000 * 2), (12.000 * 2), (13.875 * 2),
 		(15.000 * 2), (16.125 * 2), (16.875 * 2), (17.625 * 2),
 		(18.000 * 2), (18.750 * 2), (19.125 * 2), (19.500 * 2),
@@ -779,7 +781,7 @@ inline void OpenYM2413_2::update_noise()
 // EG
 void OpenYM2413_2::Slot::calc_envelope(int lfo_am)
 {
-	#define S2E(x) (SL2EG((int)(x / SL_STEP)) << (EG_DP_BITS - EG_BITS)) 
+	#define S2E(x) static_cast<unsigned int>(SL2EG((int)(x / SL_STEP)) << (EG_DP_BITS - EG_BITS))
 	static unsigned int SL[16] = {
 		S2E( 0.0), S2E( 3.0), S2E( 6.0), S2E( 9.0),
 		S2E(12.0), S2E(15.0), S2E(18.0), S2E(21.0),

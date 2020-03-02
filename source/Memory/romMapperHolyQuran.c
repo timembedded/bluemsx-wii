@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Memory/romMapperHolyQuran.c,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperHolyQuran.c,v $
 **
 ** $Revision: 1.6 $
 **
-** $Date: 2008/03/30 18:38:44 $
+** $Date: 2008-03-30 18:38:44 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -107,7 +107,7 @@ static void write(RomMapperHolyQuran* rm, UInt16 address, UInt8 value)
     }
 }
 
-int romMapperHolyQuranCreate(char* filename, UInt8* romData, 
+int romMapperHolyQuranCreate(const char* filename, UInt8* romData, 
                            int size, int slot, int sslot, int startPage) 
 {
     DeviceCallbacks callbacks = { destroy, NULL, saveState, loadState };

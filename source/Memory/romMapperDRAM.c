@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Memory/romMapperDRAM.c,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperDRAM.c,v $
 **
-** $Revision: 1.4 $
+** $Revision: 1.6 $
 **
-** $Date: 2008/03/30 18:38:43 $
+** $Date: 2009-07-03 21:27:14 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -120,7 +120,7 @@ static void setDram(RomMapperDram* rm, int enable)
     }
 }
 
-int romMapperDramCreate(char* filename, UInt8* romData, 
+int romMapperDramCreate(const char* filename, UInt8* romData, 
                         int size, int slot, int sslot, int startPage) 
 {
     DeviceCallbacks callbacks = { destroy, NULL, NULL, NULL };

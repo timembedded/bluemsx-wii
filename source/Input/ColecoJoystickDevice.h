@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Input/ColecoJoystickDevice.h,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Input/ColecoJoystickDevice.h,v $
 **
 ** $Revision: 1.3 $
 **
-** $Date: 2008/03/30 18:38:40 $
+** $Date: 2008-03-30 18:38:40 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -33,12 +33,12 @@
 // Base class for Coleco Joystick devices. 
 
 typedef struct {
-    UInt8 (*read)(void*);
-    void  (*write)(void*, UInt8);
-    void  (*destroy)(void*);
-    void  (*reset)(void*);
-    void  (*saveState)(void*);
-    void  (*loadState)(void*);
+    UInt16 (*read)(void*);
+    void   (*write)(void*, UInt8);
+    void   (*destroy)(void*);
+    void   (*reset)(void*);
+    void   (*saveState)(void*);
+    void   (*loadState)(void*);
 } ColecoJoystickDevice;
 
 

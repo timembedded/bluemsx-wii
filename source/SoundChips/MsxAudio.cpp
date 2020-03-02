@@ -1,27 +1,27 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/SoundChips/MsxAudio.cpp,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/SoundChips/MsxAudio.cpp,v $
 **
 ** $Revision: 1.8 $
 **
-** $Date: 2006/09/21 04:28:08 $
+** $Date: 2006-09-21 04:28:08 $
 **
 ** More info: http://www.bluemsx.com
 **
 ** Copyright (C) 2003-2006 Daniel Vik
 **
-** This program is free software; you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation; either version 2 of the License, or
-** (at your option) any later version.
-** 
-** This program is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-** GNU General Public License for more details.
-**
-** You should have received a copy of the GNU General Public License
-** along with this program; if not, write to the Free Software
-** Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+** This program is free software; you can redistribute it and/or modify
+** it under the terms of the GNU General Public License as published by
+** the Free Software Foundation; either version 2 of the License, or
+** (at your option) any later version.
+** 
+** This program is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+** GNU General Public License for more details.
+**
+** You should have received a copy of the GNU General Public License
+** along with this program; if not, write to the Free Software
+** Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 **
 ******************************************************************************
 */
@@ -191,6 +191,12 @@ extern "C" void msxaudioWrite(MsxAudio* msxaudio, UInt16 ioPort, UInt8 value)
 	}
 }
 
+void msxaudioSetSampleRate(void* ref, UInt32 rate)
+{
+    MsxAudio* msxaudio = (MsxAudio*)ref;
+    msxaudio->y8950->setSampleRate(rate, boardGetY8950Oversampling());
+}
+
 extern "C" int msxaudioCreate(Mixer* mixer)
 {
     DeviceCallbacks callbacks = { msxaudioDestroy, NULL, msxaudioSaveState, msxaudioLoadState };
@@ -204,12 +210,12 @@ extern "C" int msxaudioCreate(Mixer* mixer)
     msxaudio->counter2 = -1;
     msxaudio->registerLatch = 0;
 
-    msxaudio->handle = mixerRegisterChannel(mixer, MIXER_CHANNEL_MSXAUDIO, 0, msxaudioSync, msxaudio);
+    msxaudio->handle = mixerRegisterChannel(mixer, MIXER_CHANNEL_MSXAUDIO, 0, msxaudioSync, msxaudioSetSampleRate, msxaudio);
 
     msxaudio->deviceHandle = deviceManagerRegister(ROM_MSXAUDIO, &callbacks, msxaudio);
 
     msxaudio->y8950 = new Y8950("MsxAudio", 256*1024, systemTime);
-    msxaudio->y8950->setSampleRate(AUDIO_SAMPLERATE, boardGetY8950Oversampling());
+    msxaudio->y8950->setSampleRate(mixerGetSampleRate(mixer), boardGetY8950Oversampling());
 	msxaudio->y8950->setVolume(32767);
 
     ioPortRegister(0xc0, (IoPortRead)msxaudioRead, (IoPortWrite)msxaudioWrite, msxaudio);

@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/IoDevice/JoystickIO.h,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/IoDevice/JoystickIO.h,v $
 **
 ** $Revision: 1.7 $
 **
-** $Date: 2008/03/30 18:38:40 $
+** $Date: 2008-03-30 18:38:40 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -30,7 +30,7 @@
 #ifndef JOYSTICK_IO_H
 #define JOYSTICK_IO_H
 
-#include "msxTypes.h"
+#include "MsxTypes.h"
 #include "AY8910.h"
 
 typedef enum { 

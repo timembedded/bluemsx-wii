@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Memory/romMapperSegaBasic.c,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperSegaBasic.c,v $
 **
 ** $Revision: 1.3 $
 **
-** $Date: 2008/03/30 18:38:44 $
+** $Date: 2008-03-30 18:38:44 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -92,7 +92,7 @@ static int dbgWriteMemory(RomMapperSegaBasic* rm, char* name, void* data, int st
     return 1;
 }
 
-int romMapperSegaBasicCreate(char* filename, UInt8* romData, 
+int romMapperSegaBasicCreate(const char* filename, UInt8* romData, 
                           int size, int slot, int sslot, int startPage) 
 {
     DeviceCallbacks callbacks = { destroy, NULL, saveState, loadState };

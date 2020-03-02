@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/IoDevice/I8254.c,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/IoDevice/I8254.c,v $
 **
 ** $Revision: 1.13 $
 **
-** $Date: 2008/05/19 19:56:58 $
+** $Date: 2008-05-19 19:56:58 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -689,9 +689,6 @@ void i8254Reset(I8254* i8254)
 
 void i8254Destroy(I8254* i8254) 
 {
-    counterDestroy(i8254->counter1);
-    counterDestroy(i8254->counter2);
-    counterDestroy(i8254->counter3);
     free(i8254);
 }
 

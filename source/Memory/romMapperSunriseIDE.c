@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Memory/romMapperSunriseIDE.c,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperSunriseIDE.c,v $
 **
 ** $Revision: 1.9 $
 **
-** $Date: 2008/03/30 18:38:44 $
+** $Date: 2008-03-30 18:38:44 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -173,7 +173,7 @@ static void reset(RomMapperSunriseIde* rm)
 }
 
 
-int romMapperSunriseIdeCreate(int hdId, char* filename, UInt8* romData, 
+int romMapperSunriseIdeCreate(int hdId, const char* filename, UInt8* romData, 
                               int size, int slot, int sslot, int startPage) 
 {
     DeviceCallbacks callbacks = { destroy, NULL, saveState, loadState };

@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/SoundChips/SamplePlayer.c,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/SoundChips/SamplePlayer.c,v $
 **
 ** $Revision: 1.8 $
 **
-** $Date: 2008/05/17 04:51:04 $
+** $Date: 2008-05-17 04:51:04 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -13,7 +13,7 @@
 ** it under the terms of the GNU General Public License as published by
 ** the Free Software Foundation; either version 2 of the License, or
 ** (at your option) any later version.
-**
+** 
 ** This program is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -76,7 +76,7 @@ SamplePlayer* samplePlayerCreate(Mixer* mixer, int mixerChannel, int bitDepth, i
 
     samplePlayerReset(samplePlayer);
 
-    samplePlayer->handle = mixerRegisterChannel(mixer, mixerChannel, 0, samplePlayerSync, samplePlayer);
+    samplePlayer->handle = mixerRegisterChannel(mixer, mixerChannel, 0, samplePlayerSync, NULL, samplePlayer);
 
     return samplePlayer;
 }
@@ -140,8 +140,8 @@ void samplePlayerDoSync(SamplePlayer* samplePlayer)
 	mixerSync(samplePlayer->mixer);
 }
 
-void samplePlayerWrite(SamplePlayer* samplePlayer,
-                       const void* attackBuffer, UInt32 attackBufferSize,
+void samplePlayerWrite(SamplePlayer* samplePlayer, 
+                       const void* attackBuffer, UInt32 attackBufferSize, 
                        const void* loopBuffer, UInt32 loopBufferSize)
 {
     if (attackBuffer == NULL) {

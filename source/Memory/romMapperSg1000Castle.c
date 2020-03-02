@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Memory/romMapperSg1000Castle.c,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperSg1000Castle.c,v $
 **
 ** $Revision: 1.5 $
 **
-** $Date: 2008/03/30 18:38:44 $
+** $Date: 2008-03-30 18:38:44 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -57,7 +57,7 @@ static void destroy(RomMapperSg1000Castle* rm)
     free(rm);
 }
 
-int romMapperSg1000CastleCreate(char* filename, UInt8* romData, 
+int romMapperSg1000CastleCreate(const char* filename, UInt8* romData, 
                           int size, int slot, int sslot, int startPage) 
 {
     DeviceCallbacks callbacks = { destroy, NULL, NULL, NULL };

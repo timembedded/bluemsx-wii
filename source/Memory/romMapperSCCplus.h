@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Memory/romMapperSCCplus.h,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperSCCplus.h,v $
 **
 ** $Revision: 1.6 $
 **
-** $Date: 2008/03/30 18:38:44 $
+** $Date: 2008-03-30 18:38:44 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -38,7 +38,7 @@ typedef enum {
     SCCP_EXTENDED
 } SccType;
 
-int romMapperSCCplusCreate(char* filename, UInt8* romData, 
+int romMapperSCCplusCreate(const char* filename, UInt8* romData, 
                            int size, int slot, int sslot, int startPage,
                            SccType sccType);
 

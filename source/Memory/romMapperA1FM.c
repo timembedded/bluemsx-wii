@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cvsroot/bluemsx/blueMSX/Src/Memory/romMapperA1FM.c,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperA1FM.c,v $
 **
 ** $Revision: 1.3 $
 **
-** $Date: 2008/03/30 18:38:42 $
+** $Date: 2008-03-30 18:38:42 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -108,8 +108,8 @@ static void saveState(RomMapperA1FM* rm)
         saveStateSet(state, tag, rm->romMapper[i]);
     }
     
-    saveStateGet(state, "readSection", rm->readSection);
-    saveStateGet(state, "readOffset", rm->readOffset);
+    saveStateSet(state, "readSection", rm->readSection);
+    saveStateSet(state, "readOffset", rm->readOffset);
     saveStateSet(state, "control", rm->control);
 
     saveStateClose(state);
@@ -253,7 +253,7 @@ static void reset(RomMapperA1FM* rm)
     changeBank(rm, 7, 0);
 }
 
-int romMapperA1FMCreate(char* filename, UInt8* romData, 
+int romMapperA1FMCreate(const char* filename, UInt8* romData, 
                              int size, int slot, int sslot, int startPage,
                              int sramSize) 
 {
