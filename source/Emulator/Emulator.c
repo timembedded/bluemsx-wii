@@ -67,6 +67,9 @@ int           emuMaxEmuSpeed = 0; // Max speed issued by emulation
 static char   emuStateName[512];
 static volatile int      emuSuspendFlag;
 static volatile EmuState emuState = EMU_STOPPED;
+#ifdef WII
+static volatile int      emuSuspendCount = 0;
+#endif
 static volatile int      emuSingleStep = 0;
 static Properties* properties;
 static Mixer* mixer;
@@ -563,16 +566,28 @@ void emulatorSetFrequency(int logFrequency, int* frequency) {
 void emulatorSuspend() {
     if (emuState == EMU_RUNNING) {
         emuState = EMU_SUSPENDED;
+#ifdef WII
+        emuSuspendCount = 1;
+#endif
         do {
             archThreadSleep(10);
         } while (!emuSuspendFlag);
         archSoundSuspend();
         archMidiEnable(0);
     }
+#ifdef WII
+    else if (emuState == EMU_SUSPENDED) {
+        emuSuspendCount++;
+    }
+#endif
 }
 
 void emulatorResume() {
     if (emuState == EMU_SUSPENDED) {
+#ifdef WII
+        if (--emuSuspendCount != 0)
+            return;
+#endif
         emuSysTime = 0;
 
         archSoundResume();

@@ -179,9 +179,6 @@ void archDiskQuickChangeNotify(int driveId, char* fileName, const char* fileInZi
 
 void blueMsxInit(int resetProperties)
 {
-    int width;
-    int height;
-
     setDefaultPaths(archGetCurrentDirectory());
 
     properties = propCreate(resetProperties, 0, P_KBD_EUROPEAN, 0, "");
@@ -206,9 +203,6 @@ void blueMsxInit(int resetProperties)
         }
         bitDepth = 16;
     }
-
-    width  = zoom * WIDTH;
-    height = zoom * HEIGHT;
 
     mixer = mixerCreate();
 

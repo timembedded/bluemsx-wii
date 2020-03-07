@@ -125,7 +125,7 @@ void allocLogStop(void)
         do {
             WPAD_ScanPads();
             buttons = WPAD_ButtonsDown(WPAD_CHAN_0) | WPAD_ButtonsDown(WPAD_CHAN_1);
-        }while( !(buttons & WPAD_BUTTON_A) );
+        }while( (buttons & (WPAD_BUTTON_A | WPAD_CLASSIC_BUTTON_A | WPAD_BUTTON_2)) == 0 );
     }
     loggingEnabled = 0;
 }

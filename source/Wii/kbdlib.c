@@ -175,6 +175,8 @@ static PADCODE keypad[] =
     {KEY_JOY1_NUNCHUCK_C,   KEY_NONE,              WPAD_BUTTON_B     },
     {KEY_JOY2_WIIMOTE_B,    KEY_JOY2_CLASSIC_B,    WPAD_BUTTON_B     },
     {KEY_JOY2_NUNCHUCK_C,   KEY_NONE,              WPAD_BUTTON_B     },
+    {KEY_JOY1_WIIMOTE_1,    KEY_NONE,              WPAD_BUTTON_1     },
+    {KEY_JOY1_WIIMOTE_2,    KEY_NONE,              WPAD_BUTTON_2     },
     {KEY_JOY1_WIIMOTE_HOME, KEY_JOY2_WIIMOTE_HOME, WPAD_BUTTON_HOME  },
     {KEY_JOY1_CLASSIC_HOME, KEY_JOY2_CLASSIC_HOME, WPAD_BUTTON_HOME  },
     {KEY_UP,                KEY_NONE,              WPAD_BUTTON_UP    },

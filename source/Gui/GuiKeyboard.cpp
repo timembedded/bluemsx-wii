@@ -189,7 +189,7 @@ void GuiKeyboard::Render(void)
                 inputEventUnset(key_pressed->key);
             }
             // set/unset/toggle current key
-            if( buttons & (WPAD_BUTTON_A | WPAD_CLASSIC_BUTTON_A) ) {
+            if( buttons & WPAD_BUTTON_A ) {
                 if( key->toggle ) {
                     if( key != key_pressed ) {
                         if( inputEventGetState(key->key) ) {

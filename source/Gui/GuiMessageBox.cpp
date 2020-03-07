@@ -103,7 +103,7 @@ bool GuiMessageBox::DoSelection(Sprite *yes, Sprite *no)
         if( use_keyboard && (buttons & WPAD_BUTTON_A) != 0 ) {
             break;
         }
-        if( (buttons & (WPAD_BUTTON_HOME | WPAD_BUTTON_B)) != 0 ) {
+        if( (buttons & (WPAD_BUTTON_HOME | WPAD_BUTTON_B | WPAD_BUTTON_1)) != 0 ) {
             selected = false;
             break;
         }
