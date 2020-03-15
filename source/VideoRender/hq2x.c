@@ -82,24 +82,6 @@ static void Interp2(unsigned char * pc, int c1, int c2, int c3)
 #endif
 }
 
-static void Interp5(unsigned char * pc, int c1, int c2)
-{
-#ifndef USE_INLINE_ASSEMBLY
-    c1 &= 0xfefefe;
-    c2 &= 0xfefefe;
-    *((int*)pc) = (c1+c2)>>1;
-#else
-    __asm
-    {
-        mov        eax, pc
-            mov        edx, c1
-            add        edx, c2
-            shr        edx, 1
-            mov        [eax], edx
-    }
-#endif
-}
-
 static void Interp6(unsigned char * pc, int c1, int c2, int c3)
 {
 #ifndef USE_INLINE_ASSEMBLY
@@ -211,7 +193,9 @@ static void Interp10(unsigned char * pc, int c1, int c2, int c3)
 }
 
 
+#ifdef WIN32
 #pragma warning(disable: 4035)
+#endif
 
 static int Diff(unsigned int w5, unsigned int w1)
 {
@@ -289,8 +273,9 @@ FIN:
 #define PIXEL11_90    Interp9(pOut+BpL+4, c[5], c[6], c[8]);
 #define PIXEL11_100   Interp10(pOut+BpL+4, c[5], c[6], c[8]);
 
+#ifdef WIN32
 #pragma warning(default: 4035)
-
+#endif
 
 void hq2x_32(void* pSrc, void* pDest, int Xres, int Yres, int BpL)
 {
@@ -315,7 +300,7 @@ void hq2x_32(void* pSrc, void* pDest, int Xres, int Yres, int BpL)
 
     for (j=0; j<Yres; j++)
     {
-        char* pOutOrig = pOut;
+        unsigned char* pOutOrig = pOut;
 
         if (j>0)      prevline = -Xres*2; else prevline = 0;
         if (j<Yres-1) nextline =  Xres*2; else nextline = 0;

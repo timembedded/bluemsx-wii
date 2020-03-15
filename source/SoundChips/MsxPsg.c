@@ -127,7 +127,7 @@ static UInt8 peek(MsxPsg* msxPsg, UInt16 address)
 
 static UInt8 read(MsxPsg* msxPsg, UInt16 address)
 {
-    UInt8 casdat = 0;
+//    UInt8 casdat = 0;
 
     if (address & 1) {
     	/* r15 */
@@ -159,7 +159,7 @@ static UInt8 read(MsxPsg* msxPsg, UInt16 address)
         }
 
 #if 0
-        // COmment out until cassette wave is working
+        // Comment out until cassette wave is working
         tapeRead(&casdat);
         state |= (casdat) ? 0:0x80;
        	dacWrite(msxPsg->dac, DAC_CH_MONO, (casdat) ? 0 : 255);

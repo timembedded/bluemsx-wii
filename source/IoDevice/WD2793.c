@@ -352,7 +352,7 @@ int wd2793PeekDataRequest(WD2793* wd)
 	}
 
     if ((wd->regCommand & 0xe0) == 0x80 && (wd->regStatus & ST_BUSY)) {
-        UInt32 pulses = (boardSystemTime() - wd->dataRequsetTime) / (boardFrequency() / 25);
+        //UInt32 pulses = (boardSystemTime() - wd->dataRequsetTime) / (boardFrequency() / 25);
 		if (wd->dataReady) {
 			dataRequest = 1;
 		}

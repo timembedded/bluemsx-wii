@@ -53,7 +53,6 @@
 /* Hardware */
 static SN76489*    sn76489;
 static R800*       r800;
-static UInt8       adamMemMapReg;
 
 /************************/
 /*	Adam Memory	*/
@@ -75,64 +74,7 @@ FFFF +---------+---------+---------+---------+
 typedef enum { BANK_02=0x00, BANK_04=0x50, BANK_06=0xa0, BANK_08=0xf0 } adamMemBanksHigh;
 typedef enum { BANK_01=0x00, BANK_03=0x05, BANK_05=0x0a, BANK_07=0x0f } adamMemBanksLow;
 
-static void adamMemMapSet(UInt8 value)
-{
-    UInt8 pages;
-    int i;
 
-    /* Map the Coleco Adam low and high banks to pages */
-    pages = (value&1)?(value&2)?(value&4)?BANK_05:BANK_07:BANK_03:BANK_01;
-    pages |= (value&8)?(value&16)?(value&32)?BANK_02:BANK_08:BANK_06:BANK_04;
-
-    for (i = 0; i < 4; i++) {
-        slotSetRamSlot(i, pages & 3);
-        pages >>= 2;
-    }
-}
-
-static void adamMemMapWrite(void* arg, UInt16 address, UInt8 value)
-{
-	adamMemMapReg = value;
-	adamMemMapSet(value);
-	
-}
-
-static UInt8 adamMemMapRead(void* arg, UInt16 address)
-{
-	return adamMemMapReg;
-}
-
-static void adamMemMapCreate(void)
-{
-    int i;
-    for (i = 0x60; i <= 0x7f; i++) {
-        ioPortRegister(i, adamMemMapRead, adamMemMapWrite, NULL);
-    }
-}
-
-/************************/
-/*	Adam Net	*/
-/************************/
-
-static void adamNetWrite(void* arg, UInt16 address, UInt8 value)
-{
-}
-
-static UInt8 adamNetRead(void* arg, UInt16 address)
-{
-	return 0xff;
-}
-
- static void adamNetCreate(void)
-{
-    int i;
-    for (i = 0x20; i <= 0x3f; i++) {
-        ioPortRegister(i, adamNetRead, adamNetWrite, NULL);
-    }
-}
-
- 
- 
 // ---------------------------------------------
 // ColecoAdam Joystick and PSG handler
 

@@ -83,7 +83,6 @@ static UInt8 colecoJoyIoRead(void* dummy, UInt16 ioPort)
     int devNo = (ioPort >> 1) & 1;
     ColecoJoystickDevice* device = joyDevice[devNo];
     UInt16 joyState = 0xffff;
-    static UInt8 oldValue[2] = { 0, 0 };
     UInt8 value;
 
     if (device != NULL && device->read != NULL) {

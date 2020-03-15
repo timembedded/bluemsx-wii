@@ -72,7 +72,7 @@ const char* stripPath(const char* filename) {
 }
 
 #ifndef NO_FILE_HISTORY
-void updateFileHistory(char* history, RomType* historyType, char* filename, RomType romType) {
+void updateFileHistory(char* history, RomType* historyType, const char* filename, RomType romType) {
     char fname[PROP_MAXPATH];
     int i = 0;
 
@@ -186,7 +186,7 @@ void verifyFileHistory(char* history, RomType* historyType) {
 }
 #endif
 
-int fileExist(char* fileName, char* zipFile) {
+int fileExist(const char* fileName, const char* zipFile) {
     if (fileName == NULL || *fileName == 0) {
         return 0;
     }
@@ -207,7 +207,7 @@ int fileExist(char* fileName, char* zipFile) {
     return 0;
 }
 
-char* fileGetNext(char* filename, char* zipFile) {
+char* fileGetNext(const char* filename, const char* zipFile) {
     static char name[512];
     static int pos = -1;
     int c;
@@ -285,9 +285,9 @@ char* fileGetNext(char* filename, char* zipFile) {
     return name;
 }
 
-void updateExtendedRomName(int drive, char* filename, char* zipFile) {
+void updateExtendedRomName(int drive, const char* filename, const char* zipFile) {
     int size;
-    char* buf = romLoad(filename, zipFile[0] ? zipFile : NULL, &size);
+    UInt8* buf = romLoad(filename, zipFile[0] ? zipFile : NULL, &size);
 
     if (buf != NULL) {
         strcpy(extendedName[drive], mediaDbGetPrettyString(mediaDbLookupRom(buf, size)));
@@ -298,16 +298,15 @@ void updateExtendedRomName(int drive, char* filename, char* zipFile) {
     }
 }
 
-void updateExtendedDiskName(int drive, char* filename, char* zipFile) {
-    int size;
-    char* buf;
-    char* name;
+void updateExtendedDiskName(int drive, const char* filename, const char* zipFile) {
+    const char* name;
 
     extendedDiskName[drive][0] = 0;
 
 #ifndef WII
     if (drive < MAX_FDC_COUNT) {
-        buf = romLoad(filename, zipFile[0] ? zipFile : NULL, &size);
+        int size;
+        char* buf = romLoad(filename, zipFile[0] ? zipFile : NULL, &size);
         if (buf != NULL) {
             strcpy(extendedDiskName[drive], mediaDbGetPrettyString(mediaDbLookupDisk(buf, size)));
             free(buf);
@@ -340,9 +339,9 @@ void updateExtendedDiskName(int drive, char* filename, char* zipFile) {
 */
 }
 
-void updateExtendedCasName(int drive, char* filename, char* zipFile) {
+void updateExtendedCasName(int drive, const char* filename, const char* zipFile) {
     int size;
-    char* buf = romLoad(filename, zipFile[0] ? zipFile : NULL, &size);
+    UInt8* buf = romLoad(filename, zipFile[0] ? zipFile : NULL, &size);
 
     extendedCasName[drive][0] = 0;
     if (buf != NULL) {
@@ -505,7 +504,7 @@ static UInt32 fileWriteTime(const char* filename)
   return rv < 0 ? 0 : (UInt32)s.st_mtime;
 }
 
-char* generateSaveFilename(Properties* properties, char* directory, char* prefix, char* extension, int digits)
+char* generateSaveFilename(Properties* properties, const char* directory, const char* prefix, const char* extension, int digits)
 {
     ArchGlob* glob;
     static char filename[512];
@@ -561,7 +560,7 @@ char* generateSaveFilename(Properties* properties, char* directory, char* prefix
     return filename;
 }
 #else
-char* generateSaveFilename(Properties* properties, char* directory, char* prefix, char* extension, int digits)
+char* generateSaveFilename(Properties* properties, const char* directory, const char* prefix, const char* extension, int digits)
 {
 	WIN32_FIND_DATA fileData;
     FILETIME writeTime;

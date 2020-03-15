@@ -118,7 +118,7 @@ static void ft245UsbHostReset(Ft245UsbHost* host)
 static void onTimer(Ft245UsbHost* host, UInt32 time)
 {
     if (diskChanged(host->driveId)) {
-        char sectorBuffer[512];
+        UInt8 sectorBuffer[512];
         
         _diskRead2(host->driveId, sectorBuffer, 1, 1);
 
@@ -433,11 +433,15 @@ void ft245UsbHostTrigger(Ft245UsbHost* host)
 
     case ST_DEBUGSTRING: 
         {
-            UInt8 temp = host->readCb(host->ref);
-            if (temp == 0) {
+            char temp[2] = {(char)host->readCb(host->ref), '\0'};
+            if (temp[0] == 0) {
                 host->state = ST_WAIT;
             } 
-            else sprintf(host->debugString, "%s%c", host->debugString, temp);
+            else {
+                if (strlen(host->debugString) < sizeof(host->debugString) - 2) {
+                    strcat(host->debugString, temp);
+                }
+            }
             break;
         }
     
@@ -589,7 +593,7 @@ static UInt8 fifoFront(Fifo* fifo)
 ///     FT245
 ////////////////////////////////////////////////////////////////////////////
 
-typedef struct FT245
+struct FT245
 {
     Fifo* sendFifo;
     Fifo* recvFifo;

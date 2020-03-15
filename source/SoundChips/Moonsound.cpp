@@ -38,8 +38,8 @@ extern "C" {
 #define FREQUENCY        3579545
  
 struct Moonsound {
-    Moonsound() : opl3latch(0), opl4latch(0),
-        timerValue1(0), timerValue2(0), timerRef1(0xff), timerRef2(0xff) {
+    Moonsound() : 
+        timerValue1(0), timerValue2(0), timerRef1(0xff), timerRef2(0xff), opl3latch(0), opl4latch(0) {
         memset(defaultBuffer, 0, sizeof(defaultBuffer));
     }
 
@@ -203,7 +203,7 @@ static char* regText(int d)
 static char* slotRegText(int s, int r)
 {
     static char text[5];
-    sprintf(text, "S%d:%d", s, r);
+    sprintf(text, "S%c:%c", '0'+s, '0'+r);
     return text;
 }
 
@@ -226,7 +226,7 @@ void moonsoundGetDebugInfo(Moonsound* moonsound, DbgDevice* dbgDevice)
 
     // Add YMF262 registers
     int c = 1;
-    for (r = 0; r < sizeof(regsAvailYMF262); r++) {
+    for (r = 0; r < (int)sizeof(regsAvailYMF262); r++) {
         c += regsAvailYMF262[r];
     }
 
@@ -235,7 +235,7 @@ void moonsoundGetDebugInfo(Moonsound* moonsound, DbgDevice* dbgDevice)
     c = 0;
     dbgRegisterBankAddRegister(regBank, c++, "SR", 8, moonsound->ymf262->peekStatus());
 
-    for (r = 0; r < sizeof(regsAvailYMF262); r++) {
+    for (r = 0; r < (int)sizeof(regsAvailYMF262); r++) {
         if (regsAvailYMF262[r]) {
             if (r <= 8) {
                 dbgRegisterBankAddRegister(regBank, c++, regText(r), 8, moonsound->ymf262->peekReg(r|0x100));

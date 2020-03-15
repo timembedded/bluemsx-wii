@@ -42,7 +42,6 @@
 
 
 static int mixerCPUFrequency;
-static int mixerConnector;
 static int mixerCPUFrequencyFixed;
 
 void mixerSetBoardFrequency(int CPUFrequency)

@@ -141,11 +141,6 @@ static short int i8250RxBufferGetByte(UInt8* value)
     return 1;
 }
 
-static UInt16 i8250RxBufferGetLength(void)
-{
-    return ((i8250RxBufferHead - i8250RxBufferTail) & I8250_RX_BUFFER_MASK);
-}
-
 static void i8250RxBufferClear(void)
 {
     i8250RxBufferHead = 0;

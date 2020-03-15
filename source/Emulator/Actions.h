@@ -33,9 +33,9 @@
 #include "AudioMixer.h"
 
 void actionInit(Video* video, Properties* properties, Mixer* mixer);
-void actionSetAudioCaptureSetDirectory(char* dir, char* prefix);
-void actionSetVideoCaptureSetDirectory(char* dir, char* prefix);
-void actionSetQuickSaveSetDirectory(char* dir, char* prefix);
+void actionSetAudioCaptureSetDirectory(const char* dir, const char* prefix);
+void actionSetVideoCaptureSetDirectory(const char* dir, const char* prefix);
+void actionSetQuickSaveSetDirectory(const char* dir, const char* prefix);
 
 void actionCartInsert(int cartNo);
 void actionCartRemove(int cartNo);

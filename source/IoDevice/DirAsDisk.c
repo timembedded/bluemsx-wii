@@ -29,12 +29,12 @@
 
 #include "DirAsDisk.h"
 
-#pragma warning(disable: 4996)
 #if defined(WIN32) || defined (WINDOWS_HOST)
 #include <io.h> // not on Linux
 #endif
 
 #ifdef _WIN32
+#pragma warning(disable: 4996)
 #include <direct.h>
 #else
 #include <unistd.h>
@@ -507,11 +507,12 @@ static int get_next_free(void) {
   int i,status=0;
 
   for (i=2; i<2+fatelements; i++)
-    if (!next_link (i)) 
+    if (!next_link (i)) {
       if (status) 
         return i;
       else
         status=1;
+    }
   //printf ("Internal error\n");
   //exit (5);
   return 0;

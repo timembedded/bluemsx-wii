@@ -228,9 +228,6 @@ FIN:
 #define PIXEL22_5   Interp5(pOut+BpL+BpL+8, c[6], c[8]);
 #define PIXEL22_C   *((int*)(pOut+BpL+BpL+8)) = c[5];
 
-#pragma warning(disable: 4035)
-#pragma warning(default: 4035)
-
 void hq3x_32(void* pSrc, void* pDest, int Xres, int Yres, int BpL)
 {
     unsigned char* pIn  = (unsigned char*)pSrc;
@@ -253,7 +250,7 @@ void hq3x_32(void* pSrc, void* pDest, int Xres, int Yres, int BpL)
 
     for (j=0; j<Yres; j++)
     {
-        char* pOutOrig = pOut;
+        unsigned char* pOutOrig = pOut;
 
         if (j>0)      prevline = -Xres*2; else prevline = 0;
         if (j<Yres-1) nextline =  Xres*2; else nextline = 0;

@@ -224,50 +224,6 @@ static void writeIo(NMS1210Rs232* nms1210Rs232, UInt16 ioPort, UInt8 value)
     }
 }
 
-/*****************************************
-** I8251 callbacks
-******************************************
-*/
-static int rs232transmit(NMS1210Rs232* nms1210Rs232, UInt8 value) {
-    return 0;
-}
-
-static int rs232signal(NMS1210Rs232* nms1210Rs232) {
-    return 0;
-}
-
-static void setDataBits(NMS1210Rs232* nms1210Rs232, int value) {
-}
-
-static void setStopBits(NMS1210Rs232* nms1210Rs232, int value) {
-}
-
-static void setParity(NMS1210Rs232* nms1210Rs232, int value) {
-}
-
-static void setRxReady(NMS1210Rs232* nms1210Rs232, int status)
-{
-    if (~nms1210Rs232->intmask & INTMASK_RXREADY) {
-        if (status)
-            boardSetInt(1);
-        else
-            boardClearInt(1);
-    }
-}
-
-static void setDtr(NMS1210Rs232* nms1210Rs232, int status) {
-}
-
-static void setRts(NMS1210Rs232* nms1210Rs232, int status) {
-}
-
-static int getDtr(NMS1210Rs232* nms1210Rs232) {
-    return 0;
-}
-
-static int getRts(NMS1210Rs232* nms1210Rs232) {
-    return 0;
-}
 
 /*****************************************
 ** I8254 callbacks
@@ -343,8 +299,6 @@ int romMapperNms1210Rs232Create(int slot, int sslot, int startPage)
         slotMapPage(slot, sslot, i + startPage, NULL, 0, 0);
     }
 
-//    nms1210Rs232->i8251 = i8251Create(rs232transmit, rs232signal, setDataBits, setStopBits, setParity, 
-//                                 setRxReady, setDtr, setRts, getDtr, getRts, nms1210Rs232);
     nms1210Rs232->z8530 = z8530Create(nms1210Rs232);
 
     nms1210Rs232->i8254 = i8254Create(3686400, pitOut0, pitOut1, pitOut2, nms1210Rs232);

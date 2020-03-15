@@ -443,10 +443,6 @@ static void RefreshLine0Plus(VDP* vdp, int Y, int X, int X2)
 
 static void RefreshLine0Mix(VDP* vdp, int Y, int X, int X2)
 {
-    static int     patternBase;
-    static int     pattern;
-    static int     x;
-    static int     y;
     static int     shift;
 
     static int     hScroll;
@@ -461,9 +457,6 @@ static void RefreshLine0Mix(VDP* vdp, int Y, int X, int X2)
 
         hScroll    = vdpHScroll(vdp) % 6;
 
-        y = Y - vdp->firstLine + vdpVScroll(vdp) - vdp->scr0splitLine;
-        x = 0;
-        patternBase = vdp->chrGenBase & ((-1 << 11) | (y & 7));
         shift = 0;
 
         for (i = 0; i < hScroll; i++) {
@@ -645,7 +638,6 @@ static void RefreshLineTx80(VDP* vdp, int Y, int X, int X2)
 
 static void RefreshLineTx80(VDP* vdp, int Y, int X, int X2)
 {
-    static UInt8*  sprLine;
     static int     patternBase;
     static UInt8   colPattern;
     static int     pattern;

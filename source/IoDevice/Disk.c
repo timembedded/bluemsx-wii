@@ -57,7 +57,7 @@ static int   changed[MAXDRIVES];
 static int   diskType[MAXDRIVES];
 static int   maxSector[MAXDRIVES];
 static char* drivesErrors[MAXDRIVES];
-static const UInt8 svi328Cpm80track[] = "CP/M-80";
+static const char svi328Cpm80track[] = "CP/M-80";
 static void diskHdUpdateInfo(int driveId);
 static void diskReadHdIdentifySector(int driveId, UInt8* buffer);
 

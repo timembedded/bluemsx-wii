@@ -134,11 +134,6 @@ static void destroy(RomMapperBeerIde* rm)
     free(rm);
 }
 
-static UInt8 peekIo(RomMapperBeerIde* rm, UInt16 ioPort) 
-{
-    return 0xff;
-}
-
 static UInt8 readA(RomMapperBeerIde* rm)
 {
     return (UInt8)rm->ideData;

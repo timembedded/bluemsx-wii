@@ -109,12 +109,10 @@ static void DoTuning(void)
     // DMA output  ----------------|
     // Write ptr   ---|<-----|<-----
     //               max    min
-    static Int32 prev_tuning = 0;
     Int32 percent_used = (tuning_sample_max - tuning_sample_min)*100/BUFFER_SIZE_SAMPLES;
     Int32 average = (tuning_sample_min + tuning_sample_max) / 2;
     Int32 buffer_tuning = average - BUFFER_SIZE_SAMPLES / 2;
     if( percent_used > 90 ) {
-        prev_tuning = 0;
         samplerate_tuning_p = 0;
         soundRestart(10);
     }else{
@@ -129,7 +127,6 @@ static void DoTuning(void)
         }
         samplerate_tuning_i += /*(buffer_tuning / 30) + */ buffer_tuning - buffer_tuning;
         samplerate_tuning = samplerate_tuning_p + (samplerate_tuning_i / 200);
-        prev_tuning = buffer_tuning;
 #if AUDIO_DEBUG
         printf("Audio: Tune %3d, %5d, %3d%%, %3d%%, %3d%%\n", samplerate_tuning, buffer_tuning,
                percent_used, tuning_sample_min*200/BUFFER_SIZE_SAMPLES,

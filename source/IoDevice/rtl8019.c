@@ -39,7 +39,7 @@
 #define RX_FREQUENCY  10000
 
 
-typedef struct RTL8019
+struct RTL8019
 {
     UInt8  regCr;
     UInt8  regPstart;
@@ -333,8 +333,6 @@ static void setIrq(int enable)
 
 static void writeCr(RTL8019* rtl, UInt8 value)
 {
-    UInt8 changed = rtl->regCr ^ value;
-
     rtl->regCr = value | (rtl->regCr & CR_TXP);
 
     if ((rtl->regCr & CR_RD) == CR_RD_NA) {

@@ -195,7 +195,9 @@ static const int VLM5030_speed_table[8] =
  IP_SIZE_SLOW
 };
 
+#if 0
 static const char VLM_NAME[] = "VLM5030";
+#endif
 
 /* ROM Tables */
 
@@ -505,6 +507,7 @@ static void VLM5030_setup_parameter(struct vlm5030_info *chip, UINT8 param)
 }
 
 
+#if 0
 static void VLM5030_restore_state(void *param)
 {
 	struct vlm5030_info *chip = param;
@@ -521,7 +524,7 @@ static void VLM5030_restore_state(void *param)
 	for (i = 0; i <= 9 ; i++)
 		chip->current_k[i] = chip->old_k[i] + (chip->target_k[i] - chip->old_k[i]) * interp_effect / FR_SIZE;
 }
-
+#endif
 
 static void VLM5030_reset(struct vlm5030_info *chip)
 {
@@ -670,7 +673,9 @@ if( chip->interp_step != 1)
 /* speech_rom == 0 -> use sampling data mode */
 void *vlm5030_start(int clock)
 {
+#if 0
 	int emulation_rate;
+#endif
 	struct vlm5030_info *chip;
 
 	chip = auto_malloc(sizeof(*chip));
@@ -678,7 +683,9 @@ void *vlm5030_start(int clock)
 
 //	chip->intf = config;
 
+#if 0
 	emulation_rate = clock / 440;
+#endif
 
 	/* reset input pins */
 	chip->pin_RST = chip->pin_ST = chip->pin_VCU= 0;
@@ -805,6 +812,7 @@ void vlm5030_SaveState()
  * Generic get_info
  **************************************************************************/
 
+#if 0
 static void vlm5030_set_info(void *token, UINT32 state, union sndinfo *info)
 {
 	switch (state)
@@ -813,7 +821,6 @@ static void vlm5030_set_info(void *token, UINT32 state, union sndinfo *info)
 	}
 }
 
-#if 0
 void vlm5030_get_info(void *token, UINT32 state, union sndinfo *info)
 {
 	switch (state)

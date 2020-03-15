@@ -161,7 +161,7 @@ int insertCartridge(Properties* properties, int drive, const char* fname, const 
     }
     {
         int size;
-        char* buf = romLoad(filename, isZip ? romName : NULL, &size);
+        UInt8* buf = romLoad(filename, isZip ? romName : NULL, &size);
         char prettyRomName[256];
 
         if (buf != NULL) {

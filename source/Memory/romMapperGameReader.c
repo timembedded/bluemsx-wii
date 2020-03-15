@@ -134,7 +134,6 @@ static void write(RomMapperGameReader* rm, UInt16 address, UInt8 value)
     static UInt8 buf1[0x10000];
     static UInt8 buf2[0x10000];
 #endif
-    int bank = address >> 13;
     int i;
 
 //    fprintf(f, "W %.4x : 0x%.2x\n", address, value);

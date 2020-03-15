@@ -163,9 +163,9 @@ typedef struct {
 } RomMapperNoWind;
 
 
+#ifdef USE_NOWIND_DLL
 static int nowindLoaded = 0;
 
-#ifdef USE_NOWIND_DLL
 static void diskInsert(RomMapperNoWind* rm, int driveId, int driveNo)
 {
     NoWindProperties* prop = &propGetGlobalProperties()->nowind;
@@ -252,11 +252,10 @@ static void loadState(void* _rm)
 static void RomMapperNoWinddestroy(void* _rm)
 {
     RomMapperNoWind* rm = (RomMapperNoWind*)_rm;
-    int i;
-
+ 
     amdFlashDestroy(rm->amdFlash);
 #ifdef USE_NOWIND_DLL
-    for (i = 0; i < 4; i++) {
+    for (int i = 0; i < 4; i++) {
         if (rm->deviceId[i] != -1) {
             deviceIdFree(rm->deviceId[i]);
         } 
@@ -330,10 +329,8 @@ static void RomMapperNoWindwrite(RomMapperNoWind* rm, UInt16 address, UInt8 valu
 int romMapperNoWindCreate(int driveId, const char* filename, UInt8* romData, 
                          int size, int slot, int sslot, int startPage) 
 {
-    NoWindProperties* prop = &propGetGlobalProperties()->nowind;
     DeviceCallbacks callbacks = { RomMapperNoWinddestroy, reset, saveState, loadState };
     RomMapperNoWind* rm;
-    int i;
 
     rm = (RomMapperNoWind*)malloc(sizeof(RomMapperNoWind));
 
@@ -354,6 +351,7 @@ int romMapperNoWindCreate(int driveId, const char* filename, UInt8* romData,
         if (nowindusb_startup)  nowindusb_startup();
     }
     if (nowindusb_attribute) {
+        NoWindProperties* prop = &propGetGlobalProperties()->nowind;
         nowindusb_attribute(ATTR_ENABLE_DOS2, prop->enableDos2 != 0);
         nowindusb_attribute(ATTR_ENABLE_OTHER_DISKROMS, prop->enableOtherDiskRoms != 0);
         nowindusb_attribute(ATTR_ENABLE_PHANTOM_DRIVES, prop->enablePhantomDrives != 0);
@@ -362,7 +360,7 @@ int romMapperNoWindCreate(int driveId, const char* filename, UInt8* romData,
         nowindusb_set_debug_callback(debugCb);
     }
 
-    for (i = 0; i < 4; i++) {
+    for (int i = 0; i < 4; i++) {
         diskInsert(rm, driveId, i);
     }
 #endif

@@ -32,7 +32,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef struct PrinterIO {
+struct PrinterIO {
     PrinterType type;
     DAC* dac;
     FILE* file;
@@ -58,6 +58,8 @@ static void setType(PrinterIO* printerIO)
     case PRN_SIMPL:
         printerIO->dac = dacCreate(boardGetMixer(), DAC_MONO);
         break;
+    case PRN_NONE:
+        break;
     }
 }
 
@@ -74,6 +76,8 @@ static void removeType(PrinterIO* printerIO)
     case PRN_SIMPL:
         dacDestroy(printerIO->dac);
         break;
+    case PRN_NONE:
+        break;
     }
 }
 
@@ -89,6 +93,8 @@ void printerIOWrite(PrinterIO* printerIO, UInt8 value)
     case PRN_SIMPL:
         dacWrite(printerIO->dac, DAC_CH_MONO, value);
         break;
+    case PRN_NONE:
+        break;
     }
 }
 
@@ -101,6 +107,8 @@ int printerIOGetStatus(PrinterIO* printerIO)
         return printerIO->file != NULL;
     case PRN_SIMPL:
         return 1;
+    case PRN_NONE:
+        break;
     }
     return 0;
 }

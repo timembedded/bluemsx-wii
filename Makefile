@@ -88,10 +88,11 @@ INCLUDES	:=	include/libpng \
 # options for code generation
 #---------------------------------------------------------------------------------
 
-CFLAGS	= -g -O2 -Wall -fsigned-char $(MACHDEP) $(INCLUDE) -DNO_ASM -DWII -DDEVKITPPC_STDLIB_INCLUDE=\"$(DEVKITPPC_LOCAL)/powerpc-eabi/include/stdlib.h\"
-CXXFLAGS	=	$(CFLAGS)
+ALLCFLAGS = -g -O2 -Wall -fsigned-char $(MACHDEP) $(INCLUDE) -DNO_ASM -DWII -DDEVKITPPC_STDLIB_INCLUDE=\"$(DEVKITPPC_LOCAL)/powerpc-eabi/include/stdlib.h\"
+CFLAGS    = $(ALLCFLAGS) -Wno-incompatible-pointer-types
+CXXFLAGS  = $(ALLCFLAGS)
 
-LDFLAGS	=	-g $(MACHDEP) -Wl,-Map,$(notdir $@).map
+LDFLAGS   = -g $(MACHDEP) -Wl,-Map,$(notdir $@).map
 
 #---------------------------------------------------------------------------------
 # any extra libraries we wish to link with the project

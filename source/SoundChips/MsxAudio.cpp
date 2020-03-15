@@ -45,7 +45,7 @@ extern "C" Int32* msxaudioSync(void* ref, UInt32 count);
 
 struct MsxAudio {
     MsxAudio() :
-        timer1(0), timer2(0), timerRef1(-1), timerRef2(-1) {
+        timer1(0), timerRef1(-1), timer2(0), timerRef2(-1) {
         memset(defaultBuffer, 0, sizeof(defaultBuffer));
     }
 
@@ -83,13 +83,13 @@ extern "C" Int32* msxaudioSync(void* ref, UInt32 count)
 void msxaudioTimerSet(int timer, int count)
 {
     if (timer == 1) {
-        if (theMsxAudio->counter1 != -1) {
+        if (theMsxAudio->counter1 != (UInt32)-1) {
             theMsxAudio->counter1 = count;
         }
         theMsxAudio->timer1 = count;
     }
     else {
-        if (theMsxAudio->counter2 != -1) {
+        if (theMsxAudio->counter2 != (UInt32)-1) {
             theMsxAudio->counter2 = count;
         }
         theMsxAudio->timer2 = count;
@@ -118,14 +118,14 @@ extern "C" void msxaudioTick(UInt32 elapsedTime)
 {
     if (theMsxAudio != NULL) {
         while (elapsedTime--) {
-            if (theMsxAudio->counter1 != -1) {
+            if (theMsxAudio->counter1 != (UInt32)-1) {
                 if (theMsxAudio->counter1-- == 0) {
                     theMsxAudio->counter1 = theMsxAudio->timer1;
                     theMsxAudio->y8950->callback(theMsxAudio->timerRef1);
                 }
             }
 
-            if (theMsxAudio->counter2 != -1) {
+            if (theMsxAudio->counter2 != (UInt32)-1) {
                 if (theMsxAudio->counter2-- == 0) {
                     theMsxAudio->counter2 = theMsxAudio->timer2;
                     theMsxAudio->y8950->callback(theMsxAudio->timerRef2);

@@ -296,7 +296,6 @@ static int emuStartWithArguments(Properties* properties, char* commandLine, char
     char    ide1s[256] = "";
     char    cas[512] = "";
     char    caszip[256] = "";
-    int     fullscreen = 0;
 #ifdef WII
     int     startEmu = 1; // always start
 #else
@@ -435,9 +434,6 @@ static int emuStartWithArguments(Properties* properties, char* commandLine, char
             strcpy(machineName, argument);
             if (!machineIsValid(machineName, 1)) return 0;
             startEmu = 1;
-        }
-        if (checkArg(argument, "fullscreen")) {
-            fullscreen = 1;
         }
     }
 

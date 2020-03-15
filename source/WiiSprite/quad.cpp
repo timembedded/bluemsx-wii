@@ -16,8 +16,9 @@ namespace wsp{
 	}
 
 	Quad::~Quad(){
-		if(_rect)
+		if(_rect) {
 			delete _rect; _rect = NULL;
+		}
 	}
 
 	void Quad::SetRectangle(Rectangle* rect){

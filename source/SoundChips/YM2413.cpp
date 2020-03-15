@@ -149,14 +149,14 @@ void ym2413GetDebugInfo(YM_2413* ym2413, DbgDevice* dbgDevice)
 
     // Add YM2413 registers
     int c = 0;
-    for (int r = 0; r < sizeof(regsAvailYM2413); r++) {
+    for (int r = 0; r < (int)sizeof(regsAvailYM2413); r++) {
         c += regsAvailYM2413[r];
     }
 
     regBank = dbgDeviceAddRegisterBank(dbgDevice, langDbgRegsYm2413(), c);
     
     c = 0;
-    for (int r = 0; r < sizeof(regsAvailYM2413); r++) {
+    for (int r = 0; r < (int)sizeof(regsAvailYM2413); r++) {
         if (regsAvailYM2413[r]) {
             dbgRegisterBankAddRegister(regBank, c++, regText(r), 8, ym2413->ym2413->peekReg(r));
         }

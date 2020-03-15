@@ -1301,22 +1301,6 @@ static void ld_h_l(R800* r800) {
     r800->regs.HL.B.h = r800->regs.HL.B.l; 
 }
 
-static void ld_h_ixh(R800* r800) {
-    r800->regs.HL.B.h = r800->regs.IX.B.h; 
-}
-
-static void ld_h_ixl(R800* r800) {
-    r800->regs.HL.B.h = r800->regs.IX.B.l;
-}
-
-static void ld_h_iyh(R800* r800) {
-    r800->regs.HL.B.h = r800->regs.IY.B.h; 
-}
-
-static void ld_h_iyl(R800* r800) {
-    r800->regs.HL.B.h = r800->regs.IY.B.l; 
-}
-
 static void ld_h_xhl(R800* r800) {
     r800->regs.HL.B.h = readMem(r800, r800->regs.HL.W); 
 }
@@ -1375,22 +1359,6 @@ static void ld_l_h(R800* r800) {
 
 static void ld_l_l(R800* r800) {
     r800->regs.HL.B.l = r800->regs.HL.B.l;
-}
-
-static void ld_l_ixh(R800* r800) {
-    r800->regs.HL.B.l = r800->regs.IX.B.h;
-}
-
-static void ld_l_ixl(R800* r800) {
-    r800->regs.HL.B.l = r800->regs.IX.B.l;
-}
-
-static void ld_l_iyh(R800* r800) {
-    r800->regs.HL.B.l = r800->regs.IY.B.h;
-}
-
-static void ld_l_iyl(R800* r800) {
-    r800->regs.HL.B.l = r800->regs.IY.B.l; 
 }
 
 static void ld_l_xhl(R800* r800) {
@@ -5720,6 +5688,8 @@ static void r800SwitchCpu(R800* r800) {
     case CPU_R800:
         r800->regBanks[1] = r800->regs;
         break;
+    case CPU_UNKNOWN:
+        break;
     }
 
     r800->oldCpuMode = CPU_UNKNOWN;
@@ -5730,6 +5700,8 @@ static void r800SwitchCpu(R800* r800) {
         break;
     case CPU_R800:
         r800->regs = r800->regBanks[1];
+        break;
+    case CPU_UNKNOWN:
         break;
     }
 
@@ -5974,6 +5946,8 @@ void r800SetFrequency(R800* r800, CpuMode cpuMode, UInt32 frequency) {
     case CPU_R800:
         r800->frequencyR800 = frequency;
         break;
+    case CPU_UNKNOWN:
+        break;
     }
 
     r800->oldCpuMode = r800->cpuMode;
@@ -6030,7 +6004,6 @@ void r800Execute(R800* r800) {
     static SystemTime lastRefreshTime = 0;
     while (!r800->terminate) {
         UInt16 address;
-        int iff1 = 0;
 
 #if TIME_TRACE_SIZE > 0
         if (r800->regs.PC.W != r800->lastPC) {

@@ -127,7 +127,7 @@ void setDefaultPaths(const char* rootDir)
 {
     char buffer[512];
 
-    propertiesSetDirectory(rootDir, rootDir);
+    propertiesSetDirectory(rootDir);
 
     sprintf(buffer, "%s/Machines", rootDir);
     archCreateDirectory(buffer);
@@ -148,7 +148,7 @@ void setDefaultPaths(const char* rootDir)
 
     sprintf(buffer, "%s/Casinfo", rootDir);
     archCreateDirectory(buffer);
-    tapeSetDirectory(buffer, "");
+    tapeSetDirectory(buffer);
 
     sprintf(buffer, "%s/Databases", rootDir);
     archCreateDirectory(buffer);

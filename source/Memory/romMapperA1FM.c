@@ -63,7 +63,6 @@ typedef struct {
 static UInt8 emptyRam[0x2000];
 
 static int SRAM_BASE = 0x80;
-static int RAM_BASE  = 0x180;
 
 static UInt8* panasonicSramData;
 static UInt32 panasonicSramMask = 0;

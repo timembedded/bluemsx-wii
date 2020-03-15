@@ -102,31 +102,16 @@ static UInt8 joyIoRead(void* dummy, UInt16 ioPort)
     return 0xff;
 }
 
-static void sg1000IoPortDestroy(void* dummy)
-{
-	int i;
-
-	for (i=0x40; i<0x80; i++)
-		ioPortUnregister(i);
-
-	for (i=0xC0; i<0x100; i+=2)
-		ioPortUnregister(i);
-
-	ioPortUnregister(0xc1);
-	ioPortUnregister(0xdd);
-}
-
 static void sg1000IoPortCreate()
 {
-    DeviceCallbacks callbacks = { sg1000IoPortDestroy, NULL, NULL, NULL };
 	int i;
-   
+
 	for (i=0x40; i<0x80; i++)
 		ioPortRegister(i, NULL, sg1000Sn76489Write, NULL);
 
 	for (i=0xC0; i<0x100; i+=2)
 		ioPortRegister(i, joyIoRead, NULL, NULL);
-    
+
 	ioPortRegister(0xc1, joyIoRead, NULL, NULL);
 	ioPortRegister(0xdd, joyIoRead, NULL, NULL);
 }

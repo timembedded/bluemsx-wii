@@ -606,7 +606,7 @@ static int scsiDeviceBlueMSX(SCSIDEVICE* scsi)
         length = strlen(fileName);
         buffer[0] = (UInt8)((length >> 8) & 0xff);
         buffer[1] = (UInt8)(length & 0xff);
-        strcpy(buffer + 2, fileName);
+        strcpy((char*)buffer + 2, fileName);
         SCSILOG1("file info:\n%s\n", buffer + 2);
         return length + 3;  // + \0
     }

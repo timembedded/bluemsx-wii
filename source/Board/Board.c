@@ -561,7 +561,7 @@ static void onMixerSync(void* ref, UInt32 time)
 static void onStateSync(void* ref, UInt32 time)
 {    
     if (enableSnapshots) {
-        char memFilename[8];
+        char memFilename[16];
         ramStateCur = (ramStateCur + 1) % ramMaxStates;
         if (ramStateCount < ramMaxStates) {
             ramStateCount++;
@@ -668,7 +668,7 @@ int boardRewind()
     //boardTimerAdd(syncTimer, boardSystemTime() + 1);
     boardTimerAdd(mixerTimer, boardSystemTime() + boardFrequency() / 50);
     
-    if (boardPeriodicCallback != NULL) {
+    if (periodicTimer != NULL) {
         boardTimerAdd(periodicTimer, boardSystemTime() + periodicInterval);
     }
 #endif
@@ -807,7 +807,7 @@ int boardRun(Machine* machine,
         boardTimerAdd(syncTimer, boardSystemTime() + 1);
         boardTimerAdd(mixerTimer, boardSystemTime() + boardFrequency() / MIXER_UPDATE_RATE);
 
-        if (boardPeriodicCallback != NULL) {
+        if (periodicRef != NULL) {
             periodicTimer = boardTimerCreate(boardPeriodicCallback, periodicRef);
             boardTimerAdd(periodicTimer, boardSystemTime() + periodicInterval);
         }
@@ -1306,7 +1306,7 @@ UInt32 boardCalcRelativeTimeout(UInt32 timerFrequency, UInt32 nextTimeout)
 /////////////////////////////////////////////////////////////
 // Board timer
 
-typedef struct BoardTimer {
+struct BoardTimer {
     BoardTimer*  next;
     BoardTimer*  prev;
     BoardTimerCb callback;

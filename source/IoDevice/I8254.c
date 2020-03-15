@@ -440,12 +440,6 @@ static Counter* counterCreate(I8254Out out, void* ref, UInt32 frequency)
     return counter;
 }
 
-static void counterDestroy(Counter* counter)
-{
-    boardTimerDestroy(counter->timer);
-    free(counter);
-}
-
 struct I8254
 {
     Counter* counter1;
@@ -743,13 +737,11 @@ I8254* i8254Create(UInt32 frequency, I8254Out out1, I8254Out out2, I8254Out out3
 I8254* i8254;
 
 
-static void i8254out1(void* ref, int state) {
-    UInt16 cnt;
-
+static void i8254out1(void* ref, int state)
+{
     i8254Write(i8254, 3, 0xe2);
 
-    cnt = i8254Read(i8254, 0) | (i8254Read(i8254, 0) << 8);
-
+//    int cnt = i8254Read(i8254, 0) | (i8254Read(i8254, 0) << 8);
 //    printf("Counter 1 = %d  %.4x\n", state, cnt);
 
     if (state == 0) {
@@ -762,30 +754,25 @@ static void i8254out1(void* ref, int state) {
 
 static void i8254out2(void* ref, int state) 
 {
-    UInt16 cnt;
-
     i8254Write(i8254, 3, 0xe4);
 
-    cnt = i8254Read(i8254, 1) | (i8254Read(i8254, 1) << 8);
-
+//    UInt16 cnt = i8254Read(i8254, 1) | (i8254Read(i8254, 1) << 8);
 //    printf("Counter 2 = %d  %.4x\n", state, cnt);
 }
 
 static void i8254out3(void* ref, int state) 
 {
-    UInt16 cnt1, cnt2, cnt3;
-
     i8254Write(i8254, 3, 0xee);
 
-    cnt1 = i8254Read(i8254, 0) | (i8254Read(i8254, 0) << 8);
-    cnt2 = i8254Read(i8254, 1) | (i8254Read(i8254, 1) << 8);
-    cnt3 = i8254Read(i8254, 2) | (i8254Read(i8254, 2) << 8);
-
+//    UInt16 cnt1 = i8254Read(i8254, 0) | (i8254Read(i8254, 0) << 8);
+//    UInt16 cnt2 = i8254Read(i8254, 1) | (i8254Read(i8254, 1) << 8);
+//    UInt16 cnt3 = i8254Read(i8254, 2) | (i8254Read(i8254, 2) << 8);
 //    printf("Counter 3: %d  %.4x  %.4x  %.4x\n", state, cnt1, cnt2, cnt3);
 }
 
 
-void testI8254() {
+void testI8254()
+{
     i8254 = i8254Create(4000000, i8254out1, i8254out2, i8254out3, 0);
 
     i8254SetGate(i8254, I8254_COUNTER_1, 1);

@@ -7,7 +7,7 @@ extern "C" {
 
 #include "kbdlib.h"
 
-extern void keyboardSetDirectory(char* directory);
+extern void keyboardSetDirectory(const char* directory);
 extern void keyboardInit(void);
 extern void keyboardClose(void);
 extern void keyboardReset(void);

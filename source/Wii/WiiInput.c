@@ -237,7 +237,7 @@ int keyboardGetMapping(KEY key)
     return kbdTable[key];
 }
 
-void keyboardSetDirectory(char* directory)
+void keyboardSetDirectory(const char* directory)
 {
     strcpy(keyboardConfigDir, directory);
 }

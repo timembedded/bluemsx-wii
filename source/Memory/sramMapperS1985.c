@@ -90,7 +90,7 @@ static UInt8 peek(SramMapperS1985* rm, UInt16 ioPort)
 	UInt8 result;
 	switch (ioPort & 0x0f) {
 	case 0:
-		result = ~0xfe;
+		result = (UInt8)~0xfe;
 		break;
 	case 2:
 		result = rm->sram[rm->address];
@@ -110,7 +110,7 @@ static UInt8 read(SramMapperS1985* rm, UInt16 ioPort)
 	UInt8 result;
 	switch (ioPort & 0x0f) {
 	case 0:
-		result = ~0xfe;
+		result = (UInt8)~0xfe;
 		break;
 	case 2:
 		result = rm->sram[rm->address];

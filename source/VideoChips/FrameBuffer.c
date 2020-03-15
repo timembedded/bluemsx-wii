@@ -126,6 +126,7 @@ static FrameBuffer* frameBufferFlipViewFrame3(int mixFrames)
     switch (currentBuffer->viewFrame) {
     case 0: index = currentBuffer->drawFrame == 1 ? 2 : 1; break;
     case 1: index = currentBuffer->drawFrame == 2 ? 0 : 2; break;
+    default:
     case 2: index = currentBuffer->drawFrame == 0 ? 1 : 0; break;
     }
     if (currentBuffer->frame[index].age > currentBuffer->frame[currentBuffer->viewFrame].age) {
@@ -217,7 +218,6 @@ static FrameBuffer* frameBufferFlipDrawFrame3()
 static FrameBuffer* frameBufferFlipDrawFrame4()
 {
     FrameBuffer* frame;
-    int drawFrame = currentBuffer->drawFrame;
     int drawAge = 0x7fffffff;
     int i;
 

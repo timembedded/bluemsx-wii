@@ -1247,7 +1247,7 @@ void OpenYM2413_2::loadState()
     char tag[32];
     int i;
 
-    for (i = 0; i < sizeof(reg) / sizeof(reg[0]); i++) {
+    for (i = 0; i < (int)(sizeof(reg) / sizeof(reg[0])); i++) {
         sprintf(tag, "reg%.4d", i);
         reg[i] = (byte)saveStateGet(state, tag, 0);
     }
@@ -1259,7 +1259,7 @@ void OpenYM2413_2::loadState()
     lfo_am     = saveStateGet(state, "lfo_am",        0);
     noise_seed = saveStateGet(state, "noise_seed",    0);
 
-    for (i = 0; i < sizeof(patches) / sizeof(patches[0]); i++) {
+    for (i = 0; i < (int)(sizeof(patches) / sizeof(patches[0])); i++) {
         sprintf(tag, "AM%d", i);
         patches[i].AM = 0 != saveStateGet(state, tag, 0);
         
@@ -1300,7 +1300,7 @@ void OpenYM2413_2::loadState()
         patches[i].RR = (byte)saveStateGet(state, tag, 0);
     }
 
-    for (i = 0; i < sizeof(ch) / sizeof(ch[0]); i++) {
+    for (i = 0; i < (int)(sizeof(ch) / sizeof(ch[0])); i++) {
         sprintf(tag, "patch_number%d", i);
         ch[i].patch_number = saveStateGet(state, tag, 0);
 
@@ -1446,7 +1446,7 @@ void OpenYM2413_2::saveState()
     char tag[32];
     int i;
 
-    for (i = 0; i < sizeof(reg) / sizeof(reg[0]); i++) {
+    for (i = 0; i < (int)(sizeof(reg) / sizeof(reg[0])); i++) {
         sprintf(tag, "reg%.4d", i);
         saveStateSet(state, tag, reg[i]);
     }
@@ -1458,7 +1458,7 @@ void OpenYM2413_2::saveState()
     saveStateSet(state, "lfo_am",        lfo_am);
     saveStateSet(state, "noise_seed",    noise_seed);
 
-    for (i = 0; i < sizeof(patches) / sizeof(patches[0]); i++) {
+    for (i = 0; i < (int)(sizeof(patches) / sizeof(patches[0])); i++) {
         sprintf(tag, "AM%d", i);
         saveStateSet(state, tag, patches[i].AM);
         
@@ -1499,7 +1499,7 @@ void OpenYM2413_2::saveState()
         saveStateSet(state, tag, patches[i].RR);
     }
 
-    for (i = 0; i < sizeof(ch) / sizeof(ch[0]); i++) {
+    for (i = 0; i < (int)(sizeof(ch) / sizeof(ch[0])); i++) {
         sprintf(tag, "patch_number%d", i);
         saveStateSet(state, tag, ch[i].patch_number);
 

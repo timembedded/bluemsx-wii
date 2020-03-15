@@ -33,7 +33,7 @@
 
 
 
-const char* sramCreateFilenameWithSuffix(const char* romFilename, char* suffix, char* ext)
+const char* sramCreateFilenameWithSuffix(const char* romFilename, const char* suffix, const char* ext)
 {
     static char SRAMfileName[512];
     char fileName[512];
@@ -49,7 +49,7 @@ const char* sramCreateFilenameWithSuffix(const char* romFilename, char* suffix, 
         *--dst = '.';
     }
     else {
-        char* p = ext + strlen(ext);
+        const char* p = ext + strlen(ext);
         do {
             *--dst = *--p;
         } while (p != ext);

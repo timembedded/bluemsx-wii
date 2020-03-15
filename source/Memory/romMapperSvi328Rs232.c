@@ -123,15 +123,6 @@ static void writeIo(RomMapperSvi328Rs232* rs232, UInt16 ioPort, UInt8 value)
     i8250Write(rs232->i8250, ioPort - rs232->baseAddress, value);
 }  
 
-static int romMapperSvi328Rs232TransmitCallback(UInt8 value)
-{
-    if (rs232->serialLink) {
-        archUartTransmit(value);
-        return 1;
-    }
-    return 0;
-}
-
 static void romMapperSvi328Rs232ReceiveCallback(UInt8 value)
 {
     //i8250Receive(rs232->i8250, value);

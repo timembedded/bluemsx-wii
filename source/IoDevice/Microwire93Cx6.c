@@ -34,7 +34,7 @@
 
 // Emulates the Microchip Technology Inc. 93C76/86 eeprom chips
 
-typedef struct Microwire93Cx6
+struct Microwire93Cx6
 {
     UInt8* romData;
     int    romMask;
@@ -63,9 +63,6 @@ typedef struct Microwire93Cx6
 #define PHASE_DATATRANSFER_READ     3
 #define PHASE_PROGRAMMING           4
 #define PHASE_COMMAND_DONE          5
-
-
-static void test(Microwire93Cx6* rm);
 
 
 static void romWrite(Microwire93Cx6* rm, UInt32 address, UInt32 value)

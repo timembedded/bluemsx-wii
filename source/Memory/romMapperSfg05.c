@@ -216,8 +216,6 @@ static void ym2148SetVector(YM2148* midi, UInt8 value)
 
 static void ym2148WriteCommand(YM2148* midi, UInt8 value)
 {
-    UInt8 oldValue = midi->command;
-
     midi->command = value;
     
     if (value & CMD_RST) {

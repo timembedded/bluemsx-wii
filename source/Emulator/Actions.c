@@ -224,19 +224,19 @@ void actionHarddiskRemoveAll()
     archUpdateMenu(0);
 }
 
-void actionSetAudioCaptureSetDirectory(char* dir, char* prefix)
+void actionSetAudioCaptureSetDirectory(const char* dir, const char* prefix)
 {
     strcpy(audioDir, dir);
     strcpy(audioPrefix, prefix);
 }
 
-void actionSetVideoCaptureSetDirectory(char* dir, char* prefix)
+void actionSetVideoCaptureSetDirectory(const char* dir, const char* prefix)
 {
     strcpy(videoDir, dir);
     strcpy(videoPrefix, prefix);
 }
 
-void actionSetQuickSaveSetDirectory(char* dir, char* prefix)
+void actionSetQuickSaveSetDirectory(const char* dir, const char* prefix)
 {
     strcpy(stateDir, dir);
     strcpy(statePrefix, prefix);

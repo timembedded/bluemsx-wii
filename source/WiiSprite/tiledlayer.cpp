@@ -22,10 +22,12 @@ namespace wsp{
 	}
 	TiledLayer::~TiledLayer(){
 		// Delete data
-		if(_data)
+		if(_data) {
 			delete[] _data; _data = NULL;
-		if(_animations)
+		}
+		if(_animations) {
 			delete[] _animations; _animations = NULL;
+		}
 	}
 
 	void TiledLayer::SetStaticTileset(Image* image, u32 tileWidth, u32 tileHeight){

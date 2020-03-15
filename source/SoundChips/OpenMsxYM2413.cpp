@@ -1468,7 +1468,7 @@ void OpenYM2413::loadState()
 
     saveStateGetBuffer(state, "inst_tab", inst_tab, sizeof(inst_tab));
 
-    for (i = 0; i < sizeof(fn_tab) / sizeof(fn_tab[0]); i++) {
+    for (i = 0; i < (int)(sizeof(fn_tab) / sizeof(fn_tab[0])); i++) {
         sprintf(tag, "fn_tab%.4d", i);
         fn_tab[i] = saveStateGet(state, tag, 0);
     }
@@ -1622,7 +1622,7 @@ void OpenYM2413::saveState()
 
     saveStateSetBuffer(state, "inst_tab", inst_tab, sizeof(inst_tab));
 
-    for (i = 0; i < sizeof(fn_tab) / sizeof(fn_tab[0]); i++) {
+    for (i = 0; i < (int)(sizeof(fn_tab) / sizeof(fn_tab[0])); i++) {
         sprintf(tag, "fn_tab%.4d", i);
         saveStateSet(state, tag, fn_tab[i]);
     }

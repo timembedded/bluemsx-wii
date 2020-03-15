@@ -33,6 +33,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+//#define SCC_DEBUG_DEVICE      /* Register in DebugDeviceManager */
 
 //#define BASE_PHASE_STEP 0x28959becUL  /* = (1 << 28) * 3579545 / 32 / 44100 */
 #define BASE_PHASE_STEP 0xA2566FBUL  /* = (1 << 28) * 3579545 / 32 / (44100 * 4) */
@@ -361,6 +362,7 @@ void sccSetMode(SCC* scc, SccMode newMode)
     scc->mode = newMode;
 }
 
+#ifdef SCC_DEBUG_DEVICE
 static void getDebugInfo(SCC* scc, DbgDevice* dbgDevice)
 {
     static UInt8 ram[0x100];
@@ -372,15 +374,20 @@ static void getDebugInfo(SCC* scc, DbgDevice* dbgDevice)
 
     dbgDeviceAddMemoryBlock(dbgDevice, langDbgMemScc(), 1, 0, 0x100, ram);
 }
+#endif
 
 SCC* sccCreate(Mixer* mixer)
 {
+#ifdef SCC_DEBUG_DEVICE
     DebugCallbacks dbgCallbacks = { getDebugInfo, NULL, NULL, NULL };
+#endif
     SCC* scc = (SCC*)calloc(1, sizeof(SCC));
 
     scc->mixer = mixer;
 
-//    scc->debugHandle = debugDeviceRegister(DBGTYPE_AUDIO, langDbgDevScc(), &dbgCallbacks, scc);
+#ifdef SCC_DEBUG_DEVICE
+    scc->debugHandle = debugDeviceRegister(DBGTYPE_AUDIO, langDbgDevScc(), &dbgCallbacks, scc);
+#endif
 
     scc->handle = mixerRegisterChannel(mixer, MIXER_CHANNEL_SCC, 0, sccSync, NULL, scc);
 
@@ -452,6 +459,9 @@ UInt8 sccRead(SCC* scc, UInt8 address)
         }
 
         return 0xff;
+
+    case SCC_NONE:
+        return 0xff;
     }
 
     return 0xff;
@@ -459,8 +469,6 @@ UInt8 sccRead(SCC* scc, UInt8 address)
 
 UInt8 sccPeek(SCC* scc, UInt8 address)
 {
-    UInt8 result;
-
     switch (scc->mode) {
 
     case SCC_REAL:
@@ -488,14 +496,14 @@ UInt8 sccPeek(SCC* scc, UInt8 address)
         }
         
         if (address < 0xc0) {
-            result = sccGetWave(scc, 4, address);
+            return sccGetWave(scc, 4, address);
         } 
 
         if (address < 0xe0) {
             return 0xff;
         }
  
-        result = 0xff;
+        return 0xff;
 
     case SCC_PLUS:
         if (address < 0xa0) {
@@ -510,6 +518,9 @@ UInt8 sccPeek(SCC* scc, UInt8 address)
             return 0xff;
         }
 
+        return 0xff;
+
+    case SCC_NONE:
         return 0xff;
     }
 
@@ -578,29 +589,14 @@ void sccWrite(SCC* scc, UInt8 address, UInt8 value)
         }
 
         return;
+
+    case SCC_NONE:
+        return;
     }
 }
 
 void sccGetDebugInfo(SCC* scc, DbgDevice* dbgDevice)
 {
-}
-
-static Int32 filter(SCC* scc, Int32 input) {
-    scc->in[4] = scc->in[3];
-    scc->in[3] = scc->in[2];
-    scc->in[2] = scc->in[1];
-    scc->in[1] = scc->in[0];
-    scc->in[0] = input;
-
-    scc->inHp[2] = scc->inHp[1];
-    scc->inHp[1] = scc->inHp[0];
-    scc->inHp[0] = (1 * (scc->in[0] + scc->in[4]) + 12 * (scc->in[1] + scc->in[3]) + 45 * scc->in[2]) / 100;
-
-    scc->outHp[2] = scc->outHp[1];
-    scc->outHp[1] = scc->outHp[0];
-    scc->outHp[0] =(997 * scc->inHp[0] - 1994 * scc->inHp[1] + 997 * scc->inHp[2] + 1994 * scc->outHp[1] - 994 * scc->outHp[2]) / 1000;
-
-    return scc->outHp[0];
 }
 
 // Filter type: Low pass

@@ -46,7 +46,7 @@ static UInt8 hdrASCII[10]  = { 0xea,0xea,0xea,0xea,0xea,0xea,0xea,0xea,0xea,0xea
 static UInt8 hdrBINARY[10] = { 0xd0,0xd0,0xd0,0xd0,0xd0,0xd0,0xd0,0xd0,0xd0,0xd0 };
 static UInt8 hdrBASIC[10]  = { 0xd3,0xd3,0xd3,0xd3,0xd3,0xd3,0xd3,0xd3,0xd3,0xd3 };
 static char   tapeBaseDir[512];
-static char   tapePosName[512];
+static char   tapePosName[512+2];
 static char   tapeName[512];
 static int    tapeRdWr;
 static TapeFormat tapeFormat;
@@ -57,8 +57,8 @@ static int    ramImageSize = 0;
 static int    ramImagePos = 0;
 static int    rewindNextInsert = 0;
 
-static char* stripPath(char* filename) {
-    char* ptr = filename + strlen(filename) - 1;
+static const char* stripPath(const char* filename) {
+    const char* ptr = filename + strlen(filename) - 1;
 
     while (--ptr >= filename) {
         if (*ptr == '/' || *ptr == '\\') {
@@ -178,7 +178,8 @@ UInt8 tapeWriteHeader()
     return 0;
 }
 
-void tapeSetDirectory(char* baseDir, char* prefix) {
+void tapeSetDirectory(const char* baseDir)
+{
     strcpy(tapeBaseDir, baseDir);
 }
 
@@ -187,7 +188,7 @@ void tapeSetReadOnly(int readOnly)
     tapeRdWr = !readOnly;
 }
 
-int tapeInsert(char *name, const char *fileInZipFile) 
+int tapeInsert(const char *name, const char *fileInZipFile) 
 {
     FILE* file;
     Properties* pProperties = propGetGlobalProperties();
@@ -264,7 +265,7 @@ int tapeInsert(char *name, const char *fileInZipFile)
     rewindNextInsert=0;
 
     if (ramImageBuffer != NULL) {
-        UInt8* ptr = ramImageBuffer + ramImageSize - 17;
+        char* ptr = ramImageBuffer + ramImageSize - 17;
         int cntFMSXDOS = 0;
         int cntFMSX98  = 0;
         int cntSVICAS  = 0;
@@ -311,7 +312,7 @@ int tapeIsInserted()
     return ramImageBuffer != NULL;
 }
 
-int tapeSave(char *name, TapeFormat format)
+int tapeSave(const char *name, TapeFormat format)
 {
     FILE* file;
     int offset   = 0;
@@ -347,6 +348,9 @@ int tapeSave(char *name, TapeFormat format)
                     hdrData = hdrSVICAS;
                     hdrSize = sizeof(hdrSVICAS);
                     break;
+                default:
+                    hdrData = NULL;
+                    hdrSize = 0;
             }
 
             if (format == TAPE_FMSXDOS) {
@@ -357,8 +361,10 @@ int tapeSave(char *name, TapeFormat format)
                 }
             }
 
-            fwrite(hdrData, 1, hdrSize, file);
-            writePos += hdrSize;
+            if (hdrData != NULL) {
+                fwrite(hdrData, 1, hdrSize, file);
+                writePos += hdrSize;
+            }
             offset += tapeHeaderSize;
         }
         else {

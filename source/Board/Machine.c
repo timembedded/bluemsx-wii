@@ -25,9 +25,7 @@
 **
 ******************************************************************************
 */
-#if defined(__linux__) || defined(EMSCRIPTEN)
 #define _GNU_SOURCE
-#endif
 #include <string.h>
 
 #include "Machine.h"
@@ -455,8 +453,8 @@ static int readMachine(Machine* machine, const char* machineName, const char* fi
 
 void machineSave(Machine* machine)
 {
-    char dir[512];
-    char file[512];
+    char dir[PROP_MAXPATH+64];
+    char file[PROP_MAXPATH+76];
     char buffer[10000];
     int size = 0;
     int i;
@@ -513,6 +511,7 @@ void machineSave(Machine* machine)
     case BOARD_SG1000:       iniFileWriteString(configIni, "Board", "type", "SG-1000"); break;
     case BOARD_SF7000:       iniFileWriteString(configIni, "Board", "type", "SF-7000"); break;
     case BOARD_SC3000:       iniFileWriteString(configIni, "Board", "type", "SC-3000"); break;
+    default: break;
     }
 
     // Write video info
@@ -562,7 +561,7 @@ void machineSave(Machine* machine)
 
 Machine* machineCreate(const char* machineName)
 {
-    char configIni[512];
+    char configIni[PROP_MAXPATH+18];
     Machine* machine;
     int success;
     FILE *file;
@@ -584,7 +583,7 @@ Machine* machineCreate(const char* machineName)
     else
     {
         // No config.ini. Is it compressed?
-        char zipFile[512];
+        char zipFile[512+6];
         
         sprintf(zipFile, "%s/%s.zip", machinesDir, machineName);
         file = fopen(zipFile, "rb");
@@ -699,7 +698,7 @@ void machineFillAvailable(ArrayList *list, int checkRoms)
     const int maxNameLength = 512;
  
     if (machineName != NULL) {
-        char filename[128];
+        char filename[PROP_MAXPATH+12];
         
         FILE* file;
         
@@ -715,7 +714,7 @@ void machineFillAvailable(ArrayList *list, int checkRoms)
         }
     }
     else {
-        char globPath[PROP_MAXPATH];
+        char globPath[PROP_MAXPATH+6];
         ArchGlob* glob;
         int i;
         
@@ -1058,14 +1057,12 @@ int machineInitialize(Machine* machine, UInt8** mainRam, UInt32* mainRamSize, UI
         int slot;
         int subslot;
         int startPage;
-        char* romName;
         
         // Don't map slots with error
         if (machine->slotInfo[i].error) {
             continue;
         }
 
-        romName   = strlen(machine->slotInfo[i].inZipName) ? machine->slotInfo[i].inZipName : machine->slotInfo[i].name;
         slot      = machine->slotInfo[i].slot;
         subslot   = machine->slotInfo[i].subslot;
         startPage = machine->slotInfo[i].startPage;
@@ -1089,14 +1086,12 @@ int machineInitialize(Machine* machine, UInt8** mainRam, UInt32* mainRamSize, UI
         int slot;
         int subslot;
         int startPage;
-        char* romName;
         
         // Don't map slots with error
         if (machine->slotInfo[i].error) {
             continue;
         }
 
-        romName   = strlen(machine->slotInfo[i].inZipName) ? machine->slotInfo[i].inZipName : machine->slotInfo[i].name;
         slot      = machine->slotInfo[i].slot;
         subslot   = machine->slotInfo[i].subslot;
         startPage = machine->slotInfo[i].startPage;

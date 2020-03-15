@@ -79,10 +79,12 @@ static int lastScreenMode;
 
 static int emuFrameskipCounter = 0;
 
+#if !defined(NO_TIMERS) && !defined(WII)
 static UInt32 emuTimeIdle       = 0;
 static UInt32 emuTimeTotal      = 1;
 static UInt32 emuTimeOverflow   = 0;
 static UInt32 emuUsageCurrent   = 0;
+#endif
 static UInt32 emuCpuSpeed       = 0;
 static UInt32 emuCpuUsage       = 0;
 static int    enableSynchronousUpdate = 1;
@@ -153,9 +155,9 @@ void savelog()
 #define savelog()
 #endif
 
+#if !defined(NO_TIMERS) && !defined(WII)
 static void emuCalcCpuUsage() {
     static UInt32 oldSysTime = 0;
-    static UInt32 oldAverage = 0;
     static UInt32 cnt = 0;
     UInt32 newSysTime;
     UInt32 emuTimeAverage;
@@ -187,6 +189,7 @@ static void emuCalcCpuUsage() {
     emuTimeIdle     = 0;
     emuTimeTotal    = 1;
 }
+#endif
 
 static int emuUseSynchronousUpdate()
 {
@@ -374,12 +377,6 @@ static void setDeviceInfo(BoardDeviceInfo* deviceInfo)
 }
 
 static int emulationStartFailure = 0;
-
-static void emulatorPauseCb(void)
-{
-    emulatorSetState(EMU_PAUSED);
-    debuggerNotifyEmulatorPause();
-}
 
 static void emulatorThread() {
     int frequency;
@@ -619,11 +616,17 @@ void emulatorRestartSound() {
     emulatorResume();
 }
 
+#if !defined(NO_TIMERS) && !defined(WII)
 int emulatorGetCpuOverflow() {
     int overflow = emuTimeOverflow;
     emuTimeOverflow = 0;
     return overflow;
 }
+#else
+int emulatorGetCpuOverflow() {
+    return 0;
+}
+#endif
 
 void emulatorSetMaxSpeed(int enable) {
     emuMaxSpeed = enable;

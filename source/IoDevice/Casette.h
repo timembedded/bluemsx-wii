@@ -40,10 +40,10 @@ typedef struct {
     char            fileName[8];
 } TapeContent;
 
-void   tapeSetDirectory(char* baseDir, char* prefix);
-int    tapeInsert(char *name, const char *fileInZipFile);
+void   tapeSetDirectory(const char* baseDir);
+int    tapeInsert(const char *name, const char *fileInZipFile);
 int    tapeIsInserted();
-int    tapeSave(char *name, TapeFormat format);
+int    tapeSave(const char *name, TapeFormat format);
 void tapeLoadState();
 void tapeSaveState();
 void tapeRewindNextInsert(void);

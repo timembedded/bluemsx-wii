@@ -11,8 +11,9 @@ namespace wsp{
 	}
 
 	LayerManager::~LayerManager(){
-		if(_layers)
+		if(_layers) {
 			delete[] _layers; _layers = NULL;
+		}
 	}
 
 	void LayerManager::Append(Layer* layer){

@@ -79,11 +79,11 @@ static void destroy(RomMapperKanji12* rm)
 
 static UInt8 peek(RomMapperKanji12* rm, UInt16 ioPort)
 {
-    UInt8 value = 0xff;
+	UInt8 value = 0xff;
 
 	switch (ioPort & 0x0f) {
 	case 0:
-		value = ~0xf7;
+		value = (UInt8)~0xf7;
 		break;
 	case 1:
 		value = 0x08;
@@ -102,11 +102,11 @@ static UInt8 peek(RomMapperKanji12* rm, UInt16 ioPort)
 
 static UInt8 read(RomMapperKanji12* rm, UInt16 ioPort)
 {
-    UInt8 value = 0xff;
+	UInt8 value = 0xff;
 
 	switch (ioPort & 0x0f) {
 	case 0:
-		value = ~0xf7;
+		value = (UInt8)~0xf7;
 		break;
 	case 1:
 		value = 0x08;

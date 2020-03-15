@@ -15,10 +15,12 @@ namespace wsp{
 		_colRect = new Rectangle();
 	}
 	Sprite::~Sprite(){
-		if(_colRect)
+		if(_colRect) {
 			delete _colRect; _colRect = NULL;
-		if(_frameSeq)
+		}
+		if(_frameSeq) {
 			delete[] _frameSeq; _frameSeq = NULL;
+		}
 	}
 
 	void Sprite::SetImage(Image* image, u32 frameWidth, u32 frameHeight){
@@ -54,13 +56,15 @@ namespace wsp{
 		// Now set framedata
 		_frame = 0; _frameRawCount = (image->GetWidth()/_width)*(image->GetHeight()/_height);
 		// Erase previous sequence
-		if(_frameSeq)
+		if(_frameSeq) {
 			delete[] _frameSeq; _frameSeq = NULL;
+		}
 		// Create a new sequence with startdata
 		_frameSeqLength = _frameRawCount;
 		_frameSeq = new u32[_frameSeqLength];
 		_frameSeqPos = 0;
-		for(u32 i = 0; i < _frameSeqLength; i++)_frameSeq[i] = i;
+		for(u32 i = 0; i < _frameSeqLength; i++)
+			_frameSeq[i] = i;
 
 		// Refpixel setting. This positions the refpixel at the center.
 		_refPixelX = (f32)_width/2; _refPixelY = (f32)_height/2;
@@ -349,8 +353,9 @@ namespace wsp{
 			if(sequence[i] >= _frameRawCount)return;
 		}
 		// Erase old frame sequence and copy the new one
-		if(_frameSeq)
+		if(_frameSeq) {
 			delete[] _frameSeq; _frameSeq = NULL;
+		}
 		_frameSeqLength = length;
 		_frameSeq = new u32[length];
 		for(u32 i = 0; i < length; i++){

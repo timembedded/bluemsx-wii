@@ -508,7 +508,7 @@ void propInitDefaults(Properties* properties, int langType, PropKeyboardLanguage
 #define SET_INT_VALUE_3(ini, v1,v2,v3)   { char v[64]; sprintf(v, "%d", properties->v1.v2.v3); iniFileWriteString(ini, ROOT_ELEMENT, #v1 "." #v2 "." #v3, v); }
 #define SET_INT_VALUE_2s1(ini, v1,v2,v3,v4) { char v[64]; sprintf(v, "%d", properties->v1.v2[v3].v4); iniFileWriteString(ini, ROOT_ELEMENT, #v1 "." #v2 "." #v3 "." #v4, v); }
 #define SET_INT_VALUE_2i(ini, v1, v2, i)      { char s[64], v[64]; sprintf(s, "%s.%s.i%d",#v1,#v2,i); sprintf(v, "%d", properties->v1.v2[i]); iniFileWriteString(ini, ROOT_ELEMENT, s, v); }
-#define SET_INT_VALUE_2i1(ini, v1, v2, i, a1) { char s[64], v[64]; sprintf(s, "%s.%s.i%d.%s",#v1,#v2,i,#a1); sprintf(v, "%d", properties->v1.v2[i].a1); iniFileWriteString(ini, ROOT_ELEMENT, s, v); }
+#define SET_INT_VALUE_2i1(ini, v1, v2, i, a1) { char s[64], v[64]; sprintf(s, "%s.%s.i%d.%s",#v1,#v2,(int)i,#a1); sprintf(v, "%d", (int)properties->v1.v2[i].a1); iniFileWriteString(ini, ROOT_ELEMENT, s, v); }
 
 #define SET_STR_VALUE_1(ini, v1)         iniFileWriteString(ini, ROOT_ELEMENT, #v1, properties->v1);
 #define SET_STR_VALUE_2(ini, v1,v2)      iniFileWriteString(ini, ROOT_ELEMENT, #v1 "." #v2, properties->v1.v2);
@@ -1048,11 +1048,11 @@ Properties* propGetGlobalProperties()
     return globalProperties;
 }
 
-void propertiesSetDirectory(const char* defDir, const char* altDir)
+void propertiesSetDirectory(const char* altDir)
 {
     FILE* f;
 
-    sprintf(settFilename, "bluemsx.ini", defDir);
+    strcpy(settFilename, "bluemsx.ini");
     f = fopen(settFilename, "r");
     if (f != NULL) {
         fclose(f);
@@ -1061,7 +1061,7 @@ void propertiesSetDirectory(const char* defDir, const char* altDir)
         sprintf(settFilename, "%s/bluemsx.ini", altDir);
     }
 
-    sprintf(histFilename, "bluemsx_history.ini", defDir);
+    strcpy(histFilename, "bluemsx_history.ini");
     f = fopen(histFilename, "r");
     if (f != NULL) {
         fclose(f);

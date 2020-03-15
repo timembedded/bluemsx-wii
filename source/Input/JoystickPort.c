@@ -100,6 +100,9 @@ void joystickPortUpdateBoardInfo()
         joystickConfig.defaultType[0] = JOYSTICK_PORT_JOYSTICK;
         joystickConfig.keyboardEnabled = 1;
         break;
+
+    default:
+        break;
     }
 
     for (i = 0; i < JOYSTICK_MAX_PORTS; i++) {

@@ -53,6 +53,8 @@ static int displayEnable = 1;
 static int refreshRate   = 0;
 static int canFlipFrameBuffer = 0;
 
+static const char* VdpNames[] = { "V9938", "V9958", "TMS9929A", "TMS99x8A" };
+
 void vdpSetSpritesEnable(int enable) {
     spritesEnable = enable ? 1 : 0;
 }
@@ -675,6 +677,7 @@ static void onDisplay(VDP* vdp, UInt32 time)
     }
 }
 
+#ifdef ENABLE_VRAM_DECAY
 static void simulateVramDecay(VDP* vdp) 
 {
     int time = (boardSystemTime() - vdp->screenOffTime) / 1350000;
@@ -704,6 +707,7 @@ static void simulateVramDecay(VDP* vdp)
         }
     }
 }
+#endif
 
 static int updateScreenMode(VDP* vdp) {
     int screenMode;
@@ -1740,7 +1744,6 @@ static void saveState(VDP* vdp)
 static void loadState(VDP* vdp)
 {
     SaveState* state = saveStateOpenForRead("vdp");
-    UInt32 systemTime = boardSystemTime() + 100;
     char tag[32];
     int i;
 
@@ -2221,7 +2224,7 @@ void vdpCreate(VdpConnector connector, VdpVersion version, VdpSyncMode sync, int
     DeviceCallbacks callbacks = { destroy, reset, saveState, loadState };
     DebugCallbacks dbgCallbacks = { getDebugInfo, dbgWriteMemory, dbgWriteRegister, NULL };
     VideoCallbacks videoCallbacks = { videoEnable, videoDisable };
-    char* vdpVersionString;
+    char* vdpVersionString = "";
     int vramSize;
     int i;
 

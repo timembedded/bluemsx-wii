@@ -1999,17 +1999,17 @@ void YMF262::loadState()
     
     saveStateGetBuffer(state, "reg", reg, sizeof(reg));
 
-    for (i = 0; i < sizeof(fn_tab) / sizeof(fn_tab[0]); i++) {
+    for (i = 0; i < (int)(sizeof(fn_tab) / sizeof(fn_tab[0])); i++) {
         sprintf(tag, "fn_tab%.4d", i);
         fn_tab[i] = saveStateGet(state, tag, 0);
     }
 
-    for (i = 0; i < sizeof(pan) / sizeof(pan[0]); i++) {
+    for (i = 0; i < (int)(sizeof(pan) / sizeof(pan[0])); i++) {
         sprintf(tag, "pan%.4d", i);
         pan[i] = saveStateGet(state, tag, 0);
     }
 
-    for (i = 0; i < sizeof(chanout) / sizeof(chanout[0]); i++) {
+    for (i = 0; i < (int)(sizeof(chanout) / sizeof(chanout[0])); i++) {
         sprintf(tag, "chanout%.4d", i);
         chanout[i] = saveStateGet(state, tag, 0);
     }
@@ -2174,17 +2174,17 @@ void YMF262::saveState()
     
     saveStateSetBuffer(state, "reg", reg, sizeof(reg));
 
-    for (i = 0; i < sizeof(fn_tab) / sizeof(fn_tab[0]); i++) {
+    for (i = 0; i < (int)(sizeof(fn_tab) / sizeof(fn_tab[0])); i++) {
         sprintf(tag, "fn_tab%.4d", i);
         saveStateSet(state, tag, fn_tab[i]);
     }
 
-    for (i = 0; i < sizeof(pan) / sizeof(pan[0]); i++) {
+    for (i = 0; i < (int)(sizeof(pan) / sizeof(pan[0])); i++) {
         sprintf(tag, "pan%.4d", i);
         saveStateSet(state, tag, pan[i]);
     }
 
-    for (i = 0; i < sizeof(chanout) / sizeof(chanout[0]); i++) {
+    for (i = 0; i < (int)(sizeof(chanout) / sizeof(chanout[0])); i++) {
         sprintf(tag, "chanout%.4d", i);
         saveStateSet(state, tag, chanout[i]);
     }

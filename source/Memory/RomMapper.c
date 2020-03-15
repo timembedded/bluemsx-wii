@@ -395,7 +395,6 @@ void romMapperGetDiskInfo(const void *data, int size, char* extendedName)
     if (extendedName) {
         UInt32 crc = crc32(data, size);
         char buffer[128];
-        RomType romType = ROM_UNKNOWN;
         FILE* file;
 
         extendedName[0] = 0;
@@ -445,7 +444,6 @@ void romMapperGetCasInfo(const void *data, int size, char* extendedName)
     if (extendedName) {
         UInt32 crc = crc32(data, size);
         char buffer[128];
-        RomType romType = ROM_UNKNOWN;
         FILE* file;
 
         extendedName[0] = 0;

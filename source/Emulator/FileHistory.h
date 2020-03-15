@@ -36,19 +36,19 @@ const char* stripPathExt(const char* filename);
 
 #ifndef NO_FILE_HISTORY
 void verifyFileHistory(char* history, RomType* historyType);
-void updateFileHistory(char* history, RomType* historyType, char* filename, RomType romType);
+void updateFileHistory(char* history, RomType* historyType, const char* filename, RomType romType);
 #endif
 
 int tempStateExists();
-int fileExist(char* filename, char* zipFile);
-char* fileGetNext(char* filename, char* zipFile);
+int fileExist(const char* filename, const char* zipFile);
+char* fileGetNext(const char* filename, const char* zipFile);
 void setExtendedRomName(int drive, const char* name);
-void updateExtendedRomName(int drive, char* filename, char* zipFile);
-void updateExtendedDiskName(int drive, char* filename, char* zipFile);
-void updateExtendedCasName(int drive, char* filename, char* zipFile);
+void updateExtendedRomName(int drive, const char* filename, const char* zipFile);
+void updateExtendedDiskName(int drive, const char* filename, const char* zipFile);
+void updateExtendedCasName(int drive, const char* filename, const char* zipFile);
 
 int createSaveFileBaseName(char* fileBase,Properties* properties, int useExtendedName);
-char* generateSaveFilename(Properties* properties, char* directory, char* prefix, char* extension, int digits);
+char* generateSaveFilename(Properties* properties, const char* directory, const char* prefix, const char* extension, int digits);
 
 #endif
 

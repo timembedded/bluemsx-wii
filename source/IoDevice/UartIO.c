@@ -32,7 +32,7 @@
 #include "DAC.h"
 #include "Board.h"
 
-typedef struct UartIO {
+struct UartIO {
     UartType type;
     FILE* file;
     int  uartReady;
@@ -56,6 +56,8 @@ static void setType(UartIO* uartIO)
     case UART_FILE:
         uartIO->file = fopen(theFileName, "w+");
         break;
+    case UART_NONE:
+        break;
     }
 }
 
@@ -69,6 +71,8 @@ static void removeType(UartIO* uartIO)
     case UART_FILE:
         fclose(uartIO->file);
         break;
+    case UART_NONE:
+        break;
     }
 }
 
@@ -81,6 +85,8 @@ void uartIOTransmit(UartIO* uartIO, UInt8 value)
     case UART_FILE:
         fwrite(&value, 1, 1, uartIO->file);
         break;
+    case UART_NONE:
+        break;
     }
 }
 
@@ -91,6 +97,8 @@ int uartIOGetStatus(UartIO* uartIO)
         return uartIO->uartReady;
     case UART_FILE:
         return uartIO->file != NULL;
+    case UART_NONE:
+        break;
     }
     return 0;
 }

@@ -66,7 +66,7 @@ typedef struct
 
 struct MameYm2151
 {
-    void* ref;
+	void*		ref;
 
 	YM2151Operator	oper[32];			/* the 32 operators */
 
@@ -103,7 +103,7 @@ struct MameYm2151
 	UInt32		status;					/* chip status (BUSY, IRQ Flags) */
 	UInt8		connect[8];				/* channels connections */
 
-    UInt16      timer_A_val;
+	UInt16		timer_A_val;
 
 	/*	Frequency-deltas to get the closest frequency possible.
 	*	There are 11 octaves because of DT2 (max 950 cents over base frequency)
@@ -132,9 +132,9 @@ struct MameYm2151
 	unsigned int clock;					/* chip clock in Hz (passed from 2151intf.c) */
 	unsigned int sampfreq;				/* sampling frequency in Hz (passed from 2151intf.c) */
 
-    signed int chanout[8];
-    signed int m2,c1,c2; /* Phase Modulation input for operators 2,3,4 */
-    signed int mem;		/* one sample delay memory */
+	signed int chanout[8];
+	signed int m2,c1,c2; /* Phase Modulation input for operators 2,3,4 */
+	signed int mem;		/* one sample delay memory */
 };
 
 extern void	ym2151TimerSet(void* ref, int timer, int count);
@@ -605,9 +605,9 @@ static void init_chip_tables(MameYm2151 *chip)
 		}
 	}
 
-    chip->timer_A_val = 0;
+	chip->timer_A_val = 0;
 
-    /* calculate noise periods table */
+	/* calculate noise periods table */
 	scaler = ( (DoubleT)chip->clock / 64.0 ) / ( (DoubleT)chip->sampfreq );
 	for (i=0; i<32; i++)
 	{
@@ -626,8 +626,8 @@ static void init_chip_tables(MameYm2151 *chip)
 			(op)->phase = 0;			/* clear phase */		\
 			(op)->state = EG_ATT;		/* KEY ON = attack */	\
 			(op)->volume += (~(op)->volume *					\
-                           (eg_inc[(op)->eg_sel_ar + ((PSG->eg_cnt>>(op)->eg_sh_ar)&7)])	\
-                          ) >>4;								\
+					 (eg_inc[(op)->eg_sel_ar + ((PSG->eg_cnt>>(op)->eg_sh_ar)&7)])	\
+					) >>4;								\
 			if ((op)->volume <= MIN_ATT_INDEX)					\
 			{													\
 				(op)->volume = MIN_ATT_INDEX;					\
@@ -674,22 +674,22 @@ static void envelope_KONKOFF(YM2151Operator * op, int v)
 
 void YM2151TimerCallback(MameYm2151 *chip, int timer)
 {
-    if (timer == 0) {
-        if (chip->irq_enable & 0x04)
-	    {
-            if ((chip->status & 3) == 0) ym2151SetIrq(chip->ref, 1);
-		    chip->status |= 1;
-	    }
-	    if (chip->irq_enable & 0x80)
-		    chip->csm_req = 2;		/* request KEY ON / KEY OFF sequence */
-    }
-    if (timer == 1) {
-	    if (chip->irq_enable & 0x08)
-	    {
-            if ((chip->status & 3) == 0) ym2151SetIrq(chip->ref, 2);
-		    chip->status |= 2;
-	    }
-    }
+	if (timer == 0) {
+		if (chip->irq_enable & 0x04)
+		{
+			if ((chip->status & 3) == 0) ym2151SetIrq(chip->ref, 1);
+			chip->status |= 1;
+		}
+		if (chip->irq_enable & 0x80)
+			chip->csm_req = 2;		/* request KEY ON / KEY OFF sequence */
+	}
+	if (timer == 1) {
+		if (chip->irq_enable & 0x08)
+		{
+			if ((chip->status & 3) == 0) ym2151SetIrq(chip->ref, 2);
+			chip->status |= 2;
+		}
+	}
 }
 
 
@@ -902,36 +902,36 @@ void YM2151WriteReg(MameYm2151 *chip, int r, int v)
 			chip->noise_f = chip->noise_tab[ v & 0x1f ];
 			break;
 
-        case 0x10:
-            chip->timer_A_val &= 0x03;
-            chip->timer_A_val |= v << 2;
+		case 0x10:
+			chip->timer_A_val &= 0x03;
+			chip->timer_A_val |= v << 2;
 			ym2151TimerSet(chip->ref, 0, 1 * (1024 - chip->timer_A_val));
-            break;
+			break;
 
-        case 0x11:
-            chip->timer_A_val &= 0x03fc;
-            chip->timer_A_val |= v & 3;
+		case 0x11:
+			chip->timer_A_val &= 0x03fc;
+			chip->timer_A_val |= v & 3;
 			ym2151TimerSet(chip->ref, 0, 1 * (1024 - chip->timer_A_val));
-            break;
+			break;
 
-        case 0x12:
+		case 0x12:
 			ym2151TimerSet(chip->ref, 1, 16 * (256 - v));
-            break;
+			break;
 
-        case 0x14:	/* CSM, irq flag reset, irq enable, timer start/stop */
+		case 0x14:	/* CSM, irq flag reset, irq enable, timer start/stop */
 
 			chip->irq_enable = v;	/* bit 3-timer B, bit 2-timer A, bit 7 - CSM */
 
 			if (v&0x10)	/* reset timer A irq flag */
 			{
 				chip->status &= ~1;
-                if ((chip->status & 3) == 0) ym2151ClearIrq(chip->ref, 1);
+				if ((chip->status & 3) == 0) ym2151ClearIrq(chip->ref, 1);
 			}
 
 			if (v&0x20)	/* reset timer B irq flag */
 			{
 				chip->status &= ~2;
-                if ((chip->status & 3) == 0) ym2151ClearIrq(chip->ref, 2);
+				if ((chip->status & 3) == 0) ym2151ClearIrq(chip->ref, 2);
 			}
 
 			ym2151TimerStart(chip->ref, 1, v & 2);
@@ -1130,15 +1130,11 @@ int YM2151ReadStatus(MameYm2151 *chip)
 }
 
 
-static void ym2151_state_save_register( MameYm2151 *chip )
-{
-}
-
 MameYm2151* YM2151Create(void* ref, int clock, int rate)
 {
-    MameYm2151 *chip = (MameYm2151 *)calloc(1, sizeof(MameYm2151));
+	MameYm2151 *chip = (MameYm2151 *)calloc(1, sizeof(MameYm2151));
 
-    chip->ref = ref;
+	chip->ref = ref;
 
 	init_tables();
 
@@ -1159,7 +1155,7 @@ MameYm2151* YM2151Create(void* ref, int clock, int rate)
 
 void YM2151Destroy(MameYm2151* chip)
 {
-    free(chip);
+	free(chip);
 }
 
 
@@ -1173,7 +1169,7 @@ void YM2151ResetChip(MameYm2151 *chip)
 	{
 		memset(&chip->oper[i],'\0',sizeof(YM2151Operator));
 		chip->oper[i].volume = MAX_ATT_INDEX;
-        chip->oper[i].kc_i = 768; // min kc_i value
+		chip->oper[i].kc_i = 768; // min kc_i value
 	}
 
 	chip->eg_timer = 0;
@@ -1594,8 +1590,8 @@ static void advance_eg(void)
 				if ( !(PSG->eg_cnt & ((1<<op->eg_sh_ar)-1) ) )
 				{
 					op->volume += (~op->volume *
-                                   (eg_inc[op->eg_sel_ar + ((PSG->eg_cnt>>op->eg_sh_ar)&7)])
-                                  ) >>4;
+								   (eg_inc[op->eg_sel_ar + ((PSG->eg_cnt>>op->eg_sh_ar)&7)])
+								  ) >>4;
 
 					if (op->volume <= MIN_ATT_INDEX)
 					{
@@ -1902,345 +1898,345 @@ void YM2151UpdateOne(MameYm2151* chip, Int16* bufL, Int16* bufR, int length)
 
 void YM2151LoadState(MameYm2151* chip)
 {
-    SaveState* state = saveStateOpenForRead("ym2151_core");
-    char tag[32];
-    int i;
-    int tmp;
-    
-    chip->eg_cnt            = saveStateGet(state, "eg_cnt",            0);
-    chip->eg_timer          = saveStateGet(state, "eg_timer",          0);
-    chip->eg_timer_add      = saveStateGet(state, "eg_timer_add",      0);
-    chip->eg_timer_overflow = saveStateGet(state, "eg_timer_overflow", 0);
-    chip->lfo_phase         = saveStateGet(state, "lfo_phase",         0);
-    chip->lfo_timer         = saveStateGet(state, "lfo_timer",         0);
-    chip->lfo_timer_add     = saveStateGet(state, "lfo_timer_add",     0);
-    chip->lfo_overflow      = saveStateGet(state, "lfo_overflow",      0);
-    chip->lfo_counter       = saveStateGet(state, "lfo_counter",       0);
-    chip->lfo_counter_add   = saveStateGet(state, "lfo_counter_add",   0);
-    chip->lfo_wsel          = (UInt8)saveStateGet(state, "lfo_wsel",   0);
-    chip->amd               = (UInt8)saveStateGet(state, "amd",        0);
-    chip->pmd               = (UInt8)saveStateGet(state, "pmd",        0);
-    chip->lfa               = saveStateGet(state, "lfa",               0);
-    chip->lfp               = saveStateGet(state, "lfp",               0);
-    chip->test              = (UInt8)saveStateGet(state, "test",       0);
-    chip->ct                = (UInt8)saveStateGet(state, "ct",         0);
-    chip->noise             = saveStateGet(state, "noise",             0);
-    chip->noise_rng         = saveStateGet(state, "noise_rng",         0);
-    chip->noise_p           = saveStateGet(state, "noise_p",           0);
-    chip->noise_f           = saveStateGet(state, "noise_f",           0);
-    chip->csm_req           = saveStateGet(state, "csm_req",           0);
-    chip->irq_enable        = saveStateGet(state, "irq_enable",        0);
-    chip->status            = saveStateGet(state, "status",            0);
-    chip->timer_A_val       = (UInt16)saveStateGet(state, "timer_A_val", 0);
-    chip->m2                = saveStateGet(state, "m2",                0);
-    chip->c1                = saveStateGet(state, "c1",                0);
-    chip->c2                = saveStateGet(state, "c2",                0);
-    chip->mem               = saveStateGet(state, "mem",               0);
+	SaveState* state = saveStateOpenForRead("ym2151_core");
+	char tag[32];
+	int i;
+	int tmp;
+	
+	chip->eg_cnt			= saveStateGet(state, "eg_cnt", 		   0);
+	chip->eg_timer			= saveStateGet(state, "eg_timer",		   0);
+	chip->eg_timer_add		= saveStateGet(state, "eg_timer_add",	   0);
+	chip->eg_timer_overflow = saveStateGet(state, "eg_timer_overflow", 0);
+	chip->lfo_phase 		= saveStateGet(state, "lfo_phase",		   0);
+	chip->lfo_timer 		= saveStateGet(state, "lfo_timer",		   0);
+	chip->lfo_timer_add 	= saveStateGet(state, "lfo_timer_add",	   0);
+	chip->lfo_overflow		= saveStateGet(state, "lfo_overflow",	   0);
+	chip->lfo_counter		= saveStateGet(state, "lfo_counter",	   0);
+	chip->lfo_counter_add	= saveStateGet(state, "lfo_counter_add",   0);
+	chip->lfo_wsel			= (UInt8)saveStateGet(state, "lfo_wsel",   0);
+	chip->amd				= (UInt8)saveStateGet(state, "amd", 	   0);
+	chip->pmd				= (UInt8)saveStateGet(state, "pmd", 	   0);
+	chip->lfa				= saveStateGet(state, "lfa",			   0);
+	chip->lfp				= saveStateGet(state, "lfp",			   0);
+	chip->test				= (UInt8)saveStateGet(state, "test",	   0);
+	chip->ct				= (UInt8)saveStateGet(state, "ct",		   0);
+	chip->noise 			= saveStateGet(state, "noise",			   0);
+	chip->noise_rng 		= saveStateGet(state, "noise_rng",		   0);
+	chip->noise_p			= saveStateGet(state, "noise_p",		   0);
+	chip->noise_f			= saveStateGet(state, "noise_f",		   0);
+	chip->csm_req			= saveStateGet(state, "csm_req",		   0);
+	chip->irq_enable		= saveStateGet(state, "irq_enable", 	   0);
+	chip->status			= saveStateGet(state, "status", 		   0);
+	chip->timer_A_val		= (UInt16)saveStateGet(state, "timer_A_val", 0);
+	chip->m2				= saveStateGet(state, "m2", 			   0);
+	chip->c1				= saveStateGet(state, "c1", 			   0);
+	chip->c2				= saveStateGet(state, "c2", 			   0);
+	chip->mem				= saveStateGet(state, "mem",			   0);
 
-    for (i = 0; i < sizeof(chip->pan) / sizeof(chip->pan[0]); i++) {
-        sprintf(tag, "pan%d", i);
-        chip->pan[i] = saveStateGet(state, tag, 0);
-    }
+	for (i = 0; i < sizeof(chip->pan) / sizeof(chip->pan[0]); i++) {
+		sprintf(tag, "pan%d", i);
+		chip->pan[i] = saveStateGet(state, tag, 0);
+	}
 
-    for (i = 0; i < sizeof(chip->connect) / sizeof(chip->connect[0]); i++) {
-        sprintf(tag, "connect%d", i);
-        chip->connect[i] = (UInt8)saveStateGet(state, tag, 0);
-    }
+	for (i = 0; i < sizeof(chip->connect) / sizeof(chip->connect[0]); i++) {
+		sprintf(tag, "connect%d", i);
+		chip->connect[i] = (UInt8)saveStateGet(state, tag, 0);
+	}
 
-    for (i = 0; i < sizeof(chip->chanout) / sizeof(chip->chanout[0]); i++) {
-        sprintf(tag, "chanout%d", i);
-        chip->chanout[i] = (UInt8)saveStateGet(state, tag, 0);
-    }
+	for (i = 0; i < sizeof(chip->chanout) / sizeof(chip->chanout[0]); i++) {
+		sprintf(tag, "chanout%d", i);
+		chip->chanout[i] = (UInt8)saveStateGet(state, tag, 0);
+	}
 
-    for (i = 0; i < sizeof(chip->oper) / sizeof(chip->oper[0]); i++) {
-        sprintf(tag, "phase%d", i);
-        chip->oper[i].phase = saveStateGet(state, tag, 0);
-        
-        sprintf(tag, "freq%d", i);
-        chip->oper[i].freq = saveStateGet(state, tag, 0);
-        
-        sprintf(tag, "dt1%d", i);
-        chip->oper[i].dt1 = saveStateGet(state, tag, 0);
-        
-        sprintf(tag, "mul%d", i);
-        chip->oper[i].mul = saveStateGet(state, tag, 0);
-        
-        sprintf(tag, "dt1_i%d", i);
-        chip->oper[i].dt1_i = saveStateGet(state, tag, 0);
-        
-        sprintf(tag, "dt2%d", i);
-        chip->oper[i].dt2 = saveStateGet(state, tag, 0);
-        
-        sprintf(tag, "mem_value%d", i);
-        chip->oper[i].mem_value = saveStateGet(state, tag, 0);
-        
-        sprintf(tag, "fb_shift%d", i);
-        chip->oper[i].fb_shift = saveStateGet(state, tag, 0);
-        
-        sprintf(tag, "fb_out_curr%d", i);
-        chip->oper[i].fb_out_curr = saveStateGet(state, tag, 0);
-        
-        sprintf(tag, "fb_out_prev%d", i);
-        chip->oper[i].fb_out_prev = saveStateGet(state, tag, 0);
-        
-        sprintf(tag, "kc%d", i);
-        chip->oper[i].kc = saveStateGet(state, tag, 0);
-        
-        sprintf(tag, "kc_i%d", i);
-        chip->oper[i].kc_i = saveStateGet(state, tag, 0);
-        
-        sprintf(tag, "pms%d", i);
-        chip->oper[i].pms = saveStateGet(state, tag, 0);
-        
-        sprintf(tag, "ams%d", i);
-        chip->oper[i].ams = saveStateGet(state, tag, 0);
-        
-        sprintf(tag, "AMmask%d", i);
-        chip->oper[i].AMmask = saveStateGet(state, tag, 0);
-        
-        sprintf(tag, "state%d", i);
-        chip->oper[i].state = saveStateGet(state, tag, 0);
-        
-        sprintf(tag, "eg_sh_ar%d", i);
-        chip->oper[i].eg_sh_ar = (UInt8)saveStateGet(state, tag, 0);
-        
-        sprintf(tag, "eg_sel_ar%d", i);
-        chip->oper[i].eg_sel_ar = (UInt8)saveStateGet(state, tag, 0);
-        
-        sprintf(tag, "tl%d", i);
-        chip->oper[i].tl = saveStateGet(state, tag, 0);
-        
-        sprintf(tag, "volume%d", i);
-        chip->oper[i].volume = saveStateGet(state, tag, 0);
-        
-        sprintf(tag, "eg_sh_d1r%d", i);
-        chip->oper[i].eg_sh_d1r = (UInt8)saveStateGet(state, tag, 0);
-        
-        sprintf(tag, "eg_sel_d1r%d", i);
-        chip->oper[i].eg_sel_d1r = (UInt8)saveStateGet(state, tag, 0);
-        
-        sprintf(tag, "d1l%d", i);
-        chip->oper[i].d1l = saveStateGet(state, tag, 0);
-        
-        sprintf(tag, "eg_sh_d2r%d", i);
-        chip->oper[i].eg_sh_d2r = (UInt8)saveStateGet(state, tag, 0);
-        
-        sprintf(tag, "eg_sel_d2r%d", i);
-        chip->oper[i].eg_sel_d2r = (UInt8)saveStateGet(state, tag, 0);
-        
-        sprintf(tag, "eg_sh_rr%d", i);
-        chip->oper[i].eg_sh_rr = (UInt8)saveStateGet(state, tag, 0);
-        
-        sprintf(tag, "eg_sel_rr%d", i);
-        chip->oper[i].eg_sel_rr = (UInt8)saveStateGet(state, tag, 0);
-        
-        sprintf(tag, "key%d", i);
-        chip->oper[i].key = saveStateGet(state, tag, 0);
-        
-        sprintf(tag, "ks%d", i);
-        chip->oper[i].ks = saveStateGet(state, tag, 0);
-        
-        sprintf(tag, "ar%d", i);
-        chip->oper[i].ar = saveStateGet(state, tag, 0);
-        
-        sprintf(tag, "d1r%d", i);
-        chip->oper[i].d1r = saveStateGet(state, tag, 0);
-        
-        sprintf(tag, "d2r%d", i);
-        chip->oper[i].d2r = saveStateGet(state, tag, 0);
-        
-        sprintf(tag, "rr%d", i);
-        chip->oper[i].rr = saveStateGet(state, tag, 0);
-        
-        sprintf(tag, "connect%d", i);
-        tmp = saveStateGet(state, tag, -1);
-        if (tmp < 0) {
-            chip->oper[i].connect = NULL;
-        }
-        else {
-            chip->oper[i].connect = (int*)chip + tmp;
-        }
+	for (i = 0; i < sizeof(chip->oper) / sizeof(chip->oper[0]); i++) {
+		sprintf(tag, "phase%d", i);
+		chip->oper[i].phase = saveStateGet(state, tag, 0);
+		
+		sprintf(tag, "freq%d", i);
+		chip->oper[i].freq = saveStateGet(state, tag, 0);
+		
+		sprintf(tag, "dt1%d", i);
+		chip->oper[i].dt1 = saveStateGet(state, tag, 0);
+		
+		sprintf(tag, "mul%d", i);
+		chip->oper[i].mul = saveStateGet(state, tag, 0);
+		
+		sprintf(tag, "dt1_i%d", i);
+		chip->oper[i].dt1_i = saveStateGet(state, tag, 0);
+		
+		sprintf(tag, "dt2%d", i);
+		chip->oper[i].dt2 = saveStateGet(state, tag, 0);
+		
+		sprintf(tag, "mem_value%d", i);
+		chip->oper[i].mem_value = saveStateGet(state, tag, 0);
+		
+		sprintf(tag, "fb_shift%d", i);
+		chip->oper[i].fb_shift = saveStateGet(state, tag, 0);
+		
+		sprintf(tag, "fb_out_curr%d", i);
+		chip->oper[i].fb_out_curr = saveStateGet(state, tag, 0);
+		
+		sprintf(tag, "fb_out_prev%d", i);
+		chip->oper[i].fb_out_prev = saveStateGet(state, tag, 0);
+		
+		sprintf(tag, "kc%d", i);
+		chip->oper[i].kc = saveStateGet(state, tag, 0);
+		
+		sprintf(tag, "kc_i%d", i);
+		chip->oper[i].kc_i = saveStateGet(state, tag, 0);
+		
+		sprintf(tag, "pms%d", i);
+		chip->oper[i].pms = saveStateGet(state, tag, 0);
+		
+		sprintf(tag, "ams%d", i);
+		chip->oper[i].ams = saveStateGet(state, tag, 0);
+		
+		sprintf(tag, "AMmask%d", i);
+		chip->oper[i].AMmask = saveStateGet(state, tag, 0);
+		
+		sprintf(tag, "state%d", i);
+		chip->oper[i].state = saveStateGet(state, tag, 0);
+		
+		sprintf(tag, "eg_sh_ar%d", i);
+		chip->oper[i].eg_sh_ar = (UInt8)saveStateGet(state, tag, 0);
+		
+		sprintf(tag, "eg_sel_ar%d", i);
+		chip->oper[i].eg_sel_ar = (UInt8)saveStateGet(state, tag, 0);
+		
+		sprintf(tag, "tl%d", i);
+		chip->oper[i].tl = saveStateGet(state, tag, 0);
+		
+		sprintf(tag, "volume%d", i);
+		chip->oper[i].volume = saveStateGet(state, tag, 0);
+		
+		sprintf(tag, "eg_sh_d1r%d", i);
+		chip->oper[i].eg_sh_d1r = (UInt8)saveStateGet(state, tag, 0);
+		
+		sprintf(tag, "eg_sel_d1r%d", i);
+		chip->oper[i].eg_sel_d1r = (UInt8)saveStateGet(state, tag, 0);
+		
+		sprintf(tag, "d1l%d", i);
+		chip->oper[i].d1l = saveStateGet(state, tag, 0);
+		
+		sprintf(tag, "eg_sh_d2r%d", i);
+		chip->oper[i].eg_sh_d2r = (UInt8)saveStateGet(state, tag, 0);
+		
+		sprintf(tag, "eg_sel_d2r%d", i);
+		chip->oper[i].eg_sel_d2r = (UInt8)saveStateGet(state, tag, 0);
+		
+		sprintf(tag, "eg_sh_rr%d", i);
+		chip->oper[i].eg_sh_rr = (UInt8)saveStateGet(state, tag, 0);
+		
+		sprintf(tag, "eg_sel_rr%d", i);
+		chip->oper[i].eg_sel_rr = (UInt8)saveStateGet(state, tag, 0);
+		
+		sprintf(tag, "key%d", i);
+		chip->oper[i].key = saveStateGet(state, tag, 0);
+		
+		sprintf(tag, "ks%d", i);
+		chip->oper[i].ks = saveStateGet(state, tag, 0);
+		
+		sprintf(tag, "ar%d", i);
+		chip->oper[i].ar = saveStateGet(state, tag, 0);
+		
+		sprintf(tag, "d1r%d", i);
+		chip->oper[i].d1r = saveStateGet(state, tag, 0);
+		
+		sprintf(tag, "d2r%d", i);
+		chip->oper[i].d2r = saveStateGet(state, tag, 0);
+		
+		sprintf(tag, "rr%d", i);
+		chip->oper[i].rr = saveStateGet(state, tag, 0);
+		
+		sprintf(tag, "connect%d", i);
+		tmp = saveStateGet(state, tag, -1);
+		if (tmp < 0) {
+			chip->oper[i].connect = NULL;
+		}
+		else {
+			chip->oper[i].connect = (int*)chip + tmp;
+		}
 
-        sprintf(tag, "mem_connect%d", i);
-        tmp = saveStateGet(state, tag, -1);
-        if (tmp < 0) {
-            chip->oper[i].mem_connect = NULL;
-        }
-        else {
-            chip->oper[i].mem_connect = (int*)chip + tmp;
-        }
-    }
+		sprintf(tag, "mem_connect%d", i);
+		tmp = saveStateGet(state, tag, -1);
+		if (tmp < 0) {
+			chip->oper[i].mem_connect = NULL;
+		}
+		else {
+			chip->oper[i].mem_connect = (int*)chip + tmp;
+		}
+	}
 
-    saveStateClose(state);
+	saveStateClose(state);
 }
 
 void YM2151SaveState(MameYm2151* chip)
 {
-    SaveState* state = saveStateOpenForWrite("ym2151_core");
-    char tag[32];
-    int i;
+	SaveState* state = saveStateOpenForWrite("ym2151_core");
+	char tag[32];
+	int i;
 
-    saveStateSet(state, "eg_cnt",            chip->eg_cnt);
-    saveStateSet(state, "eg_timer",          chip->eg_timer);
-    saveStateSet(state, "eg_timer_add",      chip->eg_timer_add);
-    saveStateSet(state, "eg_timer_overflow", chip->eg_timer_overflow);
-    saveStateSet(state, "lfo_phase",         chip->lfo_phase);
-    saveStateSet(state, "lfo_timer",         chip->lfo_timer);
-    saveStateSet(state, "lfo_timer_add",     chip->lfo_timer_add);
-    saveStateSet(state, "lfo_overflow",      chip->lfo_overflow);
-    saveStateSet(state, "lfo_counter",       chip->lfo_counter);
-    saveStateSet(state, "lfo_counter_add",   chip->lfo_counter_add);
-    saveStateSet(state, "lfo_wsel",          chip->lfo_wsel);
-    saveStateSet(state, "amd",               chip->amd);
-    saveStateSet(state, "pmd",               chip->pmd);
-    saveStateSet(state, "lfa",               chip->lfa);
-    saveStateSet(state, "lfp",               chip->lfp);
-    saveStateSet(state, "test",              chip->test);
-    saveStateSet(state, "ct",                chip->ct);
-    saveStateSet(state, "noise",             chip->noise);
-    saveStateSet(state, "noise_rng",         chip->noise_rng);
-    saveStateSet(state, "noise_p",           chip->noise_p);
-    saveStateSet(state, "noise_f",           chip->noise_f);
-    saveStateSet(state, "csm_req",           chip->csm_req);
-    saveStateSet(state, "irq_enable",        chip->irq_enable);
-    saveStateSet(state, "status",            chip->status);
-    saveStateSet(state, "timer_A_val",       chip->timer_A_val);
-    saveStateSet(state, "m2",                chip->m2);
-    saveStateSet(state, "c1",                chip->c1);
-    saveStateSet(state, "c2",                chip->c2);
-    saveStateSet(state, "mem",               chip->mem);
+	saveStateSet(state, "eg_cnt",			 chip->eg_cnt);
+	saveStateSet(state, "eg_timer", 		 chip->eg_timer);
+	saveStateSet(state, "eg_timer_add", 	 chip->eg_timer_add);
+	saveStateSet(state, "eg_timer_overflow", chip->eg_timer_overflow);
+	saveStateSet(state, "lfo_phase",		 chip->lfo_phase);
+	saveStateSet(state, "lfo_timer",		 chip->lfo_timer);
+	saveStateSet(state, "lfo_timer_add",	 chip->lfo_timer_add);
+	saveStateSet(state, "lfo_overflow", 	 chip->lfo_overflow);
+	saveStateSet(state, "lfo_counter",		 chip->lfo_counter);
+	saveStateSet(state, "lfo_counter_add",	 chip->lfo_counter_add);
+	saveStateSet(state, "lfo_wsel", 		 chip->lfo_wsel);
+	saveStateSet(state, "amd",				 chip->amd);
+	saveStateSet(state, "pmd",				 chip->pmd);
+	saveStateSet(state, "lfa",				 chip->lfa);
+	saveStateSet(state, "lfp",				 chip->lfp);
+	saveStateSet(state, "test", 			 chip->test);
+	saveStateSet(state, "ct",				 chip->ct);
+	saveStateSet(state, "noise",			 chip->noise);
+	saveStateSet(state, "noise_rng",		 chip->noise_rng);
+	saveStateSet(state, "noise_p",			 chip->noise_p);
+	saveStateSet(state, "noise_f",			 chip->noise_f);
+	saveStateSet(state, "csm_req",			 chip->csm_req);
+	saveStateSet(state, "irq_enable",		 chip->irq_enable);
+	saveStateSet(state, "status",			 chip->status);
+	saveStateSet(state, "timer_A_val",		 chip->timer_A_val);
+	saveStateSet(state, "m2",				 chip->m2);
+	saveStateSet(state, "c1",				 chip->c1);
+	saveStateSet(state, "c2",				 chip->c2);
+	saveStateSet(state, "mem",				 chip->mem);
 
-    for (i = 0; i < sizeof(chip->pan) / sizeof(chip->pan[0]); i++) {
-        sprintf(tag, "pan%d", i);
-        saveStateSet(state, tag, chip->pan[i]);
-    }
+	for (i = 0; i < sizeof(chip->pan) / sizeof(chip->pan[0]); i++) {
+		sprintf(tag, "pan%d", i);
+		saveStateSet(state, tag, chip->pan[i]);
+	}
 
-    for (i = 0; i < sizeof(chip->connect) / sizeof(chip->connect[0]); i++) {
-        sprintf(tag, "connect%d", i);
-        saveStateSet(state, tag, chip->connect[i]);
-    }
+	for (i = 0; i < sizeof(chip->connect) / sizeof(chip->connect[0]); i++) {
+		sprintf(tag, "connect%d", i);
+		saveStateSet(state, tag, chip->connect[i]);
+	}
 
-    for (i = 0; i < sizeof(chip->chanout) / sizeof(chip->chanout[0]); i++) {
-        sprintf(tag, "chanout%d", i);
-        saveStateSet(state, tag, chip->chanout[i]);
-    }
+	for (i = 0; i < sizeof(chip->chanout) / sizeof(chip->chanout[0]); i++) {
+		sprintf(tag, "chanout%d", i);
+		saveStateSet(state, tag, chip->chanout[i]);
+	}
 
-    for (i = 0; i < sizeof(chip->oper) / sizeof(chip->oper[0]); i++) {
-        sprintf(tag, "phase%d", i);
-        saveStateSet(state, tag, chip->oper[i].phase);
-        
-        sprintf(tag, "freq%d", i);
-        saveStateSet(state, tag, chip->oper[i].freq);
-        
-        sprintf(tag, "dt1%d", i);
-        saveStateSet(state, tag, chip->oper[i].dt1);
-        
-        sprintf(tag, "mul%d", i);
-        saveStateSet(state, tag, chip->oper[i].mul);
-        
-        sprintf(tag, "dt1_i%d", i);
-        saveStateSet(state, tag, chip->oper[i].dt1_i);
-        
-        sprintf(tag, "dt2%d", i);
-        saveStateSet(state, tag, chip->oper[i].dt2);
-        
-        sprintf(tag, "mem_value%d", i);
-        saveStateSet(state, tag, chip->oper[i].mem_value);
-        
-        sprintf(tag, "fb_shift%d", i);
-        saveStateSet(state, tag, chip->oper[i].fb_shift);
-        
-        sprintf(tag, "fb_out_curr%d", i);
-        saveStateSet(state, tag, chip->oper[i].fb_out_curr);
-        
-        sprintf(tag, "fb_out_prev%d", i);
-        saveStateSet(state, tag, chip->oper[i].fb_out_prev);
-        
-        sprintf(tag, "kc%d", i);
-        saveStateSet(state, tag, chip->oper[i].kc);
-        
-        sprintf(tag, "kc_i%d", i);
-        saveStateSet(state, tag, chip->oper[i].kc_i);
-        
-        sprintf(tag, "pms%d", i);
-        saveStateSet(state, tag, chip->oper[i].pms);
-        
-        sprintf(tag, "ams%d", i);
-        saveStateSet(state, tag, chip->oper[i].ams);
-        
-        sprintf(tag, "AMmask%d", i);
-        saveStateSet(state, tag, chip->oper[i].AMmask);
-        
-        sprintf(tag, "state%d", i);
-        saveStateSet(state, tag, chip->oper[i].state);
-        
-        sprintf(tag, "eg_sh_ar%d", i);
-        saveStateSet(state, tag, chip->oper[i].eg_sh_ar);
-        
-        sprintf(tag, "eg_sel_ar%d", i);
-        saveStateSet(state, tag, chip->oper[i].eg_sel_ar);
-        
-        sprintf(tag, "tl%d", i);
-        saveStateSet(state, tag, chip->oper[i].tl);
-        
-        sprintf(tag, "volume%d", i);
-        saveStateSet(state, tag, chip->oper[i].volume);
-        
-        sprintf(tag, "eg_sh_d1r%d", i);
-        saveStateSet(state, tag, chip->oper[i].eg_sh_d1r);
-        
-        sprintf(tag, "eg_sel_d1r%d", i);
-        saveStateSet(state, tag, chip->oper[i].eg_sel_d1r);
-        
-        sprintf(tag, "d1l%d", i);
-        saveStateSet(state, tag, chip->oper[i].d1l);
-        
-        sprintf(tag, "eg_sh_d2r%d", i);
-        saveStateSet(state, tag, chip->oper[i].eg_sh_d2r);
-        
-        sprintf(tag, "eg_sel_d2r%d", i);
-        saveStateSet(state, tag, chip->oper[i].eg_sel_d2r);
-        
-        sprintf(tag, "eg_sh_rr%d", i);
-        saveStateSet(state, tag, chip->oper[i].eg_sh_rr);
-        
-        sprintf(tag, "eg_sel_rr%d", i);
-        saveStateSet(state, tag, chip->oper[i].eg_sel_rr);
-        
-        sprintf(tag, "key%d", i);
-        saveStateSet(state, tag, chip->oper[i].key);
-        
-        sprintf(tag, "ks%d", i);
-        saveStateSet(state, tag, chip->oper[i].ks);
-        
-        sprintf(tag, "ar%d", i);
-        saveStateSet(state, tag, chip->oper[i].ar);
-        
-        sprintf(tag, "d1r%d", i);
-        saveStateSet(state, tag, chip->oper[i].d1r);
-        
-        sprintf(tag, "d2r%d", i);
-        saveStateSet(state, tag, chip->oper[i].d2r);
-        
-        sprintf(tag, "rr%d", i);
-        saveStateSet(state, tag, chip->oper[i].rr);
-        
-        sprintf(tag, "connect%d", i);
-        if (chip->oper[i].connect != NULL) {
-            saveStateSet(state, tag, (int*)chip->oper[i].connect - (int*)chip);
-        }
-        else {
-            saveStateSet(state, tag, -1);
-        }
-        
-        sprintf(tag, "mem_connect%d", i);
-        if (chip->oper[i].mem_connect != NULL) {
-            saveStateSet(state, tag, (int*)chip->oper[i].mem_connect - (int*)chip);
-        }
-        else {
-            saveStateSet(state, tag, -1);
-        }
-    }
+	for (i = 0; i < sizeof(chip->oper) / sizeof(chip->oper[0]); i++) {
+		sprintf(tag, "phase%d", i);
+		saveStateSet(state, tag, chip->oper[i].phase);
+		
+		sprintf(tag, "freq%d", i);
+		saveStateSet(state, tag, chip->oper[i].freq);
+		
+		sprintf(tag, "dt1%d", i);
+		saveStateSet(state, tag, chip->oper[i].dt1);
+		
+		sprintf(tag, "mul%d", i);
+		saveStateSet(state, tag, chip->oper[i].mul);
+		
+		sprintf(tag, "dt1_i%d", i);
+		saveStateSet(state, tag, chip->oper[i].dt1_i);
+		
+		sprintf(tag, "dt2%d", i);
+		saveStateSet(state, tag, chip->oper[i].dt2);
+		
+		sprintf(tag, "mem_value%d", i);
+		saveStateSet(state, tag, chip->oper[i].mem_value);
+		
+		sprintf(tag, "fb_shift%d", i);
+		saveStateSet(state, tag, chip->oper[i].fb_shift);
+		
+		sprintf(tag, "fb_out_curr%d", i);
+		saveStateSet(state, tag, chip->oper[i].fb_out_curr);
+		
+		sprintf(tag, "fb_out_prev%d", i);
+		saveStateSet(state, tag, chip->oper[i].fb_out_prev);
+		
+		sprintf(tag, "kc%d", i);
+		saveStateSet(state, tag, chip->oper[i].kc);
+		
+		sprintf(tag, "kc_i%d", i);
+		saveStateSet(state, tag, chip->oper[i].kc_i);
+		
+		sprintf(tag, "pms%d", i);
+		saveStateSet(state, tag, chip->oper[i].pms);
+		
+		sprintf(tag, "ams%d", i);
+		saveStateSet(state, tag, chip->oper[i].ams);
+		
+		sprintf(tag, "AMmask%d", i);
+		saveStateSet(state, tag, chip->oper[i].AMmask);
+		
+		sprintf(tag, "state%d", i);
+		saveStateSet(state, tag, chip->oper[i].state);
+		
+		sprintf(tag, "eg_sh_ar%d", i);
+		saveStateSet(state, tag, chip->oper[i].eg_sh_ar);
+		
+		sprintf(tag, "eg_sel_ar%d", i);
+		saveStateSet(state, tag, chip->oper[i].eg_sel_ar);
+		
+		sprintf(tag, "tl%d", i);
+		saveStateSet(state, tag, chip->oper[i].tl);
+		
+		sprintf(tag, "volume%d", i);
+		saveStateSet(state, tag, chip->oper[i].volume);
+		
+		sprintf(tag, "eg_sh_d1r%d", i);
+		saveStateSet(state, tag, chip->oper[i].eg_sh_d1r);
+		
+		sprintf(tag, "eg_sel_d1r%d", i);
+		saveStateSet(state, tag, chip->oper[i].eg_sel_d1r);
+		
+		sprintf(tag, "d1l%d", i);
+		saveStateSet(state, tag, chip->oper[i].d1l);
+		
+		sprintf(tag, "eg_sh_d2r%d", i);
+		saveStateSet(state, tag, chip->oper[i].eg_sh_d2r);
+		
+		sprintf(tag, "eg_sel_d2r%d", i);
+		saveStateSet(state, tag, chip->oper[i].eg_sel_d2r);
+		
+		sprintf(tag, "eg_sh_rr%d", i);
+		saveStateSet(state, tag, chip->oper[i].eg_sh_rr);
+		
+		sprintf(tag, "eg_sel_rr%d", i);
+		saveStateSet(state, tag, chip->oper[i].eg_sel_rr);
+		
+		sprintf(tag, "key%d", i);
+		saveStateSet(state, tag, chip->oper[i].key);
+		
+		sprintf(tag, "ks%d", i);
+		saveStateSet(state, tag, chip->oper[i].ks);
+		
+		sprintf(tag, "ar%d", i);
+		saveStateSet(state, tag, chip->oper[i].ar);
+		
+		sprintf(tag, "d1r%d", i);
+		saveStateSet(state, tag, chip->oper[i].d1r);
+		
+		sprintf(tag, "d2r%d", i);
+		saveStateSet(state, tag, chip->oper[i].d2r);
+		
+		sprintf(tag, "rr%d", i);
+		saveStateSet(state, tag, chip->oper[i].rr);
+		
+		sprintf(tag, "connect%d", i);
+		if (chip->oper[i].connect != NULL) {
+			saveStateSet(state, tag, (int*)chip->oper[i].connect - (int*)chip);
+		}
+		else {
+			saveStateSet(state, tag, -1);
+		}
+		
+		sprintf(tag, "mem_connect%d", i);
+		if (chip->oper[i].mem_connect != NULL) {
+			saveStateSet(state, tag, (int*)chip->oper[i].mem_connect - (int*)chip);
+		}
+		else {
+			saveStateSet(state, tag, -1);
+		}
+	}
 
-    saveStateClose(state);
+	saveStateClose(state);
 }

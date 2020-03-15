@@ -97,14 +97,12 @@ static void setDram(RomMapperDram* rm, int enable)
 {
     if (enable) {
         if (rm->slot == 0 && rm->sslot == 0) {
-            int endPage = MIN(4, rm->startPage + rm->pages);
             int page;
             for (page = rm->startPage; page < 4; page++) {
                 slotMapPage(rm->slot, rm->sslot, page, boardGetRamPage(page - 8), 1, 0);
             }
         }
         else if (rm->slot == 3 && rm->sslot == 1) {
-            int endPage = MIN(4, rm->startPage + rm->pages);
             int page;
             for (page = rm->startPage; page < 4; page++) {
                 slotMapPage(rm->slot, rm->sslot, page, boardGetRamPage(page - 4), 1, 0);
@@ -112,7 +110,6 @@ static void setDram(RomMapperDram* rm, int enable)
         }
     }
     else {
-        int endPage = MIN(4, rm->startPage + rm->pages);
         int page;
         for (page = rm->startPage; page < 4; page++) {
             slotMapPage(rm->slot, rm->sslot, page, rm->romData + 0x2000 * (page - rm->startPage), 1, 0);

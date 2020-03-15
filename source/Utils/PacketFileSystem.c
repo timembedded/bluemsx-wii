@@ -201,8 +201,6 @@ int pkg_fclose(FILE* file)
 
 size_t pkg_fwrite(const void* buffer, size_t size, size_t count, FILE* file)
 {
-    PKG_FILE* pkg_file = (PKG_FILE*)file;
-
     if ((char*)file < (char*)pkg_files || (char*)file >= ((char*)pkg_files + PKG_FILE_CNT)) {
         return fwrite(buffer, size, count, file);
     }

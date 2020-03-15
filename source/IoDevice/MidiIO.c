@@ -33,7 +33,7 @@
 #include "Board.h"
 #include "ArchMidi.h"
 
-typedef struct MidiIO {
+struct MidiIO {
     MidiType inType;
     FILE* inFile;
     ArchMidi* inHost;
@@ -64,6 +64,8 @@ static void setOutType(int device, MidiIO* midiIo)
     case MIDI_FILE:
         midiIo->outFile = fopen(theOutFileName, "w+");
         break;
+    case MIDI_NONE:
+        break;
     }
 }
 
@@ -83,6 +85,8 @@ static void setInType(int device, MidiIO* midiIo)
     case MIDI_FILE:
         midiIo->inFile = fopen(theInFileName, "w+");
         break;
+    case MIDI_NONE:
+        break;
     }
 }
 
@@ -97,6 +101,8 @@ static void removeOutType(MidiIO* midiIo)
         break;
     case MIDI_FILE:
         fclose(midiIo->outFile);
+        break;
+    case MIDI_NONE:
         break;
     }
 }
@@ -113,6 +119,8 @@ static void removeInType(MidiIO* midiIo)
     case MIDI_FILE:
         fclose(midiIo->inFile);
         break;
+    case MIDI_NONE:
+        break;
     }
 }
 
@@ -126,6 +134,8 @@ void midiIoTransmit(MidiIO* midiIo, UInt8 value)
         break;
     case MIDI_FILE:
         fwrite(&value, 1, 1, midiIo->outFile);
+        break;
+    case MIDI_NONE:
         break;
     }
 }
@@ -233,6 +243,8 @@ int ykIoGetKeyState(MidiIO* midiIo, int key)
         if (midiIo->inHost) {
             return archMidiInGetNoteOn(midiIo->inHost, key);
         }
+        break;
+    default:
         break;
     }
     return 0;

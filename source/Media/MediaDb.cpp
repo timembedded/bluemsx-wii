@@ -54,11 +54,11 @@ struct MediaDb {
 
 struct MediaType {
     MediaType(RomType rt, const string t, const string c = "", const string y = "", const string ct = "", const string r = "", string s = "") :
-        romType(rt), title(t), company(c), year(y), country(ct), remark(r), start(s) {}
+        title(t), company(c), year(y), country(ct), remark(r), romType(rt), start(s) {}
 
     MediaType(const MediaType& mt) :
-        romType(mt.romType), title(mt.title), company(mt.company), year(mt.year), 
-        country(mt.country), remark(mt.remark), start(mt.start) {}
+        title(mt.title), company(mt.company), year(mt.year), 
+        country(mt.country), remark(mt.remark), romType(mt.romType), start(mt.start) {}
 
     string title;
     string company;
@@ -1267,9 +1267,7 @@ extern "C" MediaType* mediaDbGuessRom(const void *buffer, int size)
     case BOARD_SF7000:
         staticMediaType.romType = ROM_SC3000;
         return &staticMediaType;
-    case BOARD_MSX_FORTE_II:
-        break;
-    case BOARD_MSX:
+    default:
         break;
     }
 
@@ -1282,7 +1280,7 @@ extern "C" MediaType* mediaDbGuessRom(const void *buffer, int size)
 		} 
         
         if (size <= 0x4000 && romData[0] == 'A' && romData[1] == 'B') {
-			UInt16 init = romData[2] + 256 * romData[3];
+//			UInt16 init = romData[2] + 256 * romData[3];
 			UInt16 text = romData[8] + 256 * romData[9];
 //			if (init == 0 && (text & 0xc000) == 0x8000) {
 			if ((text & 0xc000) == 0x8000) {
