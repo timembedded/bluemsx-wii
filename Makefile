@@ -166,7 +166,8 @@ export OUTPUT	:=	$(CURDIR)/$(TARGET)
 #---------------------------------------------------------------------------------
 $(BUILD):
 	@[ -d $@ ] || mkdir -p $@
-	@make --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
+	@MAKEFLAGS="-j1 --no-print-directory" && $(MAKE) -C $(BUILD) -f $(CURDIR)/Makefile blueMSXwii_prepare
+	@$(MAKE) --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile blueMSXwii
 
 #---------------------------------------------------------------------------------
 clean:
@@ -192,7 +193,9 @@ DEPENDS	:=	revision $(OFILES:.o=.d)
 #---------------------------------------------------------------------------------
 # main targets
 #---------------------------------------------------------------------------------
-blueMSXwii: $(GENFILES) $(OUTPUT).dol
+blueMSXwii_prepare: $(GENFILES)
+
+blueMSXwii: $(OUTPUT).dol
 $(OUTPUT).dol: $(OUTPUT).elf
 $(OUTPUT).elf: $(OFILES)
 
@@ -221,17 +224,21 @@ revision: revision_new
 #---------------------------------------------------------------------------------
 # This rule creates the zip files for the sd-card contents and converts it to a .h
 #---------------------------------------------------------------------------------
-sdcard.inc: ../sdcard/MSX
+sdcard.zip: ../sdcard/MSX
 	@echo Creating sdcard.zip ...
 	@rm -f sdcard.zip
 	@../util/7za a -r -xr!*.svn -xr!thumbs.* sdcard.zip ../sdcard/MSX
+
+sdcard.inc: sdcard.zip
 	@echo Converting sdcard.zip to sdcard.inc ...
 	@../util/raw2c sdcard.zip sdcard.inc sdcard
 
-gamepack.inc: ../sdcard/Gamepack
+gamepack.zip: ../sdcard/Gamepack
 	@echo Creating gamepack.zip ...
 	@rm -f gamepack.zip
 	@../util/7za a -r -xr!*.svn -xr!thumbs.* gamepack.zip ../sdcard/Gamepack/Games
+
+gamepack.inc: gamepack.zip
 	@echo Converting gamepack.zip to gamepack.inc ...
 	@../util/raw2c gamepack.zip gamepack.inc gamepack
 
