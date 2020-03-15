@@ -315,10 +315,10 @@ RomType romMapperGuessRom(const void *buffer, int size, int guess, char* extende
 
     /* Count occurences of characteristic addresses */
     for (i = 0; i < size - 2; i++) {
-        UInt8 value = romData[i] + ((int)romData[i + 1] << 8) + ((int)romData[i + 2] << 16);
+        UInt32 value = romData[i] + ((UInt32)romData[i + 1] << 8) + ((UInt32)romData[i + 2] << 16);
 
         switch(value) {
-        case 0x400032: 
+        case 0x400032:
             counters[3]++;
             break;
 

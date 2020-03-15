@@ -443,11 +443,9 @@ UInt8 wd2793GetSectorReg(WD2793* wd)
 
 UInt8 wd2793PeekDataReg(WD2793* wd)
 {
-    UInt8 regData;
-
     sync(wd);
 	if (((wd->regCommand & 0xe0) == 0x80) && (wd->regStatus & ST_BUSY)) {
-		regData = wd->sectorBuf[wd->sectorOffset];
+		wd->regData = wd->sectorBuf[wd->sectorOffset];
 	}
 	return wd->regData;
 }
