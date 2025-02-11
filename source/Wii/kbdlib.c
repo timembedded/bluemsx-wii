@@ -583,12 +583,12 @@ static void ProcessJoystickDirection(KBDHANDLE kbdHandle, int channel, joystick_
     }
 }
 
-static void ProcessWPadButtons(KBDHANDLE kbdHandle, u32 buttons, PADCODE *wpad)
+static void ProcessWPadButtons(KBDHANDLE kbdHandle,int channel, u32 buttons, PADCODE *wpad)
 {
     int i, idx_new  = kbdHandle->keyidx ^ 1;
     for(i = 0; wpad[i].key_a != KEY_NONE; i++)  {
         if( (buttons & wpad[i].code) != 0  ) {
-            kbdHandle->btnstatus[idx_new][wpad[i].key_a-KEY_JOY_FIRST] = 1;
+            kbdHandle->btnstatus[idx_new][(channel?wpad[i].key_b:wpad[i].key_a)-KEY_JOY_FIRST] = 1;
         }
     }
 }
@@ -602,30 +602,30 @@ void KBD_GetPadButtonStatus(int channel)
 
     // Check GameCube buttons
     buttons = PAD_ButtonsHeld(channel);
-    ProcessWPadButtons(kbdHandle, buttons, pad_default);
+    ProcessWPadButtons(kbdHandle, channel, buttons, pad_default);
 
     // Check WiiMote buttons
     buttons = WPAD_ButtonsHeld(channel);
 
     // Key translations for default WiiMote buttons
-    ProcessWPadButtons(kbdHandle, buttons, wpad_default);
+    ProcessWPadButtons(kbdHandle, channel, buttons, wpad_default);
     if( wpad_orientation == WPADO_HORIZONTAL ) {
-        ProcessWPadButtons(kbdHandle, buttons, wpad_horizontal);
+        ProcessWPadButtons(kbdHandle, channel, buttons, wpad_horizontal);
     }else{
-        ProcessWPadButtons(kbdHandle, buttons, wpad_vertical);
+        ProcessWPadButtons(kbdHandle, channel, buttons, wpad_vertical);
     }
 
     // Check extensions
     WPAD_Probe(channel, &extensions);
     if( extensions == WPAD_EXP_NUNCHUK ) {
       // Nunchuck button translations
-      ProcessWPadButtons(kbdHandle, buttons, wpad_nunchuk);
+      ProcessWPadButtons(kbdHandle, channel, buttons, wpad_nunchuk);
       // Nunchuk stick
       WPAD_Expansion(channel, &data.exp);
       ProcessJoystickDirection(kbdHandle, channel, &data.exp.nunchuk.js);
     } else if( extensions == WPAD_EXP_CLASSIC ) {
       // Classic controller button translations
-      ProcessWPadButtons(kbdHandle, buttons, wpad_classic);
+      ProcessWPadButtons(kbdHandle, channel, buttons, wpad_classic);
       // Both classic controller sticks
       WPAD_Expansion(channel, &data.exp);
       ProcessJoystickDirection(kbdHandle, channel, &data.exp.classic.ljs);
